@@ -43,5 +43,5 @@ sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/ampache.conf
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service nginx reload
-#sudo yunohost app setting ampache skipped_uris -v "/"
+#sudo yunohost app setting ampache skipped_uris -v "/rest"
 sudo yunohost app ssowatconf
