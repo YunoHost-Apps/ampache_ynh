@@ -44,10 +44,10 @@ sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/ampache.conf
 
 # Reload Nginx and regenerate SSOwat conf
 sudo service nginx reload
+sudo yunohost app setting ampache skipped_uris -v "/"
 sudo yunohost app ssowatconf
 
 # Ampache installation
-sudo yunohost app setting ampache skipped_uris -v "/"
 echo "127.0.0.1 $domain #yunowordpress" | sudo tee -a /etc/hosts
 sleep 1
 curl -kL -X POST http://$domain$path/update.php?action=update
