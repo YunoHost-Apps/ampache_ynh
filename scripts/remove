@@ -1,0 +1,10 @@
+#!/bin/bash
+
+db_user=ampache
+db_name=ampache
+root_pwd=$(sudo cat /etc/yunohost/mysql)
+domain=$(sudo yunohost app setting ampache domain)
+
+mysql -u root -p$root_pwd -e "DROP DATABASE $db_name ; DROP USER $db_user@localhost ;"
+sudo rm -rf /var/www/ampache
+sudo rm -f /etc/nginx/conf.d/$domain.d/ampache.conf
