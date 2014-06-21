@@ -50,7 +50,7 @@ sudo yunohost app ssowatconf
 # Ampache installation
 echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1
-curl -kL -X POST http://$domain$path/update.php?action=update
+curl -kL -X POST http://$domain$path/update.php?action=update > /dev/null 2>&1
 sleep 5
 sudo yunohost app setting ampache skipped_uris -d
 sudo yunohost app setting ampache skipped_uris -v "/rest"
