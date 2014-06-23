@@ -287,7 +287,7 @@ use_auth = "true"
 ; if use_auth if false
 ; POSSIBLE VALUES: user, admin, manager, guest
 ; DEFAULT: admin
-default_auth_level = "admin"
+default_auth_level = "user"
 
 ; 5 Star Ratings
 ; This allows ratings for almost any object in ampache
@@ -554,7 +554,7 @@ ldap_search_dn = "dc=yunohost,dc=org"
 
 ; This is the address of your ldap server (required)
 ; DEFAULT: null
-ldap_url = "192.168.1.88"
+ldap_url = "localhost"
 
 ; Attributes where additional user information is stored (optional)
 ; OpenLDAP ldap_name_field = "cn"
@@ -613,7 +613,7 @@ auto_create = "true"
 ; added as a guest and must be promoted by the admin.
 ; POSSIBLE VALUES: guest, user, admin
 ; DEFAULT: guest
-auto_user = "admin"
+auto_user = "yunoadmin"
 
 ; This will display the user agreement when registering
 ; For agreement text, edit templates/user_agreement.php
