@@ -40,7 +40,7 @@ sudo cp ../conf/ampache.cfg.php $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunouser/$db_user/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunobase/$db_user/g" $final_path/config/ampache.cfg.php
-sudo sed -i "s/yunoadmin/$admin_ampache/g" $final_path/config/ampache.cfg.php
+sudo sed -i "s/yunoadmin/$admin_ampache/g" $final_path/config/admin.sql
 sed -i "s@PATHTOCHANGE@$path@g" $final_path/config/ampache.cfg.php
 sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
 
@@ -67,4 +67,4 @@ sudo yunohost app setting ampache skipped_uris -d
 sudo yunohost app setting ampache skipped_uris -v "/rest"
 sudo yunohost app ssowatconf
 sudo sed -i '/yunoampache/d' /etc/hosts
-mysql -u $db_user -p$db_pwd $db_user -e "INSERT INTO user(id,username,fullname,access) VALUES("", "$admin_ampache", "$admin_ampache", "100");"
+mysql -u $db_user -p$db_pwd $db_user < ../conf/admin.sql
