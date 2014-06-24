@@ -34,7 +34,7 @@
                 "name": "admin",
                 "ask": {
                     "en": "Choose the Ampache administrator (must be an existing YunoHost user)",
-                    "fr": "Administrateur du serveur Ampache (doit être un utilisateur Yunohost existant)"
+                    "fr": "Administrateur du serveur Ampache (doit etre un utilisateur Yunohost existant)"
                 },
                 "example": "homer"
             }
