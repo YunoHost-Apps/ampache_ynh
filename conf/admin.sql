@@ -1,1 +1,1 @@
-INSERT INTO user(id,username,fullname,access) VALUES("", "yunadmin", "yunoadmin", "100");
+INSERT INTO user(id,username,fullname,access) VALUES("", "yunoadmin", "yunoadmin", "100");
