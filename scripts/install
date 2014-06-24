@@ -40,7 +40,7 @@ sudo cp ../conf/ampache.cfg.php $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunouser/$db_user/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunobase/$db_user/g" $final_path/config/ampache.cfg.php
-sudo sed -i "s/yunoadmin/$admin_ampache/g" $final_path/config/admin.sql
+sudo sed -i "s/yunoadmin/$admin_ampache/g" ../conf/admin.sql
 sed -i "s@PATHTOCHANGE@$path@g" $final_path/config/ampache.cfg.php
 sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
 
