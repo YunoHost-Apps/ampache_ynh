@@ -613,7 +613,7 @@ auto_create = "true"
 ; added as a guest and must be promoted by the admin.
 ; POSSIBLE VALUES: guest, user, admin
 ; DEFAULT: guest
-auto_user = "yunoadmin"
+auto_user = "user"
 
 ; This will display the user agreement when registering
 ; For agreement text, edit templates/user_agreement.php
