@@ -742,7 +742,7 @@ max_bit_rate = 576
 ; New dynamically downsampled streams will be denied if they are forced below
 ; this value.
 ; DEFAULT: 8
-;min_bit_rate = 48
+min_bit_rate = 48
 
 ;######################################################
 ; These are commands used to transcode non-streaming
@@ -763,31 +763,31 @@ max_bit_rate = 576
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
 ;;; Audio
-;transcode_m4a      = allowed
+transcode_m4a      = required
 transcode_flac     = required
-;transcode_mpc      = required
-;transcode_ogg      = required
-;transcode_oga      = required
-;transcode_wav      = required
-;transcode_wma      = required
-;transcode_aif      = required
-;transcode_aiff     = required
-;transcode_ape     = required
-;transcode_shn     = required
+transcode_mpc      = required
+transcode_ogg      = required
+transcode_oga      = required
+transcode_wav      = required
+transcode_wma      = required
+transcode_aif      = required
+transcode_aiff     = required
+transcode_ape     = required
+transcode_shn     = required
 transcode_mp3      = allowed
 ;;; Video
-;transcode_avi      = allowed
-;transcode_mkv      = allowed
-;transcode_mpg      = allowed
-;transcode_mpeg     = allowed
-;transcode_m4v      = allowed
-;transcode_mp4      = allowed
-;transcode_mov      = allowed
-;transcode_wmv      = allowed
-;transcode_ogv      = allowed
-;transcode_divx     = allowed
-;transcode_m2ts     = allowed
-;transcode_webm     = allowed
+transcode_avi      = allowed
+transcode_mkv      = allowed
+transcode_mpg      = allowed
+transcode_mpeg     = allowed
+transcode_m4v      = allowed
+transcode_mp4      = allowed
+transcode_mov      = allowed
+transcode_wmv      = allowed
+transcode_ogv      = allowed
+transcode_divx     = allowed
+transcode_m2ts     = allowed
+transcode_webm     = allowed
 
 ; Default audio output format
 ; DEFAULT: none
@@ -795,20 +795,31 @@ encode_target = mp3
 
 ; Default video output format
 ; DEFAULT: none
-;encode_video_target = webm
+encode_video_target = webm
 
 ; Override the default output format on a per-type basis
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
-;encode_target_flac = ogg
+encode_target_flac = ogg
 
 ; Override the default TYPE transcoding behavior on a per-player basis
 ; transcode_player_PLAYER_TYPE = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
-;transcode_player_webplayer_m4a = required
+transcode_player_webplayer_m4a = required
 ;transcode_player_webplayer_flac = required
 ;transcode_player_webplayer_mpc = required
+transcode_player_webplayer_avi      = required
+transcode_player_webplayer_mkv      = required
+transcode_player_webplayer_mpg      = required
+transcode_player_webplayer_mpeg     = required
+transcode_player_webplayer_m4v      = required
+transcode_player_webplayer_mp4      = required
+transcode_player_webplayer_mov      = required
+transcode_player_webplayer_wmv      = required
+transcode_player_webplayer_ogv      = required
+transcode_player_webplayer_divx     = required
+transcode_player_webplayer_m2ts     = required
 
 ; Override the default output format on a per-player basis
 ; encode_player_PLAYER_target = TYPE
@@ -858,6 +869,7 @@ encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
 encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
 encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
 encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+;encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate 800k -preset superfast -threads 0 pipe:1"
 encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
