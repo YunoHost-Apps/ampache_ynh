@@ -44,7 +44,7 @@ database_hostname = "localhost"
 
 ; Port to use when connecting to your database
 ; DEFAULT: none
-database_port = ""
+;database_port = 3306
 
 ; Name of your ampache database
 ; DEFAULT: ampache
@@ -67,35 +67,35 @@ secret_key = "abcdefghijklmnoprqstuvwyz0123456"
 ; Length that a session will last expressed in seconds. Default is
 ; one hour.
 ; DEFAULT: 3600
-session_length = 3600
+session_length = "3600"
 
 ; Length that the session for a single streaming instance will last
 ; the default is two hours. With some clients, and long songs this can
 ; cause playback to stop, increase this value if you experience that
 ; DEFAULT: 7200
-stream_length = 7200
+stream_length = "7200"
 
 ; This length defines how long a 'remember me' session and cookie will
 ; last, the default is 86400, same as length. It is up to the administrator
 ; of the box to increase this, for reference 86400 = 1 day,
 ; 604800 = 1 week, and 2419200 = 1 month
 ; DEFAULT: 604800
-remember_length = 604800
+remember_length = "86400"
 
 ; Name of the Session/Cookie that will sent to the browser
 ; default should be fine
 ; DEFAULT: ampache
-session_name = ampache
+session_name = "ampache"
 
 ; Lifetime of the Cookie, 0 == Forever (until browser close) , otherwise in terms of seconds
 ; If you want cookies to last past a browser close set this to a value in seconds.
 ; DEFAULT: 0
-session_cookielife = 0
+session_cookielife = "0"
 
 ; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
 ; running a secure site (HTTPS).
 ; DEFAULT: 0
-session_cookiesecure       = 0
+session_cookiesecure = "1"
 
 ; Auth Methods
 ; This defines which auth methods Auth will attempt to use and in which order.
@@ -131,14 +131,14 @@ logout_redirect = "https://DOMAINTOCHANGE/yunohost/sso/?action=logout"
 ; You can specify any file extension you want in here separating them
 ; with a |
 ; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv
-catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv"
+catalog_file_pattern = "mp3|mpc|m4p|m4a|mp4|aac|ogg|rm|wma|asf|flac|spx|ra|ape|shn|wv"
 
 ; Video Pattern
 ; This defines which video file types Ampache will attempt to catalog
 ; You can specify any file extension you want in here seperating them with
 ; a | but ampache may not be able to parse them
 ; DEAFULT: avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts
-catalog_video_pattern = "avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts"
+catalog_video_pattern = "avi|mpg|flv|m4v|webm"
 
 ; Playlist Pattern
 ; This defines which playlist types Ampache will attempt to catalog
@@ -165,7 +165,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; will not work without this on.
 ; NOTE: Default Behavior is DENY FROM ALL
 ; DEFAULT: true
-access_control	= "true"
+access_control = "true"
 
 ; Require Session
 ; If this is set to true ampache will make sure that the URL passed when
@@ -367,7 +367,7 @@ sociable = "true"
 ; License
 ; This turns on / off all licensing features on Ampache
 ; DEFAULT: false
-licensing = "false"
+;licensing = "false"
 
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog
@@ -528,7 +528,7 @@ live_stream = "true"
 ; Debug
 ; If this is enabled Ampache will write debugging information to the log file
 ; DEFAULT: false
-;debug = "false"
+debug = "true"
 
 ; Debug Level
 ; This should always be set in conjunction with the
@@ -540,7 +540,7 @@ live_stream = "true"
 ; 4 == ?? (Profit!)
 ; 5 == Information (cataloging progress etc.)
 ; DEFAULT: 5
-debug_level = 5
+debug_level = "5"
 
 ; Path to Log File
 ; This defines where you want ampache to log events to
@@ -643,7 +643,7 @@ ldap_url = "localhost"
 ; MAD ldap_name_field = "displayname"
 ; DEFAULT: null
 ;ldap_email_field = "mail"
-ldap_name_field  = "cn"
+ldap_name_field = "cn"
 
 ;#########################################################
 ; OpenID login info (optional)                           #
@@ -709,7 +709,7 @@ auto_user = "user"
 
 ; This will display the cookie disclaimer (EU Cookie Law)
 ; DEFAULT: false
-cookie_disclaimer = "false"
+;cookie_disclaimer = "false"
 
 ; The fields that will be shown on Registration page
 ; If a user wants to register.
@@ -737,12 +737,12 @@ registration_mandatory_fields = "fullname"
 ; double the configured value. It also only applies to streams that are
 ; transcoded.
 ; DEFAULT: none
-max_bit_rate = 576
+max_bit_rate = "576"
 
 ; New dynamically downsampled streams will be denied if they are forced below
 ; this value.
 ; DEFAULT: 8
-min_bit_rate = 48
+min_bit_rate = "48"
 
 ;######################################################
 ; These are commands used to transcode non-streaming
@@ -763,63 +763,52 @@ min_bit_rate = 48
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
 ;;; Audio
-transcode_m4a      = required
-transcode_flac     = required
-transcode_mpc      = required
-transcode_ogg      = required
-transcode_oga      = required
-transcode_wav      = required
-transcode_wma      = required
-transcode_aif      = required
-transcode_aiff     = required
-transcode_ape     = required
-transcode_shn     = required
-transcode_mp3      = allowed
+;transcode_m4a      = allowed
+transcode_flac = "required"
+;transcode_mpc      = required
+;transcode_ogg      = required
+;transcode_oga      = required
+;transcode_wav      = required
+;transcode_wma      = required
+;transcode_aif      = required
+;transcode_aiff     = required
+;transcode_ape     = required
+;transcode_shn     = required
+transcode_mp3 = "allowed"
 ;;; Video
-transcode_avi      = allowed
-transcode_mkv      = allowed
-transcode_mpg      = allowed
-transcode_mpeg     = allowed
-transcode_m4v      = allowed
-transcode_mp4      = allowed
-transcode_mov      = allowed
-transcode_wmv      = allowed
-transcode_ogv      = allowed
-transcode_divx     = allowed
-transcode_m2ts     = allowed
-transcode_webm     = allowed
+;transcode_avi      = allowed
+;transcode_mkv      = allowed
+;transcode_mpg      = allowed
+;transcode_mpeg     = allowed
+;transcode_m4v      = allowed
+;transcode_mp4      = allowed
+;transcode_mov      = allowed
+;transcode_wmv      = allowed
+;transcode_ogv      = allowed
+;transcode_divx     = allowed
+;transcode_m2ts     = allowed
+;transcode_webm     = allowed
 
 ; Default audio output format
 ; DEFAULT: none
-encode_target = mp3
+encode_target = "mp3"
 
 ; Default video output format
 ; DEFAULT: none
-encode_video_target = webm
+;encode_video_target = webm
 
 ; Override the default output format on a per-type basis
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
-encode_target_flac = ogg
+;encode_target_flac = ogg
 
 ; Override the default TYPE transcoding behavior on a per-player basis
 ; transcode_player_PLAYER_TYPE = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
-transcode_player_webplayer_m4a = required
+;transcode_player_webplayer_m4a = required
 ;transcode_player_webplayer_flac = required
 ;transcode_player_webplayer_mpc = required
-transcode_player_webplayer_avi      = required
-transcode_player_webplayer_mkv      = required
-transcode_player_webplayer_mpg      = required
-transcode_player_webplayer_mpeg     = required
-transcode_player_webplayer_m4v      = required
-transcode_player_webplayer_mp4      = required
-transcode_player_webplayer_mov      = required
-transcode_player_webplayer_wmv      = required
-transcode_player_webplayer_ogv      = required
-transcode_player_webplayer_divx     = required
-transcode_player_webplayer_m2ts     = required
 
 ; Override the default output format on a per-player basis
 ; encode_player_PLAYER_target = TYPE
@@ -830,7 +819,7 @@ transcode_player_webplayer_m2ts     = required
 
 ; Allow clients to override transcode settings (output type, bitrate, codec ...)
 ; DEFAULT: true
-transcode_player_customize = "true"
+transcode_player_customize = "1"
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename
@@ -844,8 +833,8 @@ transcode_player_customize = "true"
 ; equivalent to the old default, but if you find that necessary you should be
 ; clever enough to figure out how on your own.
 ; DEFAULT: none
-;transcode_cmd = "ffmpeg"
-transcode_cmd = "avconv"
+transcode_cmd = "ffmpeg -i %FILE%"
+;transcode_cmd = "avconv"
 ;transcode_cmd = "/usr/bin/neatokeen"
 
 ; Transcode input file argument
@@ -863,13 +852,12 @@ transcode_input = "-i %FILE%"
 ; For each output format, you should provide the necessary arguments for
 ; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
-encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
+encode_args_mp3 = "-vn -b:a %SAMPLE%K -acodec libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a max\(%SAMPLE%K\,49K\) -acodec libvorbis -vcodec libtheora -f ogg pipe:1"
 encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
 encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
 encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
 encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
-;encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate 800k -preset superfast -threads 0 pipe:1"
 encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
@@ -907,7 +895,7 @@ encode_ss_duration = "-t %DURATION%"
 
 ; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
 ;Default: false
-force_ssl = "true"
+force_ssl = "1"
 
 ;#############################
 ;   Mail Settings            #
@@ -984,4 +972,6 @@ force_ssl = "true"
 ; so that the ordering is sane.
 ; DEFAULT: auto
 ;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"
+
+slideshow_time = 0
 
