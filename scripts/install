@@ -5,6 +5,8 @@ domain=$1
 path=$2
 admin_ampache=$3
 
+debianversionname=$(lsb_release -a | grep Codename | awk -F' ' '{print  $2}')
+
 # Check domain/path availability
 sudo yunohost app checkurl $domain$path -a ampache
 if [[ ! $? -eq 0 ]]; then
@@ -64,9 +66,13 @@ echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1
 curl -kL -X POST http://$domain$path/update.php?action=update > /dev/null 2>&1
 sleep 5
+[ "$debianversionname" == "wheezy" ] && \
+sudo sed -i 's/;transcode_cmd = "ffmpeg"/transcode_cmd = "ffmpeg"/g' /var/www/ampache/config/ampache.cfg.php && \
+sudo sed -i 's/^transcode_cmd = "avconv"/;transcode_cmd = "avconv"/g' /var/www/ampache/config/ampache.cfg.php
 sudo yunohost app setting ampache skipped_uris -d
 sudo yunohost app setting ampache skipped_uris -v "/rest"
 sudo yunohost app ssowatconf
-sudo sed -i '/yunoampache/d' /etc/hosts
+sudo sed '/yunoampache/d' /etc/hosts > /tmp/hosts.tmp
+sudo cp /tmp/hosts.tmp /etc/hosts ; sudo rm -f /tmp/hosts.tmp
 mysql -u $db_user -p$db_pwd $db_user < /tmp/admin.sql
 sudo rm /tmp/admin.sql
