@@ -62,7 +62,7 @@ database_password = "yunopass"
 
 ; Cryptographic secret
 ; This MUST BE changed with your own secret key. Ampache-specific, just pick any random string you want.
-secret_key = "abcdefghijklmnoprqstuvwyz0123456"
+secret_key = "RANDOMKEYTOCHANGE"
 
 ; Length that a session will last expressed in seconds. Default is
 ; one hour.
@@ -984,4 +984,3 @@ force_ssl = "true"
 ; so that the ordering is sane.
 ; DEFAULT: auto
 ;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"
-
