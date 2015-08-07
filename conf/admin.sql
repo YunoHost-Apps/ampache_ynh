@@ -1,6 +1,6 @@
 INSERT INTO user(id,username,fullname,access) VALUES("", "yunoadmin", "yunoadmin", "100");
 
-UPDATE `user_preference` SET `value` = 'fr_FR' WHERE `preference` = 31 ;
+UPDATE `user_preference` SET `value` = 'en_US' WHERE `preference` = 31 ;
 
 SET @lastid = LAST_INSERT_ID();
 
@@ -14,7 +14,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (@lastid, 25, '80'),
 (@lastid, 41, 'mpd'),
 (@lastid, 29, 'web_player'),
-(@lastid, 31, 'fr_FR'),
+(@lastid, 31, 'en_US'),
 (@lastid, 32, 'm3u'),
 (@lastid, 33, 'reborn'),
 (@lastid, 34, '27'),
