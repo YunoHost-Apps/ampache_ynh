@@ -216,7 +216,7 @@ require_localnet_session = "true"
 ; still need to enabled downloading for the specific user you
 ; want to be able to use this function
 ; DEFAULT: false
-;allow_zip_download = "false"
+allow_zip_download = "true"
 
 Allow Zip Types
 ; This setting allows/disallows zip download of specific object types
@@ -224,7 +224,7 @@ Allow Zip Types
 ; Otherwise, only the given object list can be zipped.
 ; POSSIBLE VALUES: artist, album, playlist, search, tmp_playlist
 ; DEFAULT: none
-;allow_zip_types = "album"
+allow_zip_types = "artist,album,playlist"
 
 ; File Zip Comment
 ; This is an optional configuration option that adds a comment
@@ -275,16 +275,16 @@ getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpe
 ; This determines if file metadata should be write back to files
 ; as id3 metadata when updated.
 ; DEFAULT: false
-;write_id3 = "false"
+write_id3 = "true"
 
 ; This determines if album art should be write back to files
 ; as id3 metadata when updated.
 ; DEFAULT: false
-;write_id3_art = "false"
+write_id3_art = "true"
 
 ; This determines if catalog manager users can delete medias from disk.
 ; DEFAULT: false
-;delete_from_disk = "false"
+delete_from_disk = "true"
 
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked)
@@ -670,7 +670,7 @@ auto_create = "true"
 ; sign up for an account on your server.
 ; REMEMBER: don't forget to set the mail from address further down in the config.
 ; DEFAULT: false
-;allow_public_registration = "false"
+allow_public_registration = "false"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly
