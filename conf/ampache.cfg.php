@@ -102,7 +102,7 @@ session_cookiesecure       = 0
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
 ; VALUES: mysql,ldap,http,pam,external,openid
-auth_methods = "http,mysql"
+auth_methods = "ldap"
 
 ; External authentication
 ; This sets the helper used for external authentication.  It should conform to
@@ -613,13 +613,13 @@ show_footer_statistics = "true"
 ; For OpenLDAP use "uid"
 ; For Microsoft Active Directory (MAD) use "sAMAccountName"
 ; DEFAULT: null
-;ldap_filter = "(sAMAccountName=%v)"
+ldap_filter = "(uid=%v)"
 
 ; LDAP objectclass (required)
 ; OpanLDAP objectclass = "*"
 ; MAD objectclass = "organizationalPerson"
 ; DEFAULT null
-ldap_objectclass = "posixAccount"
+ldap_objectclass = "mailAccount"
 
 ; Initial credentials to bind with for searching (optional)
 ; DEFAULT: null
@@ -632,7 +632,7 @@ ldap_objectclass = "posixAccount"
 
 ; This is the search dn used to find users (required)
 ; DEFAULT: null
-ldap_search_dn = "dc=yunohost,dc=org"
+ldap_search_dn = "ou=users,dc=yunohost,dc=org"
 
 ; This is the address of your ldap server (required)
 ; DEFAULT: null
