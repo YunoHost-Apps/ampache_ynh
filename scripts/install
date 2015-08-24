@@ -66,6 +66,9 @@ sudo service nginx reload
 sudo yunohost app setting ampache skipped_uris -v "/"
 sudo yunohost app ssowatconf
 
+# Install dependency
+sudo apt-get install ffmpeg -y
+
 # Ampache installation
 echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1
