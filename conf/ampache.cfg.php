@@ -120,7 +120,7 @@ auth_methods = "ldap"
 ; Logout redirection target
 ; Defaults to our own login.php, but we can override it here if, for instance,
 ; we want to redirect to an SSO provider instead.
-logout_redirect = "https://DOMAINTOCHANGE/yunohost/sso/?action=logout"
+; logout_redirect = "https://DOMAINTOCHANGE/yunohost/sso/?action=logout"
 
 ;#####################
 ;  Program Settings  #
