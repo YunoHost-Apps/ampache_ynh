@@ -4,18 +4,18 @@
 debianversionname=$(lsb_release -a | grep Codename | awk -F' ' '{print  $2}')
 
 # Retrieve arguments
-domain=$(sudo yunohost app setting syncthing domain)
-path=$(sudo yunohost app setting syncthing path)
+domain=$(sudo yunohost app setting ampache domain)
+path=$(sudo yunohost app setting ampache path)
 db_user=ampache
-db_pwd=$(sudo yunohost app setting syncthing mysqlpwd)
-admin_ampache=$(sudo yunohost app setting syncthing admin)
+db_pwd=$(sudo yunohost app setting ampache mysqlpwd)
+admin_ampache=$(sudo yunohost app setting ampache admin)
 
 # Remove trailing "/" for next commands
 path=${path%/}
 
 
 # first make a copy of the db
-mysqldump -u $db_user -p$db_pwd --add-drop-table --allow-keywords ampache > $final_path/ampache-db-backup.sql
+# mysqldump -u $db_user -p$db_pwd --add-drop-table --allow-keywords ampache > $final_path/ampache-db-backup.sql
 
 # Copy files to the right place
 final_path=/var/www/ampache
@@ -26,8 +26,8 @@ sudo cp ../conf/ampache.cfg.php $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunouser/$db_user/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunobase/$db_user/g" $final_path/config/ampache.cfg.php
-sed -i "s@PATHTOCHANGE@$path@g" $final_path/config/ampache.cfg.php
-sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
+sudo sed -i "s@PATHTOCHANGE@$path@g" $final_path/config/ampache.cfg.php
+sudo sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
 
 
 # Set permissions to roundcube directory

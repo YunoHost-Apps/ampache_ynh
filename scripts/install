@@ -47,10 +47,10 @@ sudo sed -i "s/yunouser/$db_user/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunobase/$db_user/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunoadmin/$admin_ampache/g" /tmp/admin.sql
-sed -i "s@PATHTOCHANGE@$path@g" $final_path/config/ampache.cfg.php
-sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
+sudo sed -i "s@PATHTOCHANGE@$path@g" $final_path/config/ampache.cfg.php
+sudo sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
 random_key=db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
-sed -i "s@RANDOMKEYTOCHANGE@$random_key@g" $final_path/config/ampache.cfg.php
+sudo sed -i "s@RANDOMKEYTOCHANGE@$random_key@g" $final_path/config/ampache.cfg.php
 
 # Set permissions to ampache directory
 sudo chown -R www-data: $final_path
