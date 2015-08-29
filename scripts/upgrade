@@ -10,10 +10,6 @@ db_user=ampache
 db_pwd=$(sudo yunohost app setting ampache mysqlpwd)
 admin_ampache=$(sudo yunohost app setting ampache admin)
 
-# Remove trailing "/" for next commands
-path=${path%/}
-
-
 # first make a copy of the db
 # mysqldump -u $db_user -p$db_pwd --add-drop-table --allow-keywords ampache > $final_path/ampache-db-backup.sql
 
@@ -26,7 +22,7 @@ sudo cp ../conf/ampache.cfg.php $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunouser/$db_user/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunobase/$db_user/g" $final_path/config/ampache.cfg.php
-sudo sed -i "s@PATHTOCHANGE@$path@g" $final_path/config/ampache.cfg.php
+sudo sed -i "s@PATHTOCHANGE@${path%/}@g" $final_path/config/ampache.cfg.php
 sudo sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
 
 
@@ -47,7 +43,7 @@ sudo yunohost app ssowatconf
 # Ampache installation
 echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1
-curl -kL -X POST http://$domain$path/update.php?action=update > /dev/null 2>&1
+curl -kL -X POST http://$domain${path%/}/update.php?action=update > /dev/null 2>&1
 sleep 5
 [ "$debianversionname" == "wheezy" ] && \
 sudo sed -i 's/;transcode_cmd = "ffmpeg"/transcode_cmd = "ffmpeg"/g' /var/www/ampache/config/ampache.cfg.php && \

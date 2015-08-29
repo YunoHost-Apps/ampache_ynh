@@ -7,9 +7,6 @@ admin_ampache=$3
 
 debianversionname=$(lsb_release -a | grep Codename | awk -F' ' '{print  $2}')
 
-# Remove trailing "/" for next commands
-path=${path%/}
-
 # Check domain/path availability
 sudo yunohost app checkurl $domain$path -a ampache
 if [[ ! $? -eq 0 ]]; then
@@ -47,7 +44,7 @@ sudo sed -i "s/yunouser/$db_user/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunobase/$db_user/g" $final_path/config/ampache.cfg.php
 sudo sed -i "s/yunoadmin/$admin_ampache/g" /tmp/admin.sql
-sudo sed -i "s@PATHTOCHANGE@$path@g" $final_path/config/ampache.cfg.php
+sudo sed -i "s@PATHTOCHANGE@${path%/}@g" $final_path/config/ampache.cfg.php
 sudo sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
 random_key=db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
 sudo sed -i "s@RANDOMKEYTOCHANGE@$random_key@g" $final_path/config/ampache.cfg.php
@@ -72,7 +69,7 @@ sudo apt-get install ffmpeg -y
 # Ampache installation
 echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1
-curl -kL -X POST http://$domain$path/update.php?action=update > /dev/null 2>&1
+curl -kL -X POST http://$domain${path%/}/update.php?action=update > /dev/null 2>&1
 sleep 5
 [ "$debianversionname" == "wheezy" ] && \
 sudo sed -i 's/;transcode_cmd = "ffmpeg"/transcode_cmd = "ffmpeg"/g' /var/www/ampache/config/ampache.cfg.php && \
