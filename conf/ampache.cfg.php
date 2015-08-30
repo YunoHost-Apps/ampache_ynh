@@ -62,7 +62,7 @@ database_password = "yunopass"
 
 ; Cryptographic secret
 ; This MUST BE changed with your own secret key. Ampache-specific, just pick any random string you want.
-secret_key = "abcdefghijklmnoprqstuvwyz0123456"
+secret_key = "RANDOMKEYTOCHANGE"
 
 ; Length that a session will last expressed in seconds. Default is
 ; one hour.
@@ -102,7 +102,7 @@ session_cookiesecure       = 0
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
 ; VALUES: mysql,ldap,http,pam,external,openid
-auth_methods = "http,mysql"
+auth_methods = "ldap"
 
 ; External authentication
 ; This sets the helper used for external authentication.  It should conform to
@@ -120,7 +120,7 @@ auth_methods = "http,mysql"
 ; Logout redirection target
 ; Defaults to our own login.php, but we can override it here if, for instance,
 ; we want to redirect to an SSO provider instead.
-logout_redirect = "https://DOMAINTOCHANGE/yunohost/sso/?action=logout"
+; logout_redirect = "https://DOMAINTOCHANGE/yunohost/sso/?action=logout"
 
 ;#####################
 ;  Program Settings  #
@@ -216,7 +216,7 @@ require_localnet_session = "true"
 ; still need to enabled downloading for the specific user you
 ; want to be able to use this function
 ; DEFAULT: false
-;allow_zip_download = "false"
+allow_zip_download = "true"
 
 Allow Zip Types
 ; This setting allows/disallows zip download of specific object types
@@ -224,7 +224,7 @@ Allow Zip Types
 ; Otherwise, only the given object list can be zipped.
 ; POSSIBLE VALUES: artist, album, playlist, search, tmp_playlist
 ; DEFAULT: none
-;allow_zip_types = "album"
+allow_zip_types = "artist,album,playlist"
 
 ; File Zip Comment
 ; This is an optional configuration option that adds a comment
@@ -275,16 +275,16 @@ getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpe
 ; This determines if file metadata should be write back to files
 ; as id3 metadata when updated.
 ; DEFAULT: false
-;write_id3 = "false"
+write_id3 = "true"
 
 ; This determines if album art should be write back to files
 ; as id3 metadata when updated.
 ; DEFAULT: false
-;write_id3_art = "false"
+write_id3_art = "true"
 
 ; This determines if catalog manager users can delete medias from disk.
 ; DEFAULT: false
-;delete_from_disk = "false"
+delete_from_disk = "true"
 
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked)
@@ -613,13 +613,13 @@ show_footer_statistics = "true"
 ; For OpenLDAP use "uid"
 ; For Microsoft Active Directory (MAD) use "sAMAccountName"
 ; DEFAULT: null
-;ldap_filter = "(sAMAccountName=%v)"
+ldap_filter = "(uid=%v)"
 
 ; LDAP objectclass (required)
 ; OpanLDAP objectclass = "*"
 ; MAD objectclass = "organizationalPerson"
 ; DEFAULT null
-ldap_objectclass = "posixAccount"
+ldap_objectclass = "mailAccount"
 
 ; Initial credentials to bind with for searching (optional)
 ; DEFAULT: null
@@ -632,7 +632,7 @@ ldap_objectclass = "posixAccount"
 
 ; This is the search dn used to find users (required)
 ; DEFAULT: null
-ldap_search_dn = "dc=yunohost,dc=org"
+ldap_search_dn = "ou=users,dc=yunohost,dc=org"
 
 ; This is the address of your ldap server (required)
 ; DEFAULT: null
@@ -670,7 +670,7 @@ auto_create = "true"
 ; sign up for an account on your server.
 ; REMEMBER: don't forget to set the mail from address further down in the config.
 ; DEFAULT: false
-;allow_public_registration = "false"
+allow_public_registration = "false"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly
@@ -984,4 +984,3 @@ force_ssl = "true"
 ; so that the ordering is sane.
 ; DEFAULT: auto
 ;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"
-
