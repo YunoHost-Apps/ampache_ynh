@@ -1,4 +1,12 @@
 /**
+   #####################################################################
+   #                               Warning                             #
+   #                               #######                             #
+   # This external file is Ampache-adapted and probably unsynced with  #
+   # origin because abandonned by its original authors.                #
+   #                                                                   #
+   #####################################################################
+   
 Copyright (c) 2012 Marco Pegoraro, http://movableapp.com/
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -25,8 +33,6 @@ WHERE TO FIND MEDIA TABLE:
 https://github.com/thepeg/MediaTable
 http://consulenza-web.com/jquery/MediaTable/
 http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
-
-**Modified version for Ampache.**
 
 **/
 
@@ -239,11 +245,14 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
     // Columns Initialization Loop.
     wdg.$table.find('thead th').each(function(i){ __thInit.call( this, i, wdg );  });
 
-    wdg.$menu.$list.append(wdg.$menu.$footer);
-    
-    wdg.$menu.$footer.bind('click',function(){
-        __reset.call(_this);
-      });
+    if (wdg.$menu.$list !== undefined) {
+        wdg.$menu.$list.append(wdg.$menu.$footer);
+    }
+    if (wdg.$menu.$footer !== undefined) {
+        wdg.$menu.$footer.bind('click',function(){
+            __reset.call(_this);
+          });
+    }
 
   }
   
@@ -311,12 +320,13 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
   $.fn.mediaTable = function() {
 
     var cfg = false;
-
+    var hasMenu = (!$(this).hasClass('disablegv') && ($(this).attr('data-objecttype') !== undefined));
+    
     // Default configuration block
     if ( !arguments.length || $.isPlainObject(arguments[0]) ) cfg = $.extend({},{
 
       // Teach the widget to create a toggle menu to declare column's visibility
-      menu:   true,
+      menu: hasMenu,
       menuTitle:  'Columns',
       menuReset:  'Reset',
 

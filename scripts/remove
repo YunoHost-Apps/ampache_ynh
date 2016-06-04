@@ -1,16 +1,17 @@
 #!/bin/bash
 
-db_user=ampache
-db_name=ampache
+app=$YNH_APP_INSTANCE_NAME
+db_user=$app
+db_name=$app
 root_pwd=$(sudo cat /etc/yunohost/mysql)
-domain=$(sudo yunohost app setting ampache domain)
+domain=$(sudo yunohost app setting $app domain)
 
 # Drop MySQL database
 mysql -u root -p$root_pwd -e "DROP DATABASE $db_name ; DROP USER $db_user@localhost ;"
 
 # Remove sources
-sudo rm -rf /var/www/ampache
+sudo rm -rf /var/www/$app
 
 # Remove Nginx configuration and reload Nginx conf
-sudo rm -f /etc/nginx/conf.d/$domain.d/ampache.conf
+sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
 sudo service nginx reload

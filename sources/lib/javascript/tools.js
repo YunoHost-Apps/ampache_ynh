@@ -50,6 +50,10 @@ function showPlaylistDialog(e, item_type, item_ids) {
         width: 300,
         height: 100,
         autoOpen: false,
+		position: {
+			my: "left+10 top",
+			of: e
+		},
         open: function () {
             closeplaylist = 1;
             $(document).bind('click', overlayclickclose);
@@ -67,7 +71,6 @@ function showPlaylistDialog(e, item_type, item_ids) {
         }
     });
 
-    $("#playlistdialog").dialog("option", "position", [e.clientX + 10, e.clientY]);
     $("#playlistdialog").dialog("open");
     closeplaylist = 0;
 }
@@ -82,6 +85,14 @@ function overlayclickclose() {
 function handlePlaylistAction(url, id) {
     ajaxPut(url, id);
     $("#playlistdialog").dialog("close");
+}
+
+function createNewPlaylist(title, url, id) {
+    var plname = window.prompt(title, '');
+    if (plname != null) {
+        url += '&name=' + plname;
+        handlePlaylistAction(url, id);
+    }
 }
 
 /************************************************************/
@@ -104,6 +115,10 @@ function showBroadcastsDialog(e) {
         width: 150,
         height: 70,
         autoOpen: false,
+		position: {
+			my: "left-180 top",
+			of: e
+		},
         open: function () {
             closebroadcasts = 1;
             $(document).bind('click', broverlayclickclose);
@@ -121,7 +136,6 @@ function showBroadcastsDialog(e) {
         }
     });
 
-    $("#broadcastsdialog").dialog("option", "position", [e.clientX - 180, e.clientY]);
     $("#broadcastsdialog").dialog("open");
     closebroadcasts = 0;
 }
@@ -158,6 +172,10 @@ function showShareDialog(e, object_type, object_id) {
         width: 200,
         height: 90,
         autoOpen: false,
+		position: {
+			my: "left+10 top",
+			of: e
+		},
         open: function () {
             closeshare = 1;
             $(document).bind('click', shoverlayclickclose);
@@ -175,7 +193,6 @@ function showShareDialog(e, object_type, object_id) {
         }
     });
 
-    $("#sharedialog").dialog("option", "position", [e.clientX + 10, e.clientY]);
     $("#sharedialog").dialog("open");
     closeshare = 0;
 }
@@ -298,8 +315,6 @@ function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, refresh_ro
         show: { effect: "fade", duration: 400 },
         open: function () {
             $(this).load(parent.contentUrl, function() {
-                $(this).dialog('option', 'position', 'center');
-
                 if ($('#edit_tags').length > 0) {
                     $("#edit_tags").tagit({
                         allowSpaces: true,
@@ -329,7 +344,7 @@ function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, refresh_ro
 }
 
 $(window).resize(function() {
-    $("#editdialog").dialog("option", "position", ['center', 'center']);
+    $("#editdialog").dialog("option", "position", {my: "center", at: "center", of: window});
 });
 
 function check_inline_song_edit(type, song) {
@@ -406,7 +421,7 @@ function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refreshActio
 function getPagePlaySettings() {
     var settings = '';
     var stg_subtitle = document.getElementById('play_setting_subtitle');
-    if (stg_subtitle !== undefined) {
+    if (stg_subtitle !== undefined && stg_subtitle !== null) {
         if (stg_subtitle.value != '') {
             settings += '&subtitle=' + stg_subtitle.value;
         }

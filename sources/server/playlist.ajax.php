@@ -2,28 +2,30 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU General Public License, version 2 (GPLv2)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2015 Ampache.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License v2
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-if (!defined('AJAX_INCLUDE')) { exit; }
+if (!defined('AJAX_INCLUDE')) {
+    exit;
+}
 
 $results = array();
 switch ($_REQUEST['action']) {
@@ -40,7 +42,7 @@ switch ($_REQUEST['action']) {
         $object_ids = $playlist->get_items();
         ob_start();
         $browse = new Browse();
-        $browse->set_type('playlist_song');
+        $browse->set_type('playlist_media');
         $browse->add_supplemental_object('playlist',$playlist->id);
         $browse->save_objects($object_ids);
         $browse->show_objects($object_ids);
@@ -51,7 +53,7 @@ switch ($_REQUEST['action']) {
     case 'append_item':
         // Only song item are supported with playlists
 
-        debug_event('playlist', 'Appending items to playlist {'.$_REQUEST['playlist_id'].'}...', '5');
+        debug_event('playlist', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', '5');
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface','25')) {
@@ -59,7 +61,10 @@ switch ($_REQUEST['action']) {
                 break;
             }
 
-            $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
+            $name        = $_REQUEST['name'];
+            if (empty($name)) {
+                $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s",time());
+            }
             $playlist_id = Playlist::create($name, 'private');
             if (!$playlist_id) {
                 break;
@@ -73,65 +78,26 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $songs = array();
-        $item_id = $_REQUEST['item_id'];
+        $medias    = array();
+        $item_id   = $_REQUEST['item_id'];
+        $item_type = $_REQUEST['item_type'];
 
-        switch ($_REQUEST['item_type']) {
-            case 'smartplaylist':
-                $smartplaylist = new Search($item_id, 'song');
-                $items = $playlist->get_items();
-                foreach ($items as $item) {
-                    $songs[] = $item['object_id'];
-                }
-            break;
-            case 'album':
-                debug_event('playlist', 'Adding all songs of album(s) {'.$item_id.'}...', '5');
-                $albums_array = explode(',', $item_id);
-                foreach ($albums_array as $a) {
-                    $album = new Album($a);
-                    $asongs = $album->get_songs();
-                    foreach ($asongs as $song_id) {
-                        $songs[] = $song_id;
-                    }
-                }
-            break;
-            case 'artist':
-                debug_event('playlist', 'Adding all songs of artist {'.$item_id.'}...', '5');
-                $artist = new Artist($item_id);
-                $songs[] = $artist->get_songs();
-            break;
-            case 'song_preview':
-            case 'song':
-                debug_event('playlist', 'Adding song {'.$item_id.'}...', '5');
-                $songs = explode(',', $item_id);
-            break;
-            case 'playlist':
-                $pl = new Playlist($item_id);
-                $songs = $pl->get_songs();
-            break;
-            default:
-                debug_event('playlist', 'Adding all songs of current playlist...', '5');
-                $objects = $GLOBALS['user']->playlist->get_items();
-
-                foreach ($objects as $object_data) {
-                    $type = array_shift($object_data);
-                    if ($type == 'song') {
-                        $songs[] = array_shift($object_data);
-                    }
-                }
-            break;
+        if (!empty($item_type) && Core::is_playable_item($item_type)) {
+            debug_event('playlist', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
+            $item_ids = explode(',', $item_id);
+            foreach ($item_ids as $iid) {
+                $libitem = new $item_type($iid);
+                $medias  = array_merge($medias, $libitem->get_medias());
+            }
+        } else {
+            debug_event('playlist', 'Adding all medias of current playlist...', 5);
+            $medias = $GLOBALS['user']->playlist->get_items();
         }
 
-        if (count($songs) > 0) {
+        if (count($medias) > 0) {
             Ajax::set_include_override(true);
-            $playlist->add_songs($songs, true);
-
-            /*$playlist->format();
-            $object_ids = $playlist->get_items();
-            ob_start();
-            require_once AmpConfig::get('prefix') . '/templates/show_playlist.inc.php';
-            $results['content'] = ob_get_contents();
-            ob_end_clean();*/
+            $playlist->add_medias($medias, true);
+            
             debug_event('playlist', 'Items added successfully!', '5');
             ob_start();
             display_notification(T_('Added to playlist'));

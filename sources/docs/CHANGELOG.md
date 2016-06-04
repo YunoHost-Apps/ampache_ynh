@@ -1,6 +1,98 @@
 CHANGELOG
 =========
 
+3.8.2
+----------
+- Fixed potential security vulnerability on smartplaylist search rule and catalog management actions (thanks Roman Ammann)
+- Fixed song comparison issue on arrays (genre ...) when updating from tag
+- Fixed song insertion issue if track year is out of range
+- Fixed unexpected artist summary autoupdate
+- Improved generated playlist filename (thanks yam655)
+- Fixed user avatar upload (thanks vader083)
+- Fixed waveform temporary file deletion issue if GD library is unavailable
+- Fixed max number of items returned from Subsonic getStarred.view (thanks zerodogg)
+- Fixed video update from tags (thanks stebe)
+- Reverted PHP 5.5.9 dependency to PHP 5.4
+- Added video playlist support (thanks SurvivalHive)
+- Added preference subcategory
+- Added prompt for new playlist name
+- Fixed page refresh when canceling album art change (thanks EvilLivesHere)
+- Added /play htaccess rewrite rule to avoid default max limit redirection 
+- Fixed Subsonic artist/album/song name JSON parsing if the name is numeric only
+- Added ignored articles and cover art to Subsonic getArtists.view function
+- Fixed MySQL requests to support ONLY_FULL_GROUP_BY mode
+- Fixed Ajax art refresh after changing it (thanks gnujeremie)
+- Fixed playlist creation from smartplaylist (thanks stebe)
+- Added SQL unique constraint on tag map
+- Fixed Subsonic genres with JSON format
+- Added Bookmarks feature on Subsonic API
+- Fixed thumb art regeneration if entry found in database without data (thanks s4astliv)
+- Added Podcast feature
+- Added large view / grid view option on artist and albums collection
+- Moved from php-gettext to oscarotero/Gettext
+- Added `Access-Control-Allow-Origin: *` header on Subsonic images & streams
+- Fixed Subsonic item identifier parsing
+- Added logic for external plugin directories (ampache-*)
+- Added Discogs metadata plugin
+
+3.8.1
+----------
+- Fixed PHP7 Error class conflict (thanks trampi)
+- Fixed user password with special characters at install time (thanks jagerman)
+- Moved Ampache project license from GPLv2 to AGPLv3
+- Added Ampache specific information on Subsonic API getAlbum using a new `ampache` parameter (thanks nicklan)
+- Added 'album tag' option in song search (thanks DanielMaly)
+- Added Message of the Day plugin to display MOTD at home page
+- Moved AmpacheApi class to a separate ampacheapi-php git repository
+- Added timeline / friends timeline feature
+- Fixed disabled song display to regular users (thanks shangril)
+- Fixed random albums art size (thanks Bidules079)
+- Moved tag cloud to artist browsing by default
+- Fixed utf8 BOM empty string on song comparison
+- Improved recently played and user stats queries performance (thanks thinca)
+- Renamed SAMPLE_RATE to TRANSCODE_BITRATE on transcoding
+- Fixed tag deletion sql error (thanks stebe)
+- Moved to PNG default blank image instead of JPG (thanks Psy-Virus)
+- Fixed temporary playlist initial position when scrolling down (thanks RobertoCarlo)
+- Added Radio stations to UPnP backend
+- Fixed Subsonic API art to use album art if song doesn't have a custom art (thanks hypfvieh)
+- Fixed Subsonic API search when object count parameter is 0 (thanks hypfvieh)
+- Fixed UPnP UUID to be based on host information
+- Moved to Composer for dependencies management
+- Fixed catalog action when not using Ajax page loading (thanks Razrael)
+- Fixed unrated song default value (thanks Combustible)
+- Added custom metadata support from files (thanks Razrael)
+- Improved Subsonic API getArtists performance (thanks nicklan)
+- Fixed theme color setting behavior
+- Moved audioscrobbler API to v2
+- Added m3u8 playlist import
+- Fixed utf8 id3v2 comments support
+- Added write_playlists script to export playlists to file
+- Fixed Tvdb and Tmdb plugins (thanks wagnered)
+- Improved Video filename parsing (thanks wagnered)
+- Fixed non scalar settings value printing on debug page
+- Improved Subsonic API getAlbumList error handling
+- Fixed user login with browser used during the installation
+- Fixed iTunes 12 browsing when using DAAP (thanks Chattaway83)
+- Moved http_port user preference to ampache.cfg.php
+- Upgraded last.fm and libre.fm scrobbling to latest API version (thanks nioc)
+- Added missing space between track and album in localplay playlist (thanks arnaudbey)
+- Added check fo mbstring.func_overload support before using id3 write functionality (thanks anonymous2ch)
+- Fixed file size calculation when using id3v2 tag (thanks hypfvieh)
+- Added rating from id3 tag (thanks nioc)
+- Added track number on streaming playlist (thanks Fondor1)
+- Fixed catalog export (thanks shellshocker)
+- Fixed file change detection
+- Improved XML API with more information and new functions (advanced_search, toggle_follow, last_shouts, rate, timeline, friends_timeline)
+- Fixed 'Next' button when browsing start offset is aligned to offset limit (thanks wagnered)
+- Fixed stream kill OS detection (thanks nan4k7)
+- Fixed calculate_art_size script to support storage on disk (thanks nan4k7)
+- Fixed sql script semicolon typo (thanks jack)
+- Added support for .opus files (thanks mrpi)
+- Fixed podcast owner xml information
+- Fixed ldap filter parameter check (thanks ChrGeiss)
+- Fixed 'Add to existing playlist' link for regular users (thanks Niols)
+
 3.8.0
 ----------
 - Added Portuguese (Brasil) language (thanks Ione Souza Junior)
