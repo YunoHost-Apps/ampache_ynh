@@ -39,6 +39,9 @@ sudo yunohost app setting $app skipped_uris -v "/"
 sudo yunohost app ssowatconf
 
 # Ampache installation
+cd /var/www/$app
+sudo php composer.phar install --prefer-source --no-interaction
+
 echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1
 curl -kL -X POST http://$domain${path%/}/update.php?action=update > /dev/null 2>&1
