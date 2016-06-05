@@ -73,10 +73,10 @@ sudo yunohost app ssowatconf
 sudo apt-get install libav-tools -y
 
 # Ampache installation
-cd /var/www/$app
+cd $final_path
 sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 sudo php composer-setup.php
-sudo php composer.phar install --prefer-source --no-interaction
+sudo -u www-data php composer.phar install --prefer-source --no-interaction
 
 echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1

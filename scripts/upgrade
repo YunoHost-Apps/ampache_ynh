@@ -39,8 +39,8 @@ sudo yunohost app setting $app skipped_uris -v "/"
 sudo yunohost app ssowatconf
 
 # Ampache installation
-cd /var/www/$app
-sudo php composer.phar install --prefer-source --no-interaction
+cd $final_path
+sudo -u www-data php composer.phar install --prefer-source --no-interaction
 
 echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1
