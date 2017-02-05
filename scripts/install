@@ -55,19 +55,10 @@ sudo sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
 random_key=db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
 sudo sed -i "s@RANDOMKEYTOCHANGE@$random_key@g" $final_path/config/ampache.cfg.php
 
-# Set permissions to ampache directory
-sudo chown -R www-data: $final_path
-
 # Modify Nginx configuration file and copy it to Nginx conf directory
 sed -i "s@PATHTOCHANGE@${path%/}@g" ../conf/nginx.conf*
 sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
-
-
-# Reload Nginx and regenerate SSOwat conf
-sudo service nginx reload
-sudo yunohost app setting $app skipped_uris -v "/"
-sudo yunohost app ssowatconf
 
 # Install dependency
 sudo apt-get install libav-tools -y
@@ -76,17 +67,26 @@ sudo apt-get install libav-tools -y
 cd $final_path
 sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 sudo php composer-setup.php
-sudo -u www-data php composer.phar install --prefer-source --no-interaction
+sudo php composer.phar install --prefer-source --no-interaction
 
+# Set permissions to ampache directory
+sudo chown -R www-data: $final_path
+
+# Reload Nginx and regenerate SSOwat conf
+sudo service nginx reload
+sudo yunohost app setting $app skipped_uris -v "/"
+sudo yunohost app ssowatconf
+
+# Pre config ampache
 echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
 sleep 1
 curl -kL -X POST http://$domain${path%/}/update.php?action=update > /dev/null 2>&1
 sleep 5
 
-sudo yunohost app setting $app skipped_uris -d
-sudo yunohost app setting $app skipped_uris -v "/rest"
-sudo yunohost app ssowatconf
+# Clean install
 sudo sed '/yunoampache/d' /etc/hosts > /tmp/hosts.tmp
 sudo cp /tmp/hosts.tmp /etc/hosts ; sudo rm -f /tmp/hosts.tmp
 ynh_mysql_connect_as "$db_user" "$db_pwd" "$app" < /tmp/admin.sql
 sudo rm /tmp/admin.sql
+
+
