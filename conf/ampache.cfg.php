@@ -912,18 +912,16 @@ encode_video_target = webm
 ; to stream lossless encoded files in lossy formats.
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
-;encode_target_flac = opus
-encode_target_flac = ogg
+encode_target_flac = opus
 
 ; Override the default TYPE transcoding behavior on a per-player basis, for example,
 ; to stream lossless using the api and lossy using the web interface.
 ; transcode_player_PLAYER_TYPE = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
-;transcode_player_webplayer_m4a = required
-;transcode_player_webplayer_flac = required
-;transcode_player_webplayer_mpc = required
-transcode_player_webplayer_m4a      = required
+transcode_player_webplayer_m4a = required
+transcode_player_webplayer_flac = required
+transcode_player_webplayer_mpc = required
 transcode_player_webplayer_avi      = required
 transcode_player_webplayer_mkv      = required
 transcode_player_webplayer_mpg      = required
