@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Copy files to the right place
+ampache_ynh_getsources () {
+	version=$(cat upstream_version)
+
+	final_path=/var/www/$app
+	sudo mkdir -p $final_path/log
+
+	sudo wget -O ../ampache.tar.gz https://github.com/ampache/ampache/archive/$version.tar.gz > /dev/null 2>&1
+	sudo tar xvzf ../ampache.tar.gz -C ..  > /dev/null 2>&1
+	sudo cp -ar ../ampache-$version/. $final_path
+
+	sudo cp ../conf/ampache.cfg.php $final_path/config/ampache.cfg.php
+}
+
+# Change variables in Ampache configuration
+ampache_ynh_prepareconfig () {
+	sudo sed -i "s/yunouser/$app/g" $final_path/config/ampache.cfg.php
+	sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
+	sudo sed -i "s/yunobase/$app/g" $final_path/config/ampache.cfg.php
+	sudo sed -i "s@PATHTOCHANGE@${path%/}@g" $final_path/config/ampache.cfg.php
+	sudo sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
+}
+
+# Modify Nginx configuration file and copy it to Nginx conf directory
+ampache_ynh_preparenginx () {
+	sed -i "s@PATHTOCHANGE@${path%/}@g" ../conf/nginx.conf*
+	sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
+	sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+}
+
+# Ampache installation
+ampache_ynh_install () {
+        ORIPATH=$(pwd)
+	cd $final_path
+	sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+	sudo php composer-setup.php
+	sudo php composer.phar install --prefer-source --no-interaction
+	# Set permissions to ampache directory
+	sudo chown -R www-data: $final_path
+	cd $ORIPATH
+}
+
+# Reload Nginx and regenerate SSOwat conf
+ampache_ynh_reloadservices () {
+	sudo service nginx reload
+	ynh_app_setting_set $app skipped_uris "/"
+	sudo yunohost app ssowatconf
+}
+
+# Pre config ampache
+ampache_ynh_doconfig () {
+	echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
+	sleep 1
+	curl -kL -X POST http://$domain${path%/}/update.php?action=update > /dev/null 2>&1
+	sleep 5
+	sudo sed '/yunoampache/d' /etc/hosts > /tmp/hosts.tmp
+	sudo cp /tmp/hosts.tmp /etc/hosts ; sudo rm -f /tmp/hosts.tmp
+}

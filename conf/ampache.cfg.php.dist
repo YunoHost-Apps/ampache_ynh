@@ -17,7 +17,7 @@ config_version = 34
 ; If not set, retrieved automatically from client request.
 ; This setting is required for WebSocket server
 ; DEFAULT: ""
-http_host = "DOMAINTOCHANGE"
+;http_host = "localhost"
 
 ; The public http port of your server.
 ; If not set, retrieved automatically from client request.
@@ -31,7 +31,7 @@ http_host = "DOMAINTOCHANGE"
 ; if it is located at http://localhost/music you need to
 ; set web_path to /music
 ; DEFAULT: ""
-web_path 	= "PATHTOCHANGE"
+;web_path 	= ""
 
 ; The local http url of your server.
 ; If not set, retrieved automatically from server information.
@@ -54,17 +54,17 @@ database_hostname = localhost
 
 ; Name of your ampache database
 ; DEFAULT: ampache
-database_name = "yunobase"
+database_name = ampache
 
 ; Username for your ampache database
 ; DEFAULT: ""
-database_username = "yunouser"
+database_username = username
 
 ; Password for your ampache database, this can not be blank
 ; this is a 'forced' security precaution, the default value
 ; will not work (except if using socket authentication)
 ; DEFAULT: ""
-database_password = "yunopass"
+database_password = password
 
 
 ;#########################################################
@@ -106,14 +106,14 @@ session_cookielife = 0
 ; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
 ; running a secure site (HTTPS).
 ; DEFAULT: 0
-session_cookiesecure = 1
+session_cookiesecure = 0
 
 ; Auth Methods
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
 ; VALUES: mysql,ldap,http,pam,external,openid
-auth_methods = "ldap"
+auth_methods = "mysql"
 
 ; External authentication
 ; This sets the helper used for external authentication.  It should conform to
@@ -626,7 +626,7 @@ debug_level = 5
 ; the specified directory exists and your HTTP server has
 ; write access.
 ; DEFAULT: none
-log_path = "/var/www/ampache/log"
+;log_path = "/var/log/ampache"
 
 ; Log filename pattern
 ; This defines where the log file name pattern
@@ -688,7 +688,7 @@ site_charset = UTF-8
 
 ; LDAP server URL (required)
 ; DEFAULT: none
-ldap_url = "ldap://localhost/"
+;ldap_url = "ldap://localhost/"
 ;ldap_url = "ldaps://localhost/"
 
 ; LDAP credentials (optional)
@@ -698,16 +698,16 @@ ldap_url = "ldap://localhost/"
 
 ; LDAP Base DN for the search (required)
 ; DEFAULT: none
-ldap_search_dn = "ou=users,dc=yunohost,dc=org"
+;ldap_search_dn = "ou=People,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
 ; LDAP objectClass (required)
 ; DEFAULT: none
-ldap_objectclass = "mailAccount"          ; OpenLDAP
+;ldap_objectclass = "posixAccount"          ; OpenLDAP
 ;ldap_objectclass = "organizationalPerson"  ; Microsoft Active Directory
 
 ; LDAP filter for search (required)
 ; DEFAULT: none
-ldap_filter = "(uid=%v)"                   ; OpenLDAP
+;ldap_filter = "(uid=%v)"                   ; OpenLDAP
 ;ldap_filter = "(sAMAccountName=%v)"        ; Microsoft Active Directory
 
 ; Require that the user is in a specific group (optional)
@@ -716,7 +716,7 @@ ldap_filter = "(uid=%v)"                   ; OpenLDAP
 
 ; LDAP name field
 ; DEFAULT = "cn"
-ldap_name_field = "cn"
+;ldap_name_field = "cn"
 ;ldap_name_field = "displayName"
 
 ; LDAP email field
@@ -874,46 +874,45 @@ registration_mandatory_fields = "fullname"
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
 ;;; Audio
-transcode_m4a      = allowed
-transcode_flac     = required
-transcode_mpc      = required
-transcode_ogg      = required
-transcode_oga      = required
-transcode_wav      = required
-transcode_wma      = required
-transcode_aif      = required
-transcode_aiff     = required
-transcode_ape     = required
-transcode_shn     = required
-transcode_mp3      = allowed
+;transcode_m4a      = allowed
+;transcode_flac     = required
+;transcode_mpc      = required
+;transcode_ogg      = required
+;transcode_oga      = required
+;transcode_wav      = required
+;transcode_wma      = required
+;transcode_aif      = required
+;transcode_aiff     = required
+;transcode_ape     = required
+;transcode_shn     = required
+;transcode_mp3      = allowed
 ;;; Video
-transcode_avi      = allowed
-transcode_mkv      = allowed
-transcode_mpg      = allowed
-transcode_mpeg     = allowed
-transcode_m4v      = allowed
-transcode_mp4      = allowed
-transcode_mov      = allowed
-transcode_wmv      = allowed
-transcode_ogv      = allowed
-transcode_divx     = allowed
-transcode_m2ts     = allowed
-transcode_webm     = allowed
+;transcode_avi      = allowed
+;transcode_mkv      = allowed
+;transcode_mpg      = allowed
+;transcode_mpeg     = allowed
+;transcode_m4v      = allowed
+;transcode_mp4      = allowed
+;transcode_mov      = allowed
+;transcode_wmv      = allowed
+;transcode_ogv      = allowed
+;transcode_divx     = allowed
+;transcode_m2ts     = allowed
+;transcode_webm     = allowed
 
 ; Default audio output format
 ; DEFAULT: none
-encode_target = mp3
+;encode_target = mp3
 
 ; Default video output format
 ; DEFAULT: none
-encode_video_target = webm
+;encode_video_target = webm
 
 ; Override the default output format on a per-type basis, for example,
 ; to stream lossless encoded files in lossy formats.
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
 ;encode_target_flac = opus
-encode_target_flac = ogg
 
 ; Override the default TYPE transcoding behavior on a per-player basis, for example,
 ; to stream lossless using the api and lossy using the web interface.
@@ -923,19 +922,6 @@ encode_target_flac = ogg
 ;transcode_player_webplayer_m4a = required
 ;transcode_player_webplayer_flac = required
 ;transcode_player_webplayer_mpc = required
-transcode_player_webplayer_m4a      = required
-transcode_player_webplayer_avi      = required
-transcode_player_webplayer_mkv      = required
-transcode_player_webplayer_mpg      = required
-transcode_player_webplayer_mpeg     = required
-transcode_player_webplayer_m4v      = required
-transcode_player_webplayer_mp4      = required
-transcode_player_webplayer_mov      = required
-transcode_player_webplayer_wmv      = required
-transcode_player_webplayer_ogv      = required
-transcode_player_webplayer_divx     = required
-transcode_player_webplayer_m2ts     = required
-
 
 ; Override the default output format on a per-player basis
 ; encode_player_PLAYER_target = TYPE
@@ -962,7 +948,7 @@ transcode_player_customize = "true"
 ; clever enough to figure out how on your own.
 ; DEFAULT: none
 ;transcode_cmd = "ffmpeg"
-transcode_cmd = "avconv"
+;transcode_cmd = "avconv"
 ;transcode_cmd = "/usr/bin/neatokeen"
 
 ; Transcode input file argument
@@ -986,8 +972,7 @@ encode_args_opus = "-vn -b:a %BITRATE%K -c:a libopus -compression_level 10 -vsyn
 encode_args_m4a = "-vn -b:a %BITRATE%K -c:a libfdk_aac -f adts pipe:1"
 encode_args_wav = "-vn -b:a %BITRATE%K -c:a pcm_s16le -f wav pipe:1"
 encode_args_flv = "-b:a %BITRATE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
-encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate 800k -preset superfast -threads 0 pipe:1"
-;encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame

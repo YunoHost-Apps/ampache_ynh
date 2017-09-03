@@ -6,12 +6,13 @@
         "fr": "Une application de streaming audio et vidéo"
     },
     "url": "http://ampache.org",
+    "packaging_format": 1,
     "license": "free",
     "maintainer": {
-        "name": "beudbeud",
-        "email": "beudbeud@beudibox.fr"
+        "name": "aymhce",
+        "email": "aymhce@gmail.com"
     },
-    "multi_instance": "true",
+    "multi_instance": true,
     "requirements": {
         "yunohost": ">> 2.3.12.1"
     },

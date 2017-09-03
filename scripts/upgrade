@@ -1,54 +1,37 @@
 #!/bin/bash
 
+set -eu
+
+. /usr/share/yunohost/helpers
+. _common
+
 # Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
-domain=$(sudo yunohost app setting $app domain)
-path=$(sudo yunohost app setting $app path)
-db_user=$app
-db_pwd=$(sudo yunohost app setting $app mysqlpwd)
-admin_ampache=$(sudo yunohost app setting $app admin)
+domain=$(ynh_app_setting_get $app domain)
+path=$(ynh_app_setting_get $app path)
+db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+admin_ampache=$(ynh_app_setting_get $app admin)
 
-# first make a copy of the db
-# mysqldump -u $db_user -p$db_pwd --add-drop-table --allow-keywords $app > $final_path/ampache-db-backup.sql
+path=$(ynh_normalize_url_path $path)
 
-# Copy files to the right place
-final_path=/var/www/$app
-sudo cp -a ../sources/* $final_path
-sudo cp ../conf/ampache.cfg.php $final_path/config/ampache.cfg.php
+# Get sources and copy files to the right place
+ampache_ynh_getsources
 
 # Change variables in Ampache configuration
-sudo sed -i "s/yunouser/$db_user/g" $final_path/config/ampache.cfg.php
-sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
-sudo sed -i "s/yunobase/$db_user/g" $final_path/config/ampache.cfg.php
-sudo sed -i "s@PATHTOCHANGE@${path%/}@g" $final_path/config/ampache.cfg.php
-sudo sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
-
-
-# Set permissions to roundcube directory
-sudo chown -R www-data: $final_path
+ampache_ynh_prepareconfig
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
-sed -i "s@PATHTOCHANGE@${path%/}@g" ../conf/nginx.conf*
-sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
-sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
-
-
-# Reload Nginx and regenerate SSOwat conf
-sudo service nginx reload
-sudo yunohost app setting $app skipped_uris -v "/"
-sudo yunohost app ssowatconf
+ampache_ynh_preparenginx
 
 # Ampache installation
-cd $final_path
-sudo -u www-data php composer.phar install --prefer-source --no-interaction
+ampache_ynh_install
 
-echo "127.0.0.1 $domain #yunoampache" | sudo tee -a /etc/hosts
-sleep 1
-curl -kL -X POST http://$domain${path%/}/update.php?action=update > /dev/null 2>&1
-sleep 5
+# Reload Nginx and regenerate SSOwat conf
+ampache_ynh_reloadservices
 
-sudo yunohost app setting $app skipped_uris -d
-sudo yunohost app setting $app skipped_uris -v "/rest"
-sudo yunohost app ssowatconf
-sudo sed '/yunoampache/d' /etc/hosts > /tmp/hosts.tmp
-sudo cp /tmp/hosts.tmp /etc/hosts ; sudo rm -f /tmp/hosts.tmp
+# Pre config ampache
+ampache_ynh_doconfig
+
+# Clean install
+sudo rm -rf ../ampache-$version
+sudo rm /tmp/admin.sql

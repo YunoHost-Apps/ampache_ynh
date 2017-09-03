@@ -1,13 +1,14 @@
 #!/bin/bash
 
-app=$YNH_APP_INSTANCE_NAME
-db_user=$app
-db_name=$app
-root_pwd=$(sudo cat /etc/yunohost/mysql)
-domain=$(sudo yunohost app setting $app domain)
+set -u
 
-# Drop MySQL database
-mysql -u root -p$root_pwd -e "DROP DATABASE $db_name ; DROP USER $db_user@localhost ;"
+. /usr/share/yunohost/helpers
+
+app=$YNH_APP_INSTANCE_NAME
+domain=$(ynh_app_setting_get $app domain)
+
+ynh_mysql_drop_db $app
+ynh_mysql_drop_user $app
 
 # Remove sources
 sudo rm -rf /var/www/$app

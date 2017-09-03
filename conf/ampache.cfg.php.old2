@@ -1,28 +1,23 @@
 ;#<?php exit(); ?>##
-;#########################################################
-; General Config                                         #
-;#########################################################
+;###################
+; General Config   #
+;###################
 
 ; This value is used to detect quickly
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 34
+config_version = 29
 
-;#########################################################
-; Path Vars                                              #
-;#########################################################
+;###################
+; Path Vars        #
+;###################
 
 ; The public http host of your server.
 ; If not set, retrieved automatically from client request.
 ; This setting is required for WebSocket server
 ; DEFAULT: ""
 http_host = "DOMAINTOCHANGE"
-
-; The public http port of your server.
-; If not set, retrieved automatically from client request.
-; DEFAULT:
-;http_port = 80
 
 ; The public path to your ampache install
 ; Do not put a trailing / on this path
@@ -31,26 +26,25 @@ http_host = "DOMAINTOCHANGE"
 ; if it is located at http://localhost/music you need to
 ; set web_path to /music
 ; DEFAULT: ""
-web_path 	= "PATHTOCHANGE"
+web_path = "PATHTOCHANGE"
 
 ; The local http url of your server.
 ; If not set, retrieved automatically from server information.
 ; DEFAULT: ""
 ;local_web_path = "http://localhost/ampache"
 
-
-;#########################################################
-; Database                                               #
-;#########################################################
+;##############################
+; Session and Login Variables #
+;##############################
 
 ; Hostname of your database
 ; For socket authentication, set the path to socket file (e.g. /var/run/mysqld/mysqld.sock)
 ; DEFAULT: localhost
-database_hostname = localhost
+database_hostname = "localhost"
 
 ; Port to use when connecting to your database
 ; DEFAULT: none
-;database_port = 3306
+database_port = ""
 
 ; Name of your ampache database
 ; DEFAULT: ampache
@@ -66,14 +60,9 @@ database_username = "yunouser"
 ; DEFAULT: ""
 database_password = "yunopass"
 
-
-;#########################################################
-; Session and Security                                   #
-;#########################################################
-
 ; Cryptographic secret
 ; This MUST BE changed with your own secret key. Ampache-specific, just pick any random string you want.
-secret_key = "abcdefghijklmnoprqstuvwyz0123456"
+secret_key = "RANDOMKEYTOCHANGE"
 
 ; Length that a session will last expressed in seconds. Default is
 ; one hour.
@@ -106,7 +95,7 @@ session_cookielife = 0
 ; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
 ; running a secure site (HTTPS).
 ; DEFAULT: 0
-session_cookiesecure = 1
+session_cookiesecure       = 0
 
 ; Auth Methods
 ; This defines which auth methods Auth will attempt to use and in which order.
@@ -131,7 +120,44 @@ auth_methods = "ldap"
 ; Logout redirection target
 ; Defaults to our own login.php, but we can override it here if, for instance,
 ; we want to redirect to an SSO provider instead.
-; logout_redirect = "http://sso.example.com/logout"
+; logout_redirect = "https://DOMAINTOCHANGE/yunohost/sso/?action=logout"
+
+;#####################
+;  Program Settings  #
+;#####################
+
+; File Pattern
+; This defines which file types Ampache will attempt to catalog
+; You can specify any file extension you want in here separating them
+; with a |
+; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv
+catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv"
+
+; Video Pattern
+; This defines which video file types Ampache will attempt to catalog
+; You can specify any file extension you want in here seperating them with
+; a | but ampache may not be able to parse them
+; DEAFULT: avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts
+catalog_video_pattern = "avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts"
+
+; Playlist Pattern
+; This defines which playlist types Ampache will attempt to catalog
+; You can specify any file extension you want in here seperating them with
+; a | but ampache may not be able to parse them
+; DEFAULT: m3u|pls|asx|xspf
+catalog_playlist_pattern = "m3u|pls|asx|xspf"
+
+; Prefix Pattern
+; This defines which prefix Ampache will ignore when importing tags from
+; your music. You may add any prefix you want seperating them with a |
+; DEFAULT: The|An|A|Die|Das|Ein|Eine|Les|Le|La
+catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
+
+; Catalog disable
+; This defines if catalog can be disabled without removing database entries
+; WARNING: this increase sensibly sql requests and slow down Ampache a lot
+; DEFAULT: false
+;catalog_disable = "false"
 
 ; Use Access List
 ; Toggle this on if you want ampache to pay attention to the access list
@@ -163,114 +189,6 @@ require_localnet_session = "true"
 ; DEFAULT: false
 ;prevent_multiple_logins = "false"
 
-
-;#########################################################
-; Metadata                                               #
-;#########################################################
-
-; This determines the tag order for all cataloged
-; music. If none of the listed tags are found then
-; ampache will randomly use whatever was found.
-; POSSIBLE VALUES: ape asf avi id3v1 id3v2 lyrics3 matroska mpeg quicktime riff
-;     vorbiscomment
-; DEFAULT: id3v2 id3v1 vorbiscomment quicktime matroska ape asf avi mpeg riff
-getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpeg,riff"
-
-; This determines whether we try to autodetect the encoding for id3v2 tags.
-; May break valid tags.
-; DEFAULT: false
-;getid3_detect_id3v2_encoding = "false"
-
-; This determines if we write the changes to files (as id3 tags) when modifying metadata, or only keep them in Ampache (the default).
-; DEFAULT: false
-;write_id3 = "false"
-
-; This determines if we write the changes to files (as id3 tags) when modifying album art, or only keep them in Ampache (the default)
-; as id3 metadata when updated.
-; DEFAULT: false
-;write_id3_art = "false"
-
-; This determines the order in which metadata sources are used (and in the
-; case of plugins, checked)
-; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): MusicBrainz,TheAudioDb, plus any others you've installed.
-; DEFAULT: getID3 filename
-metadata_order = "getID3,filename"
-
-; This determines the order in which metadata sources are used (and in the
-; case of plugins, checked) for video files
-; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
-; DEFAULT: filename getID3
-metadata_order_video = "filename,getID3"
-
-; This determines if extended metadata grabbed from external services should be deferred.
-; If enabled, extended metadata is retrieved when browsing the library item.
-; If disabled, extended metadata is retrieved at catalog update.
-; Today, only Artist information (summary, place formed, ...) can be deferred.
-; DEFAULT: true
-deferred_ext_metadata = "true"
-
-; Some taggers use delimiters other than \0 for fields
-; This list specifies possible delimiters additional to \0
-; This setting takes a regex pattern.
-; DEFAULT: // / \ | , ;
-additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
-
-; Enable importing custom metadata from files.
-; This will need a bit of time during the import. So you may want to disable this
-; if you have troubles with huge databases.
-; DEFAULT: false
-;enable_custom_metadata = "false"
-
-
-;#########################################################
-; Catalog                                                #
-;#########################################################
-
-; File Pattern
-; This defines which file types Ampache will attempt to catalog
-; You can specify any file extension you want in here separating them
-; with a |
-; DEFAULT: mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv
-catalog_file_pattern = "mp3|mpc|m4p|m4a|aac|ogg|oga|wav|aif|aiff|rm|wma|asf|flac|opus|spx|ra|ape|shn|wv"
-
-; Video Pattern
-; This defines which video file types Ampache will attempt to catalog
-; You can specify any file extension you want in here separating them with
-; a | but ampache may not be able to parse them
-; DEAFULT: avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts
-catalog_video_pattern = "avi|mpg|mpeg|flv|m4v|mp4|webm|mkv|wmv|ogv|mov|divx|m2ts"
-
-; Playlist Pattern
-; This defines which playlist types Ampache will attempt to catalog
-; You can specify any file extension you want in here separating them with
-; a | but ampache may not be able to parse them
-; DEFAULT: m3u|m3u8|pls|asx|xspf
-catalog_playlist_pattern = "m3u|m3u8|pls|asx|xspf"
-
-; Prefix Pattern
-; This defines which prefix Ampache will ignore when importing tags from
-; your music. You may add any prefix you want separating them with a |
-; DEFAULT: The|An|A|Die|Das|Ein|Eine|Les|Le|La
-catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
-
-; Catalog disable
-; This defines if catalog can be disabled without removing database entries
-; WARNING: this increase sensibly sql requests and slow down Ampache a lot
-; DEFAULT: false
-;catalog_disable = "false"
-
-; Delete from disk
-; This determines if catalog manager users can delete medias from disk.
-; DEFAULT: false
-;delete_from_disk = "false"
-
-
-;#########################################################
-; Program Settings                                       #
-;#########################################################
-
 ; Downsample Remote
 ; If this is set to true and access control is on any users who are not
 ; coming from a defined 'network' ACL will be automatically downsampled
@@ -298,15 +216,15 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; still need to enabled downloading for the specific user you
 ; want to be able to use this function
 ; DEFAULT: false
-;allow_zip_download = "false"
+allow_zip_download = "true"
 
-; Allow Zip Types
+Allow Zip Types
 ; This setting allows/disallows zip download of specific object types
 ; If empty, all supported object types can be zipped.
 ; Otherwise, only the given object list can be zipped.
 ; POSSIBLE VALUES: artist, album, playlist, search, tmp_playlist
 ; DEFAULT: none
-;allow_zip_types = "album"
+allow_zip_types = "artist,album,playlist"
 
 ; File Zip Comment
 ; This is an optional configuration option that adds a comment
@@ -341,6 +259,60 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; VALUES: any whole number (in bytes per second)
 ;throttle_download = 10
 
+; This determines the tag order for all cataloged
+; music. If none of the listed tags are found then
+; ampache will randomly use whatever was found.
+; POSSIBLE VALUES: ape asf avi id3v1 id3v2 lyrics3 matroska mpeg quicktime riff
+;     vorbiscomment
+; DEFAULT: id3v2 id3v1 vorbiscomment quicktime matroska ape asf avi mpeg riff
+getid3_tag_order = "id3v2,id3v1,vorbiscomment,quicktime,matroska,ape,asf,avi,mpeg,riff"
+
+; Determines whether we try to autodetect the encoding for id3v2 tags.
+; May break valid tags.
+; DEFAULT: false
+;getid3_detect_id3v2_encoding = "false"
+
+; This determines if file metadata should be write back to files
+; as id3 metadata when updated.
+; DEFAULT: false
+write_id3 = "true"
+
+; This determines if album art should be write back to files
+; as id3 metadata when updated.
+; DEFAULT: false
+write_id3_art = "true"
+
+; This determines if catalog manager users can delete medias from disk.
+; DEFAULT: false
+delete_from_disk = "true"
+
+; This determines the order in which metadata sources are used (and in the
+; case of plugins, checked)
+; POSSIBLE VALUES (builtins): filename and getID3
+; POSSIBLE VALUES (plugins): MusicBrainz,TheAudioDb, plus any others you've installed.
+; DEFAULT: getID3 filename
+metadata_order = "getID3,filename"
+
+; This determines the order in which metadata sources are used (and in the
+; case of plugins, checked) for video files
+; POSSIBLE VALUES (builtins): filename and getID3
+; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
+; DEFAULT: filename getID3
+metadata_order_video = "filename,getID3"
+
+; This determines if extended metadata grabbed from external services should be deferred.
+; If enabled, extended metadata is retrieved when browsing the library item.
+; If disabled, extended metadata is retrieved at catalog update.
+; Today, only Artist information (summary, place formed, ...) can be deferred.
+; DEFAULT: true
+deferred_ext_metadata = "true"
+
+; Some taggers use delimiters other than \0 for fields
+; This list specifies possible delimiters additional to \0
+; This setting takes a regex pattern.
+; DEFAULT: // / \ | , ;
+additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
+
 ; This determines if a preview image should be retrieved from video files
 ; It requires encode_get_image transcode settings.
 ; DEFAULT: false
@@ -356,7 +328,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; will not ask you for a username and password. false is only
 ; recommended for internal only instances
 ; DEFAULT true
-use_auth	= "true"
+use_auth = "true"
 
 ; Default Auth Level
 ; If use_auth is set to false then this option is used
@@ -365,7 +337,7 @@ use_auth	= "true"
 ; if use_auth is false
 ; POSSIBLE VALUES: user, admin, manager, guest
 ; DEFAULT: guest
-default_auth_level = "guest"
+default_auth_level = "user"
 
 ; 5 Star Ratings
 ; This allows ratings for almost any object in ampache
@@ -395,7 +367,7 @@ sociable = "true"
 ; License
 ; This turns on / off all licensing features on Ampache
 ; DEFAULT: false
-;licensing = "false"
+licensing = "false"
 
 ; This options will turn on/off Demo Mode
 ; If Demo mode is on you can not play songs or update your catalog
@@ -410,7 +382,7 @@ sociable = "true"
 ; requirments on larger catalogs. If you have the memory this can create
 ; a 2-3x speed improvement.
 ; DEFAULT: false
-;memory_cache = "false"
+memory_cache = "true"
 
 ; Memory Limit
 ; This defines the "Min" memory limit for PHP if your php.ini
@@ -471,13 +443,6 @@ sociable = "true"
 ; DEFAULT: false
 ;resize_images = "false"
 
-; Playlist Cover Art
-; Set this to true if you want Ampache to generate
-; cover art for playlists automatically based on
-; the content.
-; DEFAULT: false
-;playlist_art = "false"
-
 ; Statistical Graphs * Requires PHP-GD *
 ; Set this to true if you want Ampache to generate statistical
 ; graphs on usages / users.
@@ -511,11 +476,6 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ; Set this to your Last.FM api key to actually use Last.FM for
 ; recommendations and metadata.
 lastfm_api_key = "d5df942424c71b754e54ce1832505ae2"
-
-; Last.FM API secret
-; Set this to your Last.FM api secret to actually use Last.FM for
-; scrobbling.
-lastfm_api_secret = ""
 
 ; Wanted
 ; Set this to true to enable display missing albums and the
@@ -560,47 +520,10 @@ channel = "true"
 ; DEFAULT: true
 live_stream = "true"
 
-; Podcasts
-; Set this to true to enable podcasts and the
-; possibility for admins to subscribe to new podcasts.
-; DEFAULT: false
-;podcast = "false"
-
 ; Web Socket address
 ; Declare the web socket server address
 ; DEFAULT: determined automatically
 ;websocket_address = "ws://localhost:8100"
-
-; Refresh Limit
-; This defines the default refresh limit in seconds for
-; pages with dynamic content, such as now playing
-; DEFAULT: 60
-; Possible Values: Int > 5
-refresh_limit = "60"
-
-; Footer Statistics
-; This defines whether statistics (Queries, Cache Hits, Load Time)
-; are shown in the page footer.
-; DEFAULT: true
-; Possible values: true, false
-show_footer_statistics = "true"
-
-; RSS Feeds
-; Set this to true to enable rss feeds.
-; (latest albums, shouts, albums of artist, ...)
-; use_rss = false (values true | false)
-;DEFAULT: use_rss = false
-;use_rss = "false"
-
-; This setting allows themes to overwrite PHP template files. This can be really
-; dangerous. Do this only if you trust every theme in your themes/ directory.
-; DEFAULT: false
-;allow_php_themes = "false"
-
-
-;#########################################################
-; Debugging                                              #
-;#########################################################
 
 ; Debug
 ; If this is enabled Ampache will write debugging information to the log file
@@ -625,24 +548,19 @@ debug_level = 5
 ; include trailing slash. You will need to make sure that
 ; the specified directory exists and your HTTP server has
 ; write access.
-; DEFAULT: none
+; DEFAULT: NULL
 log_path = "/var/www/ampache/log"
 
 ; Log filename pattern
-; This defines where the log file name pattern
+; This defines where the log file name pattern.
 ; %name.%Y%m%d.log will create a different log file every day.
 ; DEFAULT: %name.%Y%m%d.log
 log_filename = "%name.%Y%m%d.log"
 
-
-;#########################################################
-; Encoding Settings                                      #
-;#########################################################
-
 ; Charset of generated HTML pages
 ; Default of UTF-8 should work for most people
 ; DEFAULT: UTF-8
-site_charset = UTF-8
+site_charset = "UTF-8"
 
 ; Locale Charset
 ; Local charset (mainly for file operations) if different
@@ -652,13 +570,19 @@ site_charset = UTF-8
 ; DEFAULT: ISO8859-1
 ;lc_charset = "ISO8859-1"
 
-; Multibyte
-; See http://php.net/manual/mbstring.supported-encodings.php
-; If you want ID3v1 encoding detection to work, you should uncomment this line
-; so that the ordering is sane.
-; DEFAULT: auto
-;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"
+; Refresh Limit
+; This defines the default refresh limit in seconds for
+; pages with dynamic content, such as now playing
+; DEFAULT: 60
+; Possible Values: Int > 5
+refresh_limit = "60"
 
+; Footer Statistics
+; This defines whether statistics (Queries, Cache Hits, Load Time)
+; are shown in the page footer.
+; DEFAULT: true
+; Possible values: true, false
+show_footer_statistics = "true"
 
 ;#########################################################
 ; Custom actions (optional)                              #
@@ -681,106 +605,72 @@ site_charset = UTF-8
 ;custom_play_action_icon_0 = "microphone"
 ;custom_play_action_run_0 = "sox \"%f\" -p oops | ffmpeg -i pipe:0 -f %c pipe:1"
 
-
 ;#########################################################
 ; LDAP login info (optional)                             #
 ;#########################################################
 
-; LDAP server URL (required)
-; DEFAULT: none
-ldap_url = "ldap://localhost/"
-;ldap_url = "ldaps://localhost/"
+; LDAP filter string to use (required)
+; For OpenLDAP use "uid"
+; For Microsoft Active Directory (MAD) use "sAMAccountName"
+; DEFAULT: null
+ldap_filter = "(uid=%v)"
 
-; LDAP credentials (optional)
-; DEFAULT: none
+; LDAP objectclass (required)
+; OpanLDAP objectclass = "*"
+; MAD objectclass = "organizationalPerson"
+; DEFAULT null
+ldap_objectclass = "mailAccount"
+
+; Initial credentials to bind with for searching (optional)
+; DEFAULT: null
 ;ldap_username = ""
 ;ldap_password = ""
 
-; LDAP Base DN for the search (required)
-; DEFAULT: none
-ldap_search_dn = "ou=users,dc=yunohost,dc=org"
-
-; LDAP objectClass (required)
-; DEFAULT: none
-ldap_objectclass = "mailAccount"          ; OpenLDAP
-;ldap_objectclass = "organizationalPerson"  ; Microsoft Active Directory
-
-; LDAP filter for search (required)
-; DEFAULT: none
-ldap_filter = "(uid=%v)"                   ; OpenLDAP
-;ldap_filter = "(sAMAccountName=%v)"        ; Microsoft Active Directory
-
 ; Require that the user is in a specific group (optional)
-; DEFAULT: none
+; DEFAULT: null
 ;ldap_require_group = "cn=yourgroup,ou=yourorg,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
-; LDAP name field
-; DEFAULT = "cn"
-ldap_name_field = "cn"
-;ldap_name_field = "displayName"
+; This is the search dn used to find users (required)
+; DEFAULT: null
+ldap_search_dn = "ou=users,dc=yunohost,dc=org"
 
-; LDAP email field
-; DEFAULT = "mail"
+; This is the address of your ldap server (required)
+; DEFAULT: null
+ldap_url = "localhost"
+
+; Attributes where additional user information is stored (optional)
+; OpenLDAP ldap_name_field = "cn"
+; MAD ldap_name_field = "displayname"
+; DEFAULT: null
 ;ldap_email_field = "mail"
-
-; LDAP avatar field
-; DEFAULT: none
-;ldap_avatar_field = "jpegPhoto"
-
-; LDAP avatar mime type
-; DEFAULT: image/jpeg
-;ldap_avatar_mime = "image/jpeg"
-
-; LDAP protocol version to use
-; DEFAULT: 3
-;ldap_protocol_version = 3
-
-; LDAP StartTLS
-; DEFAULT: false
-;ldap_start_tls = "false"
-
-; LDAP member attribute name.
-; That's the name of the attribute of the group that will contain
-; the usernames.
-; DEFAULT: member
-;ldap_member_attribute = "member"
-;ldap_member_attribute = "memberuid"
-
-
+ldap_name_field  = "cn"
 
 ;#########################################################
 ; OpenID login info (optional)                           #
 ;#########################################################
 
 ; Requires specific OpenID Provider Authentication Policy
-; DEFAULT: none
+; DEFAULT: null
 ; VALUES: PAPE_AUTH_MULTI_FACTOR_PHYSICAL,PAPE_AUTH_MULTI_FACTOR,PAPE_AUTH_PHISHING_RESISTANT
 ;openid_required_pape = ""
-
 
 ;#########################################################
 ; Public Registration settings, defaults to disabled     #
 ;#########################################################
 
 ; This setting will silently create an ampache account
-; for anyone who can login using LDAP (or any other login
+; for anyone who can login using ldap (or any other login
 ; extension). The default is to create new users as guests
 ; see auto_user config option if you would like to change this
 ; DEFAULT: false
-;auto_create = "false"
-
-; This setting will silently update an ampache account's
-; informations for anyone who can login using LDAP
-; (or any other login extension).
-; DEFAULT: false
-;external_auto_update = "false"
+auto_create = "true"
 
 ; This setting turns on/off public registration. It is
 ; recommended you leave this off, as it will allow anyone to
 ; sign up for an account on your server.
 ; REMEMBER: don't forget to set the mail from address further down in the config.
 ; DEFAULT: false
-;allow_public_registration = "false"
+allow_public_registration = "false"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly
@@ -805,7 +695,7 @@ ldap_name_field = "cn"
 ; added as a guest and must be promoted by the admin.
 ; POSSIBLE VALUES: guest, user, admin
 ; DEFAULT: guest
-;auto_user = "guest"
+auto_user = "user"
 
 ; This will display the user agreement when registering
 ; For agreement text, edit config/registration_agreement.php
@@ -819,7 +709,7 @@ ldap_name_field = "cn"
 
 ; This will display the cookie disclaimer (EU Cookie Law)
 ; DEFAULT: false
-;cookie_disclaimer = "false"
+cookie_disclaimer = "false"
 
 ; The fields that will be shown on Registration page
 ; If a user wants to register.
@@ -835,7 +725,6 @@ registration_display_fields = "fullname,website"
 ; DEFAULT: fullname
 registration_mandatory_fields = "fullname"
 
-
 ;########################################################
 ; These options control the dynamic downsampling based  #
 ; on current usage                                      #
@@ -848,12 +737,12 @@ registration_mandatory_fields = "fullname"
 ; double the configured value. It also only applies to streams that are
 ; transcoded.
 ; DEFAULT: none
-;max_bit_rate = 576
+max_bit_rate = 576
 
 ; New dynamically downsampled streams will be denied if they are forced below
 ; this value.
 ; DEFAULT: 8
-;min_bit_rate = 48
+min_bit_rate = 48
 
 ;######################################################
 ; These are commands used to transcode non-streaming
@@ -874,7 +763,7 @@ registration_mandatory_fields = "fullname"
 ; transcode_TYPE         = {allowed|required|false}
 ; DEFAULT: false
 ;;; Audio
-transcode_m4a      = allowed
+transcode_m4a      = required
 transcode_flac     = required
 transcode_mpc      = required
 transcode_ogg      = required
@@ -908,22 +797,18 @@ encode_target = mp3
 ; DEFAULT: none
 encode_video_target = webm
 
-; Override the default output format on a per-type basis, for example,
-; to stream lossless encoded files in lossy formats.
+; Override the default output format on a per-type basis
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
-;encode_target_flac = opus
 encode_target_flac = ogg
 
-; Override the default TYPE transcoding behavior on a per-player basis, for example,
-; to stream lossless using the api and lossy using the web interface.
+; Override the default TYPE transcoding behavior on a per-player basis
 ; transcode_player_PLAYER_TYPE = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
-;transcode_player_webplayer_m4a = required
+transcode_player_webplayer_m4a = required
 ;transcode_player_webplayer_flac = required
 ;transcode_player_webplayer_mpc = required
-transcode_player_webplayer_m4a      = required
 transcode_player_webplayer_avi      = required
 transcode_player_webplayer_mkv      = required
 transcode_player_webplayer_mpg      = required
@@ -935,7 +820,6 @@ transcode_player_webplayer_wmv      = required
 transcode_player_webplayer_ogv      = required
 transcode_player_webplayer_divx     = required
 transcode_player_webplayer_m2ts     = required
-
 
 ; Override the default output format on a per-player basis
 ; encode_player_PLAYER_target = TYPE
@@ -950,8 +834,7 @@ transcode_player_customize = "true"
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename
-; %BITRATE% => target bit rate (as chosen by the admin or users in the
-; preferences, if transcode_player_customize = "true")
+; %SAMPLE% => target sample rate
 ; You can do fancy things like VBR, but consider whether the consequences are
 ; acceptable in your environment.
 
@@ -980,14 +863,13 @@ transcode_input = "-i %FILE%"
 ; For each output format, you should provide the necessary arguments for
 ; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-encode_args_mp3 = "-vn -b:a %BITRATE%K -c:a libmp3lame -f mp3 pipe:1"
-encode_args_ogg = "-vn -b:a %BITRATE%K -c:a libvorbis -f ogg pipe:1"
-encode_args_opus = "-vn -b:a %BITRATE%K -c:a libopus -compression_level 10 -vsync 2 -f ogg pipe:1"
-encode_args_m4a = "-vn -b:a %BITRATE%K -c:a libfdk_aac -f adts pipe:1"
-encode_args_wav = "-vn -b:a %BITRATE%K -c:a pcm_s16le -f wav pipe:1"
-encode_args_flv = "-b:a %BITRATE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
-encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate 800k -preset superfast -threads 0 pipe:1"
-;encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_mp3 = "-vn -b:a %SAMPLE%K -c:a libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a %SAMPLE%K -c:a libvorbis -f ogg pipe:1"
+encode_args_m4a = "-vn -b:a %SAMPLE%K -c:a libfdk_aac -f adts pipe:1"
+encode_args_wav = "-vn -b:a %SAMPLE%K -c:a pcm_s16le -f wav pipe:1"
+encode_args_flv = "-b:a %SAMPLE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+;encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate 800k -preset superfast -threads 0 pipe:1"
 encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
@@ -1003,10 +885,18 @@ encode_ss_frame = "-ss %TIME%"
 encode_ss_duration = "-t %DURATION%"
 
 
-;#########################################################
-; Proxy Settings (optional)                              #
-;#########################################################
+;######################################################
+; these options allow you to configure your rss-feed
+; layout. rss exists of two parts, main and song main is the information about the feed
+; song is the information in the feed. can be multiple items.
+; use_rss = false (values true | false)
+;DEFAULT: use_rss = false
+;use_rss = "false"
+;#####################################################
 
+;#############################
+;  Proxy Settings (optional) #
+;#############################
 ; If Ampache is behind an http proxy, specifiy the hostname or IP address
 ; port, proxyusername, and proxypassword here.
 ;DEFAULT: not in use
@@ -1017,12 +907,11 @@ encode_ss_duration = "-t %DURATION%"
 
 ; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
 ;Default: false
-;force_ssl = "true"
+force_ssl = "true"
 
-
-;#########################################################
-;  Mail Settings                                         #
-;#########################################################
+;#############################
+;   Mail Settings            #
+;#############################
 
 ;Method used to send mail
 ;POSSIBLE VALUES: smtp sendmail php
@@ -1051,17 +940,16 @@ encode_ss_duration = "-t %DURATION%"
 ;mail_check = "strict"
 
 
-;#########################################################
-;  sendmail Settings                                     #
-;#########################################################
+;############################
+;   sendmail Settings       #
+;############################
 
 ;DEFAULT: /usr/sbin/sendmail
 ;sendmail_path = "/usr/sbin/sendmail"
 
-
-;#########################################################
-;  SMTP Settings                                         #
-;#########################################################
+;#############################
+;   SMTP Settings            #
+;#############################
 
 ;Mail server (hostname or IP address)
 ;DEFAULT: localhost
@@ -1089,8 +977,10 @@ encode_ss_duration = "-t %DURATION%"
 ;mail_auth_pass = ""
 
 ;#############################
-;   Abbreviation Filter      #
+;   Multibyte Settings       #
 ;#############################
-; For file name parsing. Any unecessary abbreviations in file names can be removed during parsing
-; by adding them to the list below so that they will be removed during the parsing process.
-common_abbr = "divx,xvid,dvdrip,hdtv,lol,axxo,repack,xor,pdtv,real,vtv,caph,2hd,proper,fqm,uncut,topaz,tvt,notv,fpn,fov,orenji,0tv,omicron,dsr,ws,sys,crimson,wat,hiqt,internal,brrip,boheme,vost,vostfr,fastsub,addiction,x264,LOL,720p,1080p,YIFY,evolve,fihtv,first,bokutox,bluray,tvboom,info"
+; See http://php.net/manual/mbstring.supported-encodings.php
+; If you want ID3v1 encoding detection to work, you should uncomment this line
+; so that the ordering is sane.
+; DEFAULT: auto
+;mb_detect_order = "ASCII,UTF-8,EUC-JP,ISO-2022-JP,SJIS,JIS"

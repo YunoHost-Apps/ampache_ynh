@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -eu
+
+. /usr/share/yunohost/helpers
+
+app=$YNH_APP_INSTANCE_NAME
+
+domain=$(ynh_app_setting_get "$app" domain)
+path=$(ynh_app_setting_get "$app" path)
+admin=$(ynh_app_setting_get "$app" admin)
+
+# Check domain/path availability
+test ! -d /var/www/$app \
+        || ynh_die "There is already a directory: /var/www/$app "
+
+path=$(ynh_normalize_url_path $path)
+ynh_webpath_available $domain $path
+ynh_webpath_register $app $domain $path
+
+# Install dependency
+sudo apt-get update
+sudo apt-get install libav-tools -y
+
+sudo cp -a ./sources "/var/www/$app"
+
+sudo cp -a ./conf/nginx.conf "/etc/nginx/conf.d/$domain.d/$app.conf"
+
+db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+ynh_mysql_setup_db $app $app $db_pwd
+ynh_mysql_connect_as $app $db_pwd $app < ./db.sql
+
+sudo service nginx reload

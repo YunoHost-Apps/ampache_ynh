@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -eu
+
+. /usr/share/yunohost/helpers
+
+app=$YNH_APP_INSTANCE_NAME
+
+domain=$(ynh_app_setting_get "$app" domain)
+path=$(ynh_app_setting_get "$app" path)
+admin=$(ynh_app_setting_get "$app" admin)
+
+ynh_backup "/var/www/$app" "sources" 1
+
+ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf" "conf/nginx.conf"
+
+ynh_mysql_dump_db "$app" > db.sql
+#ynh_backup "db.sql" "db.sql"
