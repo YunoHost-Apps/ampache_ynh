@@ -34,4 +34,3 @@ ampache_ynh_doconfig
 
 # Clean install
 sudo rm -rf ../ampache-$version
-sudo rm /tmp/admin.sql
