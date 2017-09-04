@@ -126,7 +126,7 @@ auth_methods = "ldap"
 ; will result in an update to the password stored in the database.
 ; A locally stored password is needed for API access.
 ; DEFAULT: false
-;auth_password_save = "false"
+auth_password_save = "true"
 
 ; Logout redirection target
 ; Defaults to our own login.php, but we can override it here if, for instance,
@@ -767,7 +767,7 @@ ldap_name_field = "cn"
 ; extension). The default is to create new users as guests
 ; see auto_user config option if you would like to change this
 ; DEFAULT: false
-;auto_create = "false"
+auto_create = "true"
 
 ; This setting will silently update an ampache account's
 ; informations for anyone who can login using LDAP
@@ -805,7 +805,7 @@ ldap_name_field = "cn"
 ; added as a guest and must be promoted by the admin.
 ; POSSIBLE VALUES: guest, user, admin
 ; DEFAULT: guest
-;auto_user = "guest"
+auto_user = "user"
 
 ; This will display the user agreement when registering
 ; For agreement text, edit config/registration_agreement.php
