@@ -19,13 +19,15 @@ ampache_ynh_prepareconfig () {
 	sudo sed -i "s/yunouser/$app/g" $final_path/config/ampache.cfg.php
 	sudo sed -i "s/yunopass/$db_pwd/g" $final_path/config/ampache.cfg.php
 	sudo sed -i "s/yunobase/$app/g" $final_path/config/ampache.cfg.php
-	sudo sed -i "s@PATHTOCHANGE@${path%/}@g" $final_path/config/ampache.cfg.php
+	sudo sed -i "s@PATHTOCHANGE@${path}@g" $final_path/config/ampache.cfg.php
 	sudo sed -i "s@DOMAINTOCHANGE@$domain@g" $final_path/config/ampache.cfg.php
 }
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
 ampache_ynh_preparenginx () {
-	sed -i "s@PATHTOCHANGE@${path%/}@g" ../conf/nginx.conf*
+	path2=$(if [ "$path" == "/" ] ; then echo "" ; else echo "$path" ; fi)
+	sed -i "s@PATHTOCHANGE@${path}@g" ../conf/nginx.conf*
+	sed -i "s@PATH2TOCHANGE@${path2}@g" ../conf/nginx.conf*
 	sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
 	sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 }
