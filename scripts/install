@@ -11,6 +11,7 @@ admin_ampache=$YNH_APP_ARG_ADMIN
 # Source helpers
 . /usr/share/yunohost/helpers
 . _common
+ynh_abort_if_errors
 
 # Check if admin exists
 sudo yunohost user list --json | grep -qi "\"username\": \"$admin_ampache\"" || ynh_die "wrong admin username"

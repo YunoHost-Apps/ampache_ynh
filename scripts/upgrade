@@ -4,6 +4,7 @@ set -eu
 
 . /usr/share/yunohost/helpers
 . _common
+ynh_abort_if_errors
 
 # Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
