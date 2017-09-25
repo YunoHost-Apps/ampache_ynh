@@ -2,9 +2,22 @@
 
 set -eu
 
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
 . /usr/share/yunohost/helpers
 . _common
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
 ynh_abort_if_errors
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
 
 # Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
@@ -13,7 +26,15 @@ path=$(ynh_app_setting_get $app path)
 db_pwd=$(ynh_app_setting_get $app mysqlpwd)
 admin_ampache=$(ynh_app_setting_get $app admin)
 
+#=================================================
+# CHECK THE PATH
+#=================================================
+
 path=$(ynh_normalize_url_path $path)
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
 
 # Get sources and copy files to the right place
 ampache_ynh_getsources
@@ -21,17 +42,37 @@ ampache_ynh_getsources
 # Change variables in Ampache configuration
 ampache_ynh_prepareconfig
 
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+
 # Modify Nginx configuration file and copy it to Nginx conf directory
 ampache_ynh_preparenginx
+
+#=================================================
+# SPECIFIC SETUP
+#=================================================
 
 # Ampache installation
 ampache_ynh_install
 
+#=================================================
+# RELOAD NGINX
+#=================================================
+
 # Reload Nginx and regenerate SSOwat conf
 ampache_ynh_reloadservices
 
+#=================================================
+# SETUP APPLICATION WITH CURL
+#=================================================
+
 # Pre config ampache
 ampache_ynh_doconfig
+
+#=================================================
+# CLEANING
+#=================================================
 
 # Clean install
 sudo rm -rf ../ampache-$version

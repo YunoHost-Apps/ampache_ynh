@@ -2,31 +2,59 @@
 
 set -eu
 
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
 # Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
 domain=$YNH_APP_ARG_DOMAIN
 path=$YNH_APP_ARG_PATH
 admin_ampache=$YNH_APP_ARG_ADMIN
 
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
 # Source helpers
 . /usr/share/yunohost/helpers
 . _common
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
 ynh_abort_if_errors
+
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
+#=================================================
 
 # Check if admin exists
 sudo yunohost user list --json | grep -qi "\"username\": \"$admin_ampache\"" || ynh_die "wrong admin username"
-
-ynh_app_setting_set $app admin $admin_ampache
 
 # Check domain/path availability
 path=$(ynh_normalize_url_path $path)
 ynh_webpath_available $domain $path
 ynh_webpath_register $app $domain $path
 
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
+
+ynh_app_setting_set $app admin $admin_ampache
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
 # get sources and copy files to the right place
 ampache_ynh_getsources
-
 sudo cp ../conf/admin.sql /tmp/
+
+#=================================================
+# CREATE A MYSQL DATABASE
+#=================================================
 
 # Generate random password
 db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
@@ -36,6 +64,10 @@ ynh_app_setting_set $app mysqlpwd $db_pwd
 ynh_mysql_setup_db "$app" "$app" "$db_pwd"
 ynh_mysql_connect_as "$app" "$db_pwd" "$app" < "$final_path/sql/ampache.sql"
 
+#=================================================
+# MODIFY A CONFIG FILE
+#=================================================
+
 # Change variables in Ampache configuration
 ampache_ynh_prepareconfig
 
@@ -43,23 +75,46 @@ sudo sed -i "s/yunoadmin/$admin_ampache/g" /tmp/admin.sql
 random_key=db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
 sudo sed -i "s@RANDOMKEYTOCHANGE@$random_key@g" $final_path/config/ampache.cfg.php
 
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+
 # Modify Nginx configuration file and copy it to Nginx conf directory
 ampache_ynh_preparenginx
+
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
 
 # Install dependency
 sudo apt-get update
 sudo apt-get install libav-tools -y
 
+#=================================================
+# SPECIFIC SETUP
+#=================================================
+
 # Ampache installation
 ampache_ynh_install
+
+#=================================================
+# RELOAD NGINX
+#=================================================
 
 # Reload Nginx and regenerate SSOwat conf
 ampache_ynh_reloadservices
 
+#=================================================
+# SETUP APPLICATION WITH CURL
+#=================================================
+
 # Pre config ampache
 ampache_ynh_doconfig
-
 ynh_mysql_connect_as "$app" "$db_pwd" "$app" < /tmp/admin.sql
+
+#=================================================
+# CLEANING
+#=================================================
 
 # Clean install
 sudo rm -rf ../ampache-$version

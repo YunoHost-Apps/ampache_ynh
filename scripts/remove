@@ -2,17 +2,42 @@
 
 set -u
 
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
 . /usr/share/yunohost/helpers
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
 
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
 
+#=================================================
+# REMOVE THE MYSQL DATABASE
+#=================================================
+
 ynh_mysql_drop_db $app
 ynh_mysql_drop_user $app
+
+#=================================================
+# REMOVE APP MAIN DIR
+#=================================================
 
 # Remove sources
 sudo rm -rf /var/www/$app
 
+#=================================================
+# REMOVE NGINX CONFIGURATION
+#=================================================
+
 # Remove Nginx configuration and reload Nginx conf
 sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+
 sudo service nginx reload

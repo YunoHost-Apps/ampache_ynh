@@ -2,33 +2,71 @@
 
 set -eu
 
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
 . /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
 ynh_abort_if_errors
 
-app=$YNH_APP_INSTANCE_NAME
+#=================================================
+# LOAD SETTINGS
+#=================================================
 
+app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get "$app" domain)
 path=$(ynh_app_setting_get "$app" path)
 admin=$(ynh_app_setting_get "$app" admin)
+
+#=================================================
+# CHECK IF THE APP CAN BE RESTORED
+#=================================================
 
 # Check domain/path availability
 test ! -d /var/www/$app \
         || ynh_die "There is already a directory: /var/www/$app "
 
+#=================================================
+# CHECK THE PATH
+#=================================================
+
 path=$(ynh_normalize_url_path $path)
-#ynh_webpath_available $domain $path
-#ynh_webpath_register $app $domain $path
+
+#=================================================
+# REINSTALL DEPENDENCIES
+#=================================================
 
 # Install dependency
 sudo apt-get update
 sudo apt-get install libav-tools -y
 
+#=================================================
+# RESTORE THE APP MAIN DIR
+#=================================================
+
 sudo cp -a ./sources "/var/www/$app"
 
+#=================================================
+# RESTORE THE NGINX CONFIGURATION
+#=================================================
+
 sudo cp -a ./conf/nginx.conf "/etc/nginx/conf.d/$domain.d/$app.conf"
+
+#=================================================
+# RESTORE THE MYSQL DATABASE
+#=================================================
 
 db_pwd=$(ynh_app_setting_get $app mysqlpwd)
 ynh_mysql_setup_db $app $app $db_pwd
 ynh_mysql_connect_as $app $db_pwd $app < ./db.sql
+
+#=================================================
+# RELOAD NGINX
+#=================================================
 
 sudo service nginx reload
