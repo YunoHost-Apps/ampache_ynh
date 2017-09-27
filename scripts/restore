@@ -23,13 +23,15 @@ domain=$(ynh_app_setting_get "$app" domain)
 path=$(ynh_app_setting_get "$app" path)
 admin=$(ynh_app_setting_get "$app" admin)
 
+final_path=/var/www/$app
+
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
 
 # Check domain/path availability
-test ! -d /var/www/$app \
-        || ynh_die "There is already a directory: /var/www/$app "
+test ! -d $final_path \
+        || ynh_die "There is already a directory: $final_path"
 
 #=================================================
 # CHECK THE PATH
@@ -42,20 +44,19 @@ path=$(ynh_normalize_url_path $path)
 #=================================================
 
 # Install dependency
-sudo apt-get update
-sudo apt-get install libav-tools -y
+ynh_install_dependencies libav-tools
 
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
 
-sudo cp -a ./sources "/var/www/$app"
+ynh_restore_file "$final_path"
 
 #=================================================
 # RESTORE THE NGINX CONFIGURATION
 #=================================================
 
-sudo cp -a ./conf/nginx.conf "/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
 # RESTORE THE MYSQL DATABASE
@@ -69,4 +70,4 @@ ynh_mysql_connect_as $app $db_pwd $app < ./db.sql
 # RELOAD NGINX
 #=================================================
 
-sudo service nginx reload
+systemctl reload nginx

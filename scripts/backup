@@ -23,17 +23,19 @@ domain=$(ynh_app_setting_get "$app" domain)
 path=$(ynh_app_setting_get "$app" path)
 admin=$(ynh_app_setting_get "$app" admin)
 
+final_path=/var/www/$app
+
 #=================================================
 # BACKUP THE APP MAIN DIR
 #=================================================
 
-ynh_backup "/var/www/$app" "sources" 1
+ynh_backup "$final_path"
 
 #=================================================
 # BACKUP THE NGINX CONFIGURATION
 #=================================================
 
-ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf" "conf/nginx.conf"
+ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
 # BACKUP THE MYSQL DATABASE

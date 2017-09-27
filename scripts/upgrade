@@ -7,7 +7,7 @@ set -eu
 #=================================================
 
 . /usr/share/yunohost/helpers
-. _common
+. _common.sh
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -75,4 +75,4 @@ ampache_ynh_doconfig
 #=================================================
 
 # Clean install
-sudo rm -rf ../ampache-$version
+ynh_secure_remove ../ampache-$version
