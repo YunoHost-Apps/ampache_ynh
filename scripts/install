@@ -9,7 +9,7 @@ set -eu
 # Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
 domain=$YNH_APP_ARG_DOMAIN
-path=$YNH_APP_ARG_PATH
+path_url=$YNH_APP_ARG_PATH
 admin_ampache=$YNH_APP_ARG_ADMIN
 
 #=================================================
@@ -31,9 +31,9 @@ ynh_abort_if_errors
 #=================================================
 
 # Check domain/path availability
-path=$(ynh_normalize_url_path $path)
-ynh_webpath_available $domain $path
-ynh_webpath_register $app $domain $path
+path_url=$(ynh_normalize_url_path $path_url)
+ynh_webpath_available $domain $path_url
+ynh_webpath_register $app $domain $path_url
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
@@ -76,15 +76,14 @@ ynh_replace_string "RANDOMKEYTOCHANGE" "$random_key" $final_path/config/ampache.
 # NGINX CONFIGURATION
 #=================================================
 
-# Modify Nginx configuration file and copy it to Nginx conf directory
-ampache_ynh_preparenginx
+ynh_add_nginx_config
 
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
 
 # Install dependency
-ynh_install_dependencies libav-tools
+ynh_install_app_dependencies libav-tools
 
 #=================================================
 # SPECIFIC SETUP
@@ -94,10 +93,10 @@ ynh_install_dependencies libav-tools
 ampache_ynh_install
 
 #=================================================
-# RELOAD NGINX
+# RELOAD SSOWAT
 #=================================================
 
-# Reload Nginx and regenerate SSOwat conf
+# Regenerate SSOwat conf
 ampache_ynh_reloadservices
 
 #=================================================

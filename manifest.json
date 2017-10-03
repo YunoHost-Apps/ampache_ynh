@@ -5,6 +5,7 @@
         "en": "A web based audio/video streaming application",
         "fr": "Une application de streaming audio et vidéo"
     },
+    "version": "1.0",
     "url": "http://ampache.org",
     "packaging_format": 1,
     "license": "free",

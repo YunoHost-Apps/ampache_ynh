@@ -35,18 +35,11 @@ ynh_secure_remove $final_path
 # REMOVE NGINX CONFIGURATION
 #=================================================
 
-# Remove Nginx configuration and reload Nginx conf
-ynh_secure_remove /etc/nginx/conf.d/$domain.d/$app.conf
+ynh_remove_nginx_config
 
 #=================================================
 # REMOVE DEPENDENCIES
 #=================================================
 
-# Remove dependency
-ynh_remove_dependencies libav-tools
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-
-systemctl reload nginx
+# Remove dependencies
+ynh_remove_app_dependencies
