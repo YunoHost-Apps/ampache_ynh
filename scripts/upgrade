@@ -50,6 +50,13 @@ ampache_ynh_prepareconfig
 ampache_ynh_preparenginx
 
 #=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+# Install dependency
+ynh_install_dependencies libav-tools
+
+#=================================================
 # SPECIFIC SETUP
 #=================================================
 
