@@ -6,6 +6,11 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
+if [ ! -e _common.sh ]; then
+	cp ../settings/scripts/_common.sh ./_common.sh
+	chmod a+rx _common.sh
+fi
+. _common.sh
 . /usr/share/yunohost/helpers
 
 #=================================================
