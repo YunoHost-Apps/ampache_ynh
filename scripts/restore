@@ -6,12 +6,7 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
-if [ ! -e _common.sh ]; then
-	cp ../settings/scripts/_common.sh ./_common.sh
-	chmod a+rx _common.sh
-fi
-. _common.sh
-. /usr/share/yunohost/helpers
+source /usr/share/yunohost/helpers
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -37,6 +32,16 @@ final_path=/var/www/$app
 # Check domain/path availability
 test ! -d $final_path \
         || ynh_die "There is already a directory: $final_path"
+
+#=================================================
+# IMPORT GENERIC HELPERS AFTER YNH_DIE FOR LINTER
+#=================================================
+
+if [ ! -e _common.sh ]; then
+        cp ../settings/scripts/_common.sh ./_common.sh
+        chmod a+rx _common.sh
+fi
+source _common.sh
 
 #=================================================
 # CHECK THE PATH
@@ -71,4 +76,3 @@ systemctl reload nginx
 db_pwd=$(ynh_app_setting_get $app mysqlpwd)
 ynh_mysql_setup_db $app $app $db_pwd
 ynh_mysql_connect_as $app $db_pwd $app < ./db.sql
-

@@ -1,12 +1,10 @@
 #!/bin/bash
 
-set -u
-
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
-. /usr/share/yunohost/helpers
+source /usr/share/yunohost/helpers
 
 #=================================================
 # LOAD SETTINGS

@@ -21,14 +21,14 @@ ampache_ynh_prepareconfig () {
 
 # Ampache installation
 ampache_ynh_install () {
-        ORIPATH=$(pwd)
-	cd $final_path
-	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-	php composer-setup.php
-	php composer.phar install --prefer-source --no-interaction
-	# Set permissions to ampache directory
-	chown -R www-data: $final_path
-	cd $ORIPATH
+        (
+		cd $final_path
+		php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+		php composer-setup.php
+		php composer.phar install --prefer-source --no-interaction
+		# Set permissions to ampache directory
+		chown -R www-data: $final_path
+	)
 }
 
 # Regenerate SSOwat conf

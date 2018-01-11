@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -eu
-
 #=================================================
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
@@ -17,8 +15,8 @@ admin_ampache=$YNH_APP_ARG_ADMIN
 #=================================================
 
 # Source helpers
-. /usr/share/yunohost/helpers
-. _common.sh
+source _common.sh
+source /usr/share/yunohost/helpers
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -53,12 +51,9 @@ cp ../conf/admin.sql /tmp/
 # CREATE A MYSQL DATABASE
 #=================================================
 
-# Generate random password
-db_pwd=$(ynh_string_random 24)
-
 # Initialize database and store mysql password for upgrade
-ynh_app_setting_set $app mysqlpwd $db_pwd
-ynh_mysql_setup_db "$app" "$app" "$db_pwd"
+ynh_mysql_setup_db "$app" "$app"
+db_pwd=$(ynh_app_setting_get $app mysqlpwd)
 ynh_mysql_connect_as "$app" "$db_pwd" "$app" < "$final_path/sql/ampache.sql"
 
 #=================================================
@@ -69,8 +64,7 @@ ynh_mysql_connect_as "$app" "$db_pwd" "$app" < "$final_path/sql/ampache.sql"
 ampache_ynh_prepareconfig
 
 ynh_replace_string "yunoadmin" "$admin_ampache" /tmp/admin.sql
-random_key=db_pwd=$(ynh_string_random 24)
-ynh_replace_string "RANDOMKEYTOCHANGE" "$random_key" $final_path/config/ampache.cfg.php
+ynh_replace_string "RANDOMKEYTOCHANGE" $(ynh_string_random 24) $final_path/config/ampache.cfg.php
 
 #=================================================
 # NGINX CONFIGURATION
@@ -112,5 +106,4 @@ ynh_mysql_connect_as "$app" "$db_pwd" "$app" < /tmp/admin.sql
 #=================================================
 
 # Clean install
-ynh_secure_remove ../ampache-$version
 ynh_secure_remove /tmp/admin.sql

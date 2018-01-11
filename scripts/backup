@@ -6,7 +6,7 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
-. /usr/share/yunohost/helpers
+source /usr/share/yunohost/helpers
 
 #=================================================
 # MANAGE SCRIPT FAILURE

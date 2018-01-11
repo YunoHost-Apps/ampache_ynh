@@ -8,7 +8,7 @@
     "version": "1.0",
     "url": "http://ampache.org",
     "packaging_format": 1,
-    "license": "free",
+    "license": "AGPL-3.0",
     "maintainer": {
         "name": "aymhce",
         "email": "aymhce@gmail.com"
