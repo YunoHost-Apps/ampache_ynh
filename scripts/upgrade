@@ -1,13 +1,11 @@
 #!/bin/bash
 
-set -eu
-
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
-. /usr/share/yunohost/helpers
-. _common
+source _common.sh
+source /usr/share/yunohost/helpers
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -22,7 +20,7 @@ ynh_abort_if_errors
 # Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
-path=$(ynh_app_setting_get $app path)
+path_url=$(ynh_app_setting_get $app path)
 db_pwd=$(ynh_app_setting_get $app mysqlpwd)
 admin_ampache=$(ynh_app_setting_get $app admin)
 
@@ -30,7 +28,7 @@ admin_ampache=$(ynh_app_setting_get $app admin)
 # CHECK THE PATH
 #=================================================
 
-path=$(ynh_normalize_url_path $path)
+path_url=$(ynh_normalize_url_path $path_url)
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -47,7 +45,18 @@ ampache_ynh_prepareconfig
 #=================================================
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
-ampache_ynh_preparenginx
+if [ "$path_url" != "/" ]
+then
+	ynh_replace_string "^#sub_path_only" "" "../conf/nginx.conf"
+fi
+ynh_add_nginx_config
+
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+# Install dependency
+ynh_install_app_dependencies libav-tools
 
 #=================================================
 # SPECIFIC SETUP
@@ -57,10 +66,10 @@ ampache_ynh_preparenginx
 ampache_ynh_install
 
 #=================================================
-# RELOAD NGINX
+# RELOAD SSOWAT
 #=================================================
 
-# Reload Nginx and regenerate SSOwat conf
+# Regenerate SSOwat conf
 ampache_ynh_reloadservices
 
 #=================================================
@@ -75,4 +84,4 @@ ampache_ynh_doconfig
 #=================================================
 
 # Clean install
-sudo rm -rf ../ampache-$version
+ynh_secure_remove ../ampache-$version

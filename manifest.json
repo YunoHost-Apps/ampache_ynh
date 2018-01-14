@@ -5,16 +5,17 @@
         "en": "A web based audio/video streaming application",
         "fr": "Une application de streaming audio et vidéo"
     },
+    "version": "1.0",
     "url": "http://ampache.org",
     "packaging_format": 1,
-    "license": "free",
+    "license": "AGPL-3.0",
     "maintainer": {
         "name": "aymhce",
         "email": "aymhce@gmail.com"
     },
     "multi_instance": true,
     "requirements": {
-        "yunohost": ">> 2.3.12.1"
+        "yunohost": ">= 2.7.2"
     },
     "services" : [
         "nginx",

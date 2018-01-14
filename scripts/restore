@@ -6,7 +6,7 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
-. /usr/share/yunohost/helpers
+source /usr/share/yunohost/helpers
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -20,42 +20,54 @@ ynh_abort_if_errors
 
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get "$app" domain)
-path=$(ynh_app_setting_get "$app" path)
+path_url=$(ynh_app_setting_get "$app" path)
 admin=$(ynh_app_setting_get "$app" admin)
+
+final_path=/var/www/$app
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
 
 # Check domain/path availability
-test ! -d /var/www/$app \
-        || ynh_die "There is already a directory: /var/www/$app "
+test ! -d $final_path \
+        || ynh_die "There is already a directory: $final_path"
+
+#=================================================
+# IMPORT GENERIC HELPERS AFTER YNH_DIE FOR LINTER
+#=================================================
+
+if [ ! -e _common.sh ]; then
+        cp ../settings/scripts/_common.sh ./_common.sh
+        chmod a+rx _common.sh
+fi
+source _common.sh
 
 #=================================================
 # CHECK THE PATH
 #=================================================
 
-path=$(ynh_normalize_url_path $path)
+path_url=$(ynh_normalize_url_path $path_url)
 
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
 
 # Install dependency
-sudo apt-get update
-sudo apt-get install libav-tools -y
+ynh_install_app_dependencies libav-tools
 
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
 
-sudo cp -a ./sources "/var/www/$app"
+ynh_restore_file "$final_path"
 
 #=================================================
 # RESTORE THE NGINX CONFIGURATION
 #=================================================
 
-sudo cp -a ./conf/nginx.conf "/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
+systemctl reload nginx
 
 #=================================================
 # RESTORE THE MYSQL DATABASE
@@ -64,9 +76,3 @@ sudo cp -a ./conf/nginx.conf "/etc/nginx/conf.d/$domain.d/$app.conf"
 db_pwd=$(ynh_app_setting_get $app mysqlpwd)
 ynh_mysql_setup_db $app $app $db_pwd
 ynh_mysql_connect_as $app $db_pwd $app < ./db.sql
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-
-sudo service nginx reload
