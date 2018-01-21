@@ -22,14 +22,16 @@ ampache_ynh_prepareconfig () {
 # Ampache installation
 ampache_ynh_install () {
         (
+		export COMPOSER_HOME=$final_path
 		cd $final_path
 		php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 		php composer-setup.php
 		php composer.phar update --no-interaction --no-dev
 		php composer.phar install --prefer-source --no-interaction --no-dev
-		# Set permissions to ampache directory
-		chown -R www-data: $final_path
 	)
+        # Set permissions to ampache directory
+        chown -R www-data: $final_path
+
 }
 
 # Regenerate SSOwat conf
