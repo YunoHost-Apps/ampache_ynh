@@ -26,7 +26,7 @@ ampache_ynh_install () {
 		cd $final_path
 		php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 		php composer-setup.php
-		php composer.phar update --no-interaction --no-dev
+		#php composer.phar update --no-interaction
 		php composer.phar install --prefer-source --no-interaction --no-dev
 	)
         # Set permissions to ampache directory
