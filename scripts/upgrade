@@ -78,10 +78,3 @@ ampache_ynh_reloadservices
 
 # Pre config ampache
 ampache_ynh_doconfig
-
-#=================================================
-# CLEANING
-#=================================================
-
-# Clean install
-ynh_secure_remove ../ampache-$version
