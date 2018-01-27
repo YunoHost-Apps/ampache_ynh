@@ -41,6 +41,7 @@ this package:
 #### Supported architectures
 
 * Tested on x86_64
+* Tested on armhf
 
 ## Limitations
 
