@@ -20,7 +20,7 @@ this package:
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-## Getting start
+## Getting started
 
  * **Add your first catalog to load music files**
    * Go to *Admin panel* ![](https://raw.githubusercontent.com/ampache/ampache/develop/themes/reborn/images/icons/icon_admin.png)
