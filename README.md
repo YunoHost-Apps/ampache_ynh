@@ -36,7 +36,8 @@ this package:
 
 #### Multi-users support
 
-?
+ * Ampache is connect to Yunohost LDAP
+ * No auto SSO yet
 
 #### Supported architectures
 
