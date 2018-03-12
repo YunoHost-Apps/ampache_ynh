@@ -46,3 +46,12 @@ ampache_ynh_doconfig () {
 	ynh_local_curl /update.php?action=update
 	sleep 5
 }
+
+# Install or update the main directory yunohost.multimedia
+#
+# usage: ynh_multimedia_build_main_dir
+ynh_multimedia_build_main_dir () {
+	wget -nv https://github.com/YunoHost-Apps/yunohost.multimedia/archive/master.zip 2>&1
+	unzip -q master.zip
+	./yunohost.multimedia-master/script/ynh_media_build.sh
+}
