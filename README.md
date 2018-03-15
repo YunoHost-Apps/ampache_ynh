@@ -11,7 +11,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 streaming application and file manager allowing you to access your 
 music & videos from anywhere, using almost any internet enabled device.
 
-**Shipped version:** 3.8.3
+**Shipped version:** 3.8.6
 
 ## Screenshots
 
