@@ -90,6 +90,9 @@ ynh_install_app_dependencies libav-tools
 # Ampache installation
 ampache_ynh_install
 
+# Create multimedia directories if necessary
+ynh_multimedia_build_main_dir
+
 #=================================================
 # RELOAD SSOWAT
 #=================================================
