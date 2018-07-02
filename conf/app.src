@@ -1,3 +1,3 @@
-SOURCE_URL=https://github.com/ampache/ampache/archive/3.8.6.zip
-SOURCE_SUM=208aca3a8daff6365e6d9d1afad362a80b17abf51114933f962261da2c099c2e
+SOURCE_URL=https://github.com/ampache/ampache/archive/3.8.8.zip
+SOURCE_SUM=a3f7f8da505ae479e2c79005ff457635e2faa48372186281b62ae197274957a0
 SOURCE_FORMAT=zip
