@@ -14,6 +14,7 @@
 		setup_private=0
 		setup_public=0
 		upgrade=1
+		upgrade=1	from_commit=11caf9791c48fdcd632193a1c82ea52d4819b328
 		backup_restore=1
 		multi_instance=1
 		incorrect_path=1
@@ -33,3 +34,7 @@
 ;;; Options
 Email=aymhce@gmail.com
 Notification=none
+;;; Upgrade options
+	; commit=11caf9791c48fdcd632193a1c82ea52d4819b328
+		name=add ynh_abort_if_errors
+		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&
