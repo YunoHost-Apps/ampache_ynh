@@ -23,6 +23,7 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 admin_ampache=$YNH_APP_ARG_ADMIN
+is_public=$YNH_APP_ARG_IS_PUBLIC
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -46,6 +47,7 @@ ynh_webpath_register $app $domain $path_url
 ynh_app_setting_set $app domain $domain
 ynh_app_setting_set $app path $path_url
 ynh_app_setting_set $app admin $admin_ampache
+ynh_app_setting_set $app is_public $is_public
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -176,6 +178,16 @@ ynh_secure_remove /tmp/admin.sql
 
 # Set permissions to ampache directory
 chown -R $app: $final_path
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+
+# Keep app public if necessary
+if [ $is_public -eq 0 ]
+then
+	ynh_app_setting_delete $app unprotected_uris
+fi
 
 #=================================================
 # RELOAD NGINX

@@ -16,6 +16,7 @@ app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
 path_url=$(ynh_app_setting_get $app path)
 admin_ampache=$(ynh_app_setting_get $app admin)
+is_public=$(ynh_app_setting_get $app is_public)
 final_path=$(ynh_app_setting_get $app final_path)
 db_name=$(ynh_app_setting_get $app db_name)
 secret_key=$(ynh_app_setting_get $app secret_key)
@@ -23,6 +24,21 @@ secret_key=$(ynh_app_setting_get $app secret_key)
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
+
+# If is_public doesn't exist, create it
+if [ -z $is_public ]; then
+	is_public=1
+	ynh_app_setting_set $app is_public $is_public
+fi
+
+# Fix is_public as a boolean value
+if [ "$is_public" = "Yes" ]; then
+	ynh_app_setting_set $app is_public 1
+	is_public=1
+elif [ "$is_public" = "No" ]; then
+	ynh_app_setting_set $app is_public 0
+	is_public=0
+fi
 
 # If db_name doesn't exist, create it
 if [ -z $db_name ]; then
@@ -41,6 +57,8 @@ if [ -z $secret_key ]; then
 	secret_key="$(grep "^secret_key" "$final_path/config/ampache.cfg.php" | cut -d'"' -f2)"
 	ynh_app_setting_set $app secret_key $secret_key
 fi
+
+ynh_app_setting_delete $app skipped_uris
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -163,6 +181,15 @@ sleep 1
 # Set permissions on app files
 chown -R $app: $final_path
 
+#=================================================
+# SETUP SSOWAT
+#=================================================
+
+# Keep app public if necessary
+if [ $is_public -eq 0 ]
+then
+	ynh_app_setting_delete $app unprotected_uris
+fi
 
 #=================================================
 # RELOAD NGINX
