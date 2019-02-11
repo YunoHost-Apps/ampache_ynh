@@ -1,20 +1,11 @@
 #!/bin/bash
 
 #=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-# Retrieve arguments
-app=$YNH_APP_INSTANCE_NAME
-domain=$YNH_APP_ARG_DOMAIN
-path_url=$YNH_APP_ARG_PATH
-admin_ampache=$YNH_APP_ARG_ADMIN
-
+# GENERIC START
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
-# Source helpers
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -22,95 +13,172 @@ source /usr/share/yunohost/helpers
 # MANAGE SCRIPT FAILURE
 #=================================================
 
+# Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
+domain=$YNH_APP_ARG_DOMAIN
+path_url=$YNH_APP_ARG_PATH
+admin_ampache=$YNH_APP_ARG_ADMIN
+
+app=$YNH_APP_INSTANCE_NAME
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
 
-# Check domain/path availability
+final_path=/var/www/$app
+test ! -e "$final_path" || ynh_die "This path already contains a folder"
+
+# Normalize the url path syntax
 path_url=$(ynh_normalize_url_path $path_url)
-ynh_webpath_available $domain $path_url
+
+# Register (book) web path
 ynh_webpath_register $app $domain $path_url
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
 
+ynh_app_setting_set $app domain $domain
+ynh_app_setting_set $app path $path_url
 ynh_app_setting_set $app admin $admin_ampache
 
 #=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
+# STANDARD MODIFICATIONS
+#=================================================
+# INSTALL DEPENDENCIES
 #=================================================
 
-# get sources and copy files to the right place
-ampache_ynh_getsources
-cp ../conf/admin.sql /tmp/
+ynh_install_app_dependencies libav-tools php-cli
 
 #=================================================
 # CREATE A MYSQL DATABASE
 #=================================================
 
-# Initialize database and store mysql password for upgrade
-ynh_mysql_setup_db "$app" "$app"
-db_pwd=$(ynh_app_setting_get $app mysqlpwd)
-ynh_mysql_connect_as "$app" "$db_pwd" "$app" < "$final_path/sql/ampache.sql"
+db_name=$(ynh_sanitize_dbid $app)
+ynh_app_setting_set $app db_name $db_name
+ynh_mysql_setup_db $db_name $db_name
 
 #=================================================
-# MODIFY A CONFIG FILE
+# DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-# Change variables in Ampache configuration
-ampache_ynh_prepareconfig
-
-ynh_replace_string "yunoadmin" "$admin_ampache" /tmp/admin.sql
-ynh_replace_string "RANDOMKEYTOCHANGE" $(ynh_string_random 24) $final_path/config/ampache.cfg.php
+ynh_app_setting_set $app final_path $final_path
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
 
-if [ "$path_url" != "/" ]
-then
-	ynh_replace_string "^#sub_path_only" "" "../conf/nginx.conf"
-fi
+# Create a dedicated nginx config
 ynh_add_nginx_config
 
 #=================================================
-# INSTALL DEPENDENCIES
+# CREATE DEDICATED USER
 #=================================================
 
-# Install dependency
-ynh_install_app_dependencies libav-tools
+# Create a system user
+ynh_system_user_create $app
+
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
+
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
 
 #=================================================
 # SPECIFIC SETUP
 #=================================================
+# CONFIGURE AMPACHE
+#=================================================
 
-# Ampache installation
-ampache_ynh_install
+conf_file="$final_path/config/ampache.cfg.php"
+cp ../conf/ampache.cfg.php "$conf_file"
 
-# Create multimedia directories if necessary
+ynh_replace_string "__DBUSER__" "$db_name" "$conf_file"
+ynh_replace_string "__DBPWD__" "$db_pwd" "$conf_file"
+ynh_replace_string "__DBNAME__" "$db_name" "$conf_file"
+ynh_replace_string "__PATHTOCHANGE__" "$path_url" "$conf_file"
+ynh_replace_string "__DOMAINTOCHANGE__" "$domain" "$conf_file"
+secret_key=$(ynh_string_random 24)
+ynh_replace_string "__RANDOMKEYTOCHANGE__" "$secret_key" "$conf_file"
+ynh_app_setting_set $app secret_key $secret_key
+
+# Calculate and store the config file checksum into the app settings
+ynh_store_file_checksum "$conf_file"
+
+#=================================================
+# LOAD DEFAULT DATABASE
+#=================================================
+
+# Load default ampache database
+ynh_mysql_connect_as $app $db_pwd $app < "$final_path/sql/ampache.sql"
+
+#=================================================
+# INSTALL AMPACHE WITH COMPOSER
+#=================================================
+
+(
+	export COMPOSER_HOME=$final_path
+	cd $final_path
+
+	# Install composer
+	curl -sS https://getcomposer.org/installer \
+		| php -- --quiet --install-dir="$final_path" \
+		|| ynh_die "Unable to install Composer"
+
+	ynh_exec_warn_less php composer.phar install --prefer-source --no-interaction --no-dev
+)
+
+#=================================================
+# INSTALL MULTIMEDIA DIRECTORIES
+#=================================================
+
 ynh_multimedia_build_main_dir
 
 #=================================================
-# RELOAD SSOWAT
+# PRE CONFIGURE AMPACHE
 #=================================================
 
-# Regenerate SSOwat conf
-ampache_ynh_reloadservices
+# Set the app as temporarily public for curl call
+ynh_app_setting_set $app unprotected_uris "/"
+# Reload SSOwat config
+yunohost app ssowatconf
+
+# Reload Nginx
+systemctl reload nginx
+
+ynh_local_curl /update.php?action=update
+sleep 1
 
 #=================================================
-# SETUP APPLICATION WITH CURL
+# LOAD ADMIN DATABASE
 #=================================================
 
-# Pre config ampache
-ampache_ynh_doconfig
+cp ../conf/admin.sql /tmp/
+ynh_replace_string "__ADMIN__" "$admin_ampache" /tmp/admin.sql
+
 ynh_mysql_connect_as "$app" "$db_pwd" "$app" < /tmp/admin.sql
 
+ynh_secure_remove /tmp/admin.sql
+
 #=================================================
-# CLEANING
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
 #=================================================
 
-# Clean install
-ynh_secure_remove /tmp/admin.sql
+# Set permissions to ampache directory
+chown -R $app: $final_path
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+
+systemctl reload nginx

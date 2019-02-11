@@ -19,42 +19,28 @@ ynh_abort_if_errors
 #=================================================
 
 app=$YNH_APP_INSTANCE_NAME
-domain=$(ynh_app_setting_get "$app" domain)
-path_url=$(ynh_app_setting_get "$app" path)
-admin=$(ynh_app_setting_get "$app" admin)
 
-final_path=/var/www/$app
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
+final_path=$(ynh_app_setting_get $app final_path)
+db_name=$(ynh_app_setting_get $app db_name)
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
 
-# Check domain/path availability
+ynh_webpath_available $domain $path_url \
+	|| ynh_die "Path not available: ${domain}${path_url}"
 test ! -d $final_path \
-        || ynh_die "There is already a directory: $final_path"
+	|| ynh_die "There is already a directory: $final_path "
 
 #=================================================
-# IMPORT GENERIC HELPERS AFTER YNH_DIE FOR LINTER
+# STANDARD RESTORATION STEPS
+#=================================================
+# RESTORE THE NGINX CONFIGURATION
 #=================================================
 
-if [ ! -e _common.sh ]; then
-        cp ../settings/scripts/_common.sh ./_common.sh
-        chmod a+rx _common.sh
-fi
-source _common.sh
-
-#=================================================
-# CHECK THE PATH
-#=================================================
-
-path_url=$(ynh_normalize_url_path $path_url)
-
-#=================================================
-# REINSTALL DEPENDENCIES
-#=================================================
-
-# Install dependency
-ynh_install_app_dependencies libav-tools
+ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
 # RESTORE THE APP MAIN DIR
@@ -63,16 +49,46 @@ ynh_install_app_dependencies libav-tools
 ynh_restore_file "$final_path"
 
 #=================================================
-# RESTORE THE NGINX CONFIGURATION
+# RECREATE THE DEDICATED USER
 #=================================================
 
-ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
-systemctl reload nginx
+# Create the dedicated user (if not existing)
+ynh_system_user_create $app
+
+#=================================================
+# RESTORE USER RIGHTS
+#=================================================
+
+# Restore permissions on app files
+chown -R $app: $final_path
+
+#=================================================
+# RESTORE THE PHP-FPM CONFIGURATION
+#=================================================
+
+ynh_restore_file "/etc/php/7.0/fpm/pool.d/$app.conf"
+
+#=================================================
+# SPECIFIC RESTORATION
+#=================================================
+# REINSTALL DEPENDENCIES
+#=================================================
+
+ynh_install_app_dependencies libav-tools
 
 #=================================================
 # RESTORE THE MYSQL DATABASE
 #=================================================
 
 db_pwd=$(ynh_app_setting_get $app mysqlpwd)
-ynh_mysql_setup_db $app $app $db_pwd
-ynh_mysql_connect_as $app $db_pwd $app < ./db.sql
+ynh_mysql_setup_db $db_name $db_name $db_pwd
+ynh_mysql_connect_as $db_name $db_pwd $db_name < ./db.sql
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# RELOAD NGINX AND PHP-FPM
+#=================================================
+
+systemctl reload php7.0-fpm
+systemctl reload nginx
