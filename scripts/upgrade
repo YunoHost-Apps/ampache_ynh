@@ -10,6 +10,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_print_info "Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -24,6 +25,7 @@ secret_key=$(ynh_app_setting_get $app secret_key)
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
+ynh_print_info "Ensuring downward compatibility..."
 
 # If is_public doesn't exist, create it
 if [ -z $is_public ]; then
@@ -63,6 +65,7 @@ ynh_app_setting_delete $app skipped_uris
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
+ynh_print_info "Backing up the app before upgrading (may take a while)..."
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -83,6 +86,7 @@ path_url=$(ynh_normalize_url_path $path_url)
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_print_info "Upgrading source files..."
 
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
@@ -90,6 +94,7 @@ ynh_setup_source "$final_path"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
+ynh_print_info "Upgrading nginx web server configuration..."
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -97,12 +102,14 @@ ynh_add_nginx_config
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
+ynh_print_info "Upgrading dependencies..."
 
 ynh_install_app_dependencies libav-tools php-cli
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
+ynh_print_info "Making sure dedicated system user exists..."
 
 # Create a dedicated user (if not existing)
 ynh_system_user_create $app
@@ -110,6 +117,7 @@ ynh_system_user_create $app
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
+ynh_print_info "Upgrading php-fpm configuration..."
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config
@@ -119,6 +127,7 @@ ynh_add_fpm_config
 #=================================================
 # RECONFIGURE AMPACHE
 #=================================================
+ynh_print_info "Upgrading ampache configuration..."
 
 conf_file="$final_path/config/ampache.cfg.php"
 ynh_backup_if_checksum_is_different "$conf_file"
@@ -137,6 +146,7 @@ ynh_store_file_checksum "$conf_file"
 #=================================================
 # UPDATE AMPACHE WITH COMPOSER
 #=================================================
+ynh_print_info "Upgrading ampache with composer..."
 
 (
 	export COMPOSER_HOME=$final_path
@@ -160,6 +170,7 @@ ynh_multimedia_build_main_dir
 #=================================================
 # UPGRADE AMPACHE WITH CURL
 #=================================================
+ynh_print_info "Upgrading ampache with curl..."
 
 # Set the app as temporarily public for curl call
 ynh_app_setting_set $app unprotected_uris "/"
@@ -184,6 +195,7 @@ chown -R $app: $final_path
 #=================================================
 # SETUP SSOWAT
 #=================================================
+ynh_print_info "Upgrading SSOwat configuration..."
 
 # Keep app public if necessary
 if [ $is_public -eq 0 ]
@@ -194,5 +206,12 @@ fi
 #=================================================
 # RELOAD NGINX
 #=================================================
+ynh_print_info "Reloading nginx web server..."
 
 systemctl reload nginx
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info "Upgrade of $app completed"

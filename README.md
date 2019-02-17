@@ -20,6 +20,7 @@ music & videos from anywhere, using almost any internet enabled device.
 ## Demo
 
 * [YunoHost demo](https://demo.yunohost.org/ampache/)
+* [Official demo](http://ampache.org/demo.html)
 
 ## Configuration
 
