@@ -8,6 +8,9 @@
 
 source _common.sh
 source /usr/share/yunohost/helpers
+# Overload the helper ynh_handle_getopts_args to have fixes from unstable.
+# Needed for composer helpers
+source _getopts_fix.sh
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -136,17 +139,10 @@ ynh_mysql_connect_as $app $db_pwd $app < "$final_path/sql/ampache.sql"
 #=================================================
 ynh_print_info "Installing ampache with composer..."
 
-(
-	export COMPOSER_HOME=$final_path
-	cd $final_path
+# Install composer
+ynh_install_composer
 
-	# Install composer
-	curl -sS https://getcomposer.org/installer \
-		| php -- --quiet --install-dir="$final_path" \
-		|| ynh_die "Unable to install Composer"
-
-	ynh_exec_warn_less php composer.phar install --prefer-source --no-interaction --no-dev
-)
+ynh_exec_warn_less ynh_composer_exec --commands=\"install --prefer-source --no-dev\"
 
 #=================================================
 # INSTALL MULTIMEDIA DIRECTORIES
