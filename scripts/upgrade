@@ -6,75 +6,208 @@
 
 source _common.sh
 source /usr/share/yunohost/helpers
-
-#=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-ynh_abort_if_errors
+# Overload the helper ynh_handle_getopts_args to have fixes from unstable.
+# Needed for composer helpers
+source _getopts_fix.sh
 
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_print_info "Loading installation settings..."
 
-# Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
+
 domain=$(ynh_app_setting_get $app domain)
 path_url=$(ynh_app_setting_get $app path)
-db_pwd=$(ynh_app_setting_get $app mysqlpwd)
 admin_ampache=$(ynh_app_setting_get $app admin)
+is_public=$(ynh_app_setting_get $app is_public)
+final_path=$(ynh_app_setting_get $app final_path)
+db_name=$(ynh_app_setting_get $app db_name)
+secret_key=$(ynh_app_setting_get $app secret_key)
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+ynh_print_info "Ensuring downward compatibility..."
+
+# If is_public doesn't exist, create it
+if [ -z $is_public ]; then
+	is_public=1
+	ynh_app_setting_set $app is_public $is_public
+fi
+
+# Fix is_public as a boolean value
+if [ "$is_public" = "Yes" ]; then
+	ynh_app_setting_set $app is_public 1
+	is_public=1
+elif [ "$is_public" = "No" ]; then
+	ynh_app_setting_set $app is_public 0
+	is_public=0
+fi
+
+# If db_name doesn't exist, create it
+if [ -z $db_name ]; then
+	db_name=$(ynh_sanitize_dbid $app)
+	ynh_app_setting_set $app db_name $db_name
+fi
+
+# If final_path doesn't exist, create it
+if [ -z $final_path ]; then
+	final_path=/var/www/$app
+	ynh_app_setting_set $app final_path $final_path
+fi
+
+# If secret_key doesn't exist, create it
+if [ -z $secret_key ]; then
+	secret_key="$(grep "^secret_key" "$final_path/config/ampache.cfg.php" | cut -d'"' -f2)"
+	ynh_app_setting_set $app secret_key $secret_key
+fi
+
+ynh_app_setting_delete $app skipped_uris
+
+#=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+ynh_print_info "Backing up the app before upgrading (may take a while)..."
+
+# Backup the current version of the app
+ynh_backup_before_upgrade
+ynh_clean_setup () {
+	# restore it if the upgrade fails
+	ynh_restore_upgradebackup
+}
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
 
 #=================================================
 # CHECK THE PATH
 #=================================================
 
+# Normalize the URL path syntax
 path_url=$(ynh_normalize_url_path $path_url)
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_print_info "Upgrading source files..."
 
-# Get sources and copy files to the right place
-ampache_ynh_getsources
-
-# Change variables in Ampache configuration
-ampache_ynh_prepareconfig
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
+ynh_print_info "Upgrading nginx web server configuration..."
 
-# Modify Nginx configuration file and copy it to Nginx conf directory
-if [ "$path_url" != "/" ]
-then
-	ynh_replace_string "^#sub_path_only" "" "../conf/nginx.conf"
-fi
+# Create a dedicated nginx config
 ynh_add_nginx_config
 
 #=================================================
-# INSTALL DEPENDENCIES
+# UPGRADE DEPENDENCIES
 #=================================================
+ynh_print_info "Upgrading dependencies..."
 
-# Install dependency
-ynh_install_app_dependencies libav-tools
-
-#=================================================
-# SPECIFIC SETUP
-#=================================================
-
-# Ampache installation
-ampache_ynh_install
+ynh_install_app_dependencies libav-tools php-cli
 
 #=================================================
-# RELOAD SSOWAT
+# CREATE DEDICATED USER
+#=================================================
+ynh_print_info "Making sure dedicated system user exists..."
+
+# Create a dedicated user (if not existing)
+ynh_system_user_create $app
+
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
+ynh_print_info "Upgrading php-fpm configuration..."
+
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
+
+#=================================================
+# SPECIFIC UPGRADE
+#=================================================
+# RECONFIGURE AMPACHE
+#=================================================
+ynh_print_info "Upgrading ampache configuration..."
+
+conf_file="$final_path/config/ampache.cfg.php"
+ynh_backup_if_checksum_is_different "$conf_file"
+
+ynh_replace_string "__DBUSER__" "$db_name" "$conf_file"
+db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+ynh_replace_string "__DBPWD__" "$db_pwd" "$conf_file"
+ynh_replace_string "__DBNAME__" "$db_name" "$conf_file"
+ynh_replace_string "__PATHTOCHANGE__" "$path_url" "$conf_file"
+ynh_replace_string "__DOMAINTOCHANGE__" "$domain" "$conf_file"
+ynh_replace_string "__RANDOMKEYTOCHANGE__" $secret_key "$conf_file"
+
+# Calculate and store the config file checksum into the app settings
+ynh_store_file_checksum "$conf_file"
+
+#=================================================
+# UPDATE AMPACHE WITH COMPOSER
+#=================================================
+ynh_print_info "Upgrading ampache with composer..."
+
+# Install composer
+ynh_install_composer
+
+ynh_composer_exec --commands="config discard-changes true"
+ynh_composer_exec --commands="update --prefer-source --no-interaction --no-dev"
+
+#=================================================
+# UPDATE MULTIMEDIA DIRECTORIES
 #=================================================
 
-# Regenerate SSOwat conf
-ampache_ynh_reloadservices
+ynh_multimedia_build_main_dir
 
 #=================================================
-# SETUP APPLICATION WITH CURL
+# UPGRADE AMPACHE WITH CURL
+#=================================================
+ynh_print_info "Upgrading ampache with curl..."
+
+# Set the app as temporarily public for curl call
+ynh_app_setting_set $app unprotected_uris "/"
+# Reload SSOwat config
+yunohost app ssowatconf
+
+# Reload Nginx
+systemctl reload nginx
+
+ynh_local_curl /update.php?action=update
+sleep 1
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
 #=================================================
 
-# Pre config ampache
-ampache_ynh_doconfig
+# Set permissions on app files
+chown -R $app: $final_path
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+ynh_print_info "Upgrading SSOwat configuration..."
+
+# Keep app public if necessary
+if [ $is_public -eq 0 ]
+then
+	ynh_app_setting_delete $app unprotected_uris
+fi
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+ynh_print_info "Reloading nginx web server..."
+
+systemctl reload nginx
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info "Upgrade of $app completed"

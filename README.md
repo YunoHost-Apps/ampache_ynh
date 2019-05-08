@@ -1,9 +1,9 @@
 # Ampache for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/ampache.svg)](https://ci-apps.yunohost.org/jenkins/job/ampache%20%28Official%29/lastBuild/consoleFull)  
+[![Integration level](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache)  
 [![Install Ampache with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=ampache)
 
-> *This package allow you to install ampache quickly and simply on a YunoHost server.  
+> *This package allow you to install Ampache quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
 
 ## Overview
@@ -17,11 +17,16 @@ music & videos from anywhere, using almost any internet enabled device.
 
 ![](http://ampache.org/img/previews/visualizer.jpg)
 
+## Demo
+
+* [YunoHost demo](https://demo.yunohost.org/ampache/)
+* [Official demo](http://ampache.org/demo.html)
+
 ## Configuration
 
 ## Documentation
 
- * Official documentation: 
+ * Official documentation: https://github.com/ampache/ampache/wiki
  * YunoHost documentation: There no other documentations, feel free to contribute.
 
 ## YunoHost specific features
@@ -41,12 +46,12 @@ this package:
 
 #### Supported architectures
 
-* Tested on x86_64
-* Tested on armhf
+* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/ampache%20%28Official%29.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/ampache%20%28Official%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/ampache/)
+* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/ampache%20%28Official%29.svg)](https://ci-stretch.nohost.me/ci/apps/ampache/)
 
 ## Limitations
 
-* The user panel button was disabled because it hides an essential part of the ampache user interface.
 * Also, the SSO authentication not fully working from user panel, we have to work about this.
 In fact, it can disrupt external Ampache clients like Subsonic.
 
@@ -91,7 +96,7 @@ Please do your pull request to the [testing branch](https://github.com/YunoHost-
 
 To try the testing branch, please proceed like that.
 ```
-sudo yunohost app install https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --verbose
+sudo yunohost app install https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --debug
 or
-sudo yunohost app upgrade ampache -u https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --verbose
+sudo yunohost app upgrade ampache -u https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --debug
 ```
