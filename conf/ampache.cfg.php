@@ -17,7 +17,7 @@ config_version = 34
 ; If not set, retrieved automatically from client request.
 ; This setting is required for WebSocket server
 ; DEFAULT: ""
-http_host = "DOMAINTOCHANGE"
+http_host = "__DOMAINTOCHANGE__"
 
 ; The public http port of your server.
 ; If not set, retrieved automatically from client request.
@@ -31,7 +31,7 @@ http_host = "DOMAINTOCHANGE"
 ; if it is located at http://localhost/music you need to
 ; set web_path to /music
 ; DEFAULT: ""
-web_path 	= "PATHTOCHANGE"
+web_path 	= "__PATHTOCHANGE__"
 
 ; The local http url of your server.
 ; If not set, retrieved automatically from server information.
@@ -54,17 +54,17 @@ database_hostname = localhost
 
 ; Name of your ampache database
 ; DEFAULT: ampache
-database_name = "yunobase"
+database_name = "__DBNAME__"
 
 ; Username for your ampache database
 ; DEFAULT: ""
-database_username = "yunouser"
+database_username = "__DBUSER__"
 
 ; Password for your ampache database, this can not be blank
 ; this is a 'forced' security precaution, the default value
 ; will not work (except if using socket authentication)
 ; DEFAULT: ""
-database_password = "yunopass"
+database_password = "__DBPWD__"
 
 
 ;#########################################################
@@ -73,7 +73,7 @@ database_password = "yunopass"
 
 ; Cryptographic secret
 ; This MUST BE changed with your own secret key. Ampache-specific, just pick any random string you want.
-secret_key = "RANDOMKEYTOCHANGE"
+secret_key = "__RANDOMKEYTOCHANGE__"
 
 ; Length that a session will last expressed in seconds. Default is
 ; one hour.
