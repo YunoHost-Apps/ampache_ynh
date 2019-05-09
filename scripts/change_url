@@ -24,14 +24,10 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --time --weight=1
+ynh_script_progression --message="Loading installation settings..."
 
 # Needed for helper "ynh_add_nginx_config"
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-
-# Add settings here as needed by your application
-#db_name=$(ynh_app_setting_get --app=$app --key=db_name)
-#db_pwd=$(ynh_app_setting_get --app=$app --key=db_pwd)
 
 #=================================================
 # CHECK WHICH PARTS SHOULD BE CHANGED
@@ -54,7 +50,7 @@ fi
 #=================================================
 # MODIFY URL IN NGINX CONF
 #=================================================
-ynh_script_progression --message="Updating nginx web server configuration..." --time --weight=1
+ynh_script_progression --message="Updating nginx web server configuration..." --weight=2
 
 nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
 
@@ -85,7 +81,7 @@ fi
 #=================================================
 # CHANGE AMPACHE CONFIGURATION
 #=================================================
-ynh_script_progression --message="Updating ampache configuration..." --time --weight=1
+ynh_script_progression --message="Updating ampache configuration..."
 
 conf_file="$final_path/config/ampache.cfg.php"
 
@@ -97,7 +93,7 @@ ynh_replace_string --match_string="\(http_host.*=.*\)\"$old_domain\"" --replace_
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
+ynh_script_progression --message="Reloading nginx web server..."
 
 ynh_systemd_action --service_name=nginx --action=reload
 
@@ -105,4 +101,4 @@ ynh_systemd_action --service_name=nginx --action=reload
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Change of URL completed for $app" --time --last
+ynh_script_progression --message="Change of URL completed for $app" --last
