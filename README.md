@@ -46,9 +46,9 @@ this package:
 
 #### Supported architectures
 
-* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/ampache%20%28Official%29.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/ampache%20%28Official%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/ampache/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/ampache%20%28Official%29.svg)](https://ci-stretch.nohost.me/ci/apps/ampache/)
+* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/ampache%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/ampache%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/ampache/)
+* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/ampache%20%28Apps%29.svg)](https://ci-stretch.nohost.me/ci/apps/ampache/)
 
 ## Limitations
 
@@ -85,6 +85,7 @@ In fact, it can disrupt external Ampache clients like Subsonic.
 
  * Report a bug: https://github.com/YunoHost-Apps/ampache_ynh/issues
  * Ampache website: http://ampache.org/
+ * Ampache repository: https://github.com/ampache/ampache
  * YunoHost website: https://yunohost.org/
 
 ---
