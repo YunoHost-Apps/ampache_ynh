@@ -129,16 +129,6 @@ ynh_store_file_checksum --file="$conf_file"
 ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_path/sql/ampache.sql"
 
 #=================================================
-# INSTALL AMPACHE WITH COMPOSER
-#=================================================
-ynh_script_progression --message="Installing ampache with composer..." --weight=45
-
-# Install composer
-ynh_install_composer
-
-ynh_exec_warn_less ynh_composer_exec --commands=\"install --prefer-source --no-dev\"
-
-#=================================================
 # INSTALL MULTIMEDIA DIRECTORIES
 #=================================================
 
