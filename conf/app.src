@@ -1,6 +1,6 @@
-SOURCE_URL=https://github.com/ampache/ampache/releases/download/4.0.0/ampache-4.0.0_all.zip
-SOURCE_SUM=0f1f8a3c6b5c9511294a0db6d00efa5e
+SOURCE_URL=https://github.com/ampache/ampache/releases/download/4.1.1/ampache-4.1.1_all.zip
+SOURCE_SUM=eb958442fcc0c6377f9070baa7db13b4
 SOURCE_SUM_PRG=md5sum
-SOURCE_FORMAT=tar.gz
+SOURCE_FORMAT=zip
 SOURCE_IN_SUBDIR=true
 SOURCE_FILENAME=
