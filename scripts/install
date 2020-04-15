@@ -55,7 +55,7 @@ ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=25
 
-ynh_install_app_dependencies ffmpeg php-cli
+ynh_install_app_dependencies "libav-tools|ffmpeg" php-cli
 
 #=================================================
 # CREATE A MYSQL DATABASE
