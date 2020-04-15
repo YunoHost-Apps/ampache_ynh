@@ -6,7 +6,7 @@
         "en": "A web based audio/video streaming application",
         "fr": "Une application de streaming audio et vidéo"
     },
-    "version": "3.9.0~ynh2",
+    "version": "4.1.1.1~ynh1",
     "url": "http://ampache.org",
     "license": "AGPL-3.0",
     "maintainer": {
@@ -19,7 +19,7 @@
     "multi_instance": true,
     "services" : [
         "nginx",
-        "php7.0-fpm",
+        "php7.3-fpm",
         "mysql"
     ],
     "arguments": {

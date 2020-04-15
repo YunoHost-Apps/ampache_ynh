@@ -112,6 +112,24 @@ ynh_script_progression --message="Upgrading nginx web server configuration..." -
 ynh_add_nginx_config
 
 #=================================================
+# UPGRADE PHP7.3
+#=================================================
+
+if [ "$(lsb_release --codename --short)" = "buster" ]; then
+    pkg_dependencies="$pkg_dependencies $extra_pkg_dependencies"
+else
+    if [ "$(ynh_app_setting_get --app=$app --key=php_version)" != "7.3" ]; then
+        ynh_print_info --message="Upgrading PHP7.3..."
+        ynh_remove_fpm_config
+        ynh_remove_app_dependencies
+        ynh_remove_php
+        ynh_install_php --phpversion="7.3" --package="$extra_pkg_dependencies"
+    else
+        ynh_install_php --phpversion="7.3" --package="$extra_pkg_dependencies"
+    fi
+fi
+
+#=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..." --weight=5
@@ -164,10 +182,10 @@ then
     ynh_script_progression --message="Upgrading ampache with composer..." --weight=30
 
     # Install composer
-    ynh_install_composer
+    ynh_install_composer --phpversion="7.3" --workdir="$final_path"
 
-    ynh_composer_exec --commands="config discard-changes true"
-    ynh_composer_exec --commands="update --prefer-source --no-interaction --no-dev"
+    ynh_composer_exec --phpversion="7.3" --workdir=$final_path --commands="config discard-changes true"
+    ynh_composer_exec --phpversion="7.3" --workdir=$final_path --commands="update --prefer-source --no-interaction --no-dev"
 fi
 
 #=================================================

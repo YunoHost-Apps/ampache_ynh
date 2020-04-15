@@ -51,6 +51,17 @@ ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
+# INSTALL PHP7.3
+#=================================================
+
+if [ "$(lsb_release --codename --short)" = "buster" ]; then
+	pkg_dependencies="$pkg_dependencies $extra_pkg_dependencies"
+else
+	ynh_print_info --message="Installing PHP7.3..."
+	ynh_install_php --phpversion="7.3" --package="$extra_pkg_dependencies"
+fi
+
+#=================================================
 # INSTALL DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=25
@@ -135,9 +146,9 @@ ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_
 ynh_script_progression --message="Installing ampache with composer..." --weight=45
 
 # Install composer
-ynh_install_composer
+ynh_install_composer --phpversion="7.3" --workdir="$final_path"
 
-ynh_exec_warn_less ynh_composer_exec --commands=\"install --prefer-source --no-dev\"
+ynh_exec_warn_less ynh_composer_exec --phpversion="7.3" --workdir=$final_path --commands=\"install --prefer-source --no-dev\"
 
 #=================================================
 # INSTALL MULTIMEDIA DIRECTORIES
