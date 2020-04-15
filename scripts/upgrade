@@ -20,6 +20,7 @@ admin_ampache=$(ynh_app_setting_get --app=$app --key=admin)
 is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+db_user=$db_name
 secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
 
 #=================================================
@@ -52,6 +53,7 @@ fi
 if [ -z "$db_name" ]; then
 	db_name=$(ynh_sanitize_dbid --db_name=$app)
 	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+    db_user=$db_name
 fi
 
 # If final_path doesn't exist, create it
@@ -114,7 +116,7 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..." --weight=5
 
-ynh_install_app_dependencies ffmpeg php-cli
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
@@ -145,7 +147,7 @@ then
     conf_file="$final_path/config/ampache.cfg.php"
     ynh_backup_if_checksum_is_different --file="$conf_file"
 
-    ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_name" --target_file="$conf_file"
+    ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_user" --target_file="$conf_file"
     db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
     ynh_replace_string --match_string="__DBPWD__" --replace_string="$db_pwd" --target_file="$conf_file"
     ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$conf_file"

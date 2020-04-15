@@ -13,10 +13,10 @@
         "name": "aymhce",
         "email": "aymhce@gmail.com"
     },
-    "multi_instance": true,
     "requirements": {
-        "yunohost": ">= 3.5.0"
+        "yunohost": ">= 3.5"
     },
+    "multi_instance": true,
     "services" : [
         "nginx",
         "php7.0-fpm",
