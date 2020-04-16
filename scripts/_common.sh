@@ -7,7 +7,7 @@
 # dependencies used by the app
 pkg_dependencies="libav-tools|ffmpeg"
 
-extra_pkg_dependencies=""
+extra_pkg_dependencies="php7.3-mysql php7.3-curl php7.3-simplexml php7.3-gd"
 # php7.3-gmp php7.3-dom php7.3-pcre php7.3-spl php7.3-simplexml php7.3-ctype php7.3-date php7.3-iconv php7.3-curl php7.3-gd  php7.3-mbstring php7.3-libxml php7.3-xmlwriter php7.3-xmlreader
 
 #=================================================
