@@ -2,5 +2,5 @@ SOURCE_URL=https://github.com/ampache/ampache/releases/download/4.1.1/ampache-4.
 SOURCE_SUM=eb958442fcc0c6377f9070baa7db13b4
 SOURCE_SUM_PRG=md5sum
 SOURCE_FORMAT=zip
-SOURCE_IN_SUBDIR=true
+SOURCE_IN_SUBDIR=false
 SOURCE_FILENAME=
