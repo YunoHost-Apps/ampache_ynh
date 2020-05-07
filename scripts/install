@@ -55,7 +55,7 @@ ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=25
 
-ynh_install_app_dependencies libav-tools php-cli
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE A MYSQL DATABASE
@@ -81,7 +81,7 @@ ynh_setup_source --dest_dir="$final_path"
 ynh_script_progression --message="Configuring nginx web server..."
 
 # Create a dedicated nginx config
-ynh_add_nginx_config
+ynh_add_nginx_config YNH_PHP_VERSION
 
 #=================================================
 # CREATE DEDICATED USER
@@ -97,7 +97,7 @@ ynh_system_user_create --username=$app
 ynh_script_progression --message="Configuring php-fpm..."
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --phpversion=$YNH_PHP_VERSION
 
 #=================================================
 # SPECIFIC SETUP

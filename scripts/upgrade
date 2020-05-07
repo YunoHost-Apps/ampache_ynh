@@ -106,15 +106,16 @@ fi
 #=================================================
 ynh_script_progression --message="Upgrading nginx web server configuration..." --weight=3
 
-# Create a dedicated nginx config
-ynh_add_nginx_config
+# Re-create a dedicated nginx config
+ynh_remove_nginx_config
+ynh_add_nginx_config YNH_PHP_VERSION
 
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..." --weight=5
 
-ynh_install_app_dependencies libav-tools php-cli
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
@@ -130,7 +131,7 @@ ynh_system_user_create --username=$app
 ynh_script_progression --message="Upgrading php-fpm configuration..." --weight=2
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --phpversion="$YNH_PHP_VERSION" --package="$extra_php_dependencies"
 
 #=================================================
 # SPECIFIC UPGRADE
