@@ -146,6 +146,7 @@ then
     conf_file="$final_path/config/ampache.cfg.php"
     ynh_backup_if_checksum_is_different --file="$conf_file"
 
+    cp ../conf/ampache.cfg.php "$conf_file"
     ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_name" --target_file="$conf_file"
     db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
     ynh_replace_string --match_string="__DBPWD__" --replace_string="$db_pwd" --target_file="$conf_file"
@@ -157,16 +158,6 @@ then
     # Calculate and store the config file checksum into the app settings
     ynh_store_file_checksum --file="$conf_file"
 
-    #=================================================
-    # UPDATE AMPACHE WITH COMPOSER
-    #=================================================
-    ynh_script_progression --message="Upgrading ampache with composer..." --weight=30
-
-    # Install composer
-    ynh_install_composer
-
-    ynh_composer_exec --commands="config discard-changes true"
-    ynh_composer_exec --commands="update --prefer-source --no-interaction --no-dev"
 fi
 
 #=================================================
