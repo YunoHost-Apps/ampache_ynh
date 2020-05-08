@@ -1,0 +1,49 @@
+diff -Naur ampache-3.9.0/composer.lock ampache-3.9.0patched/composer.lock
+--- ampache-3.9.0/composer.lock	2018-10-21 07:17:57.000000000 +0200
++++ ampache-3.9.0patched/composer.lock	2020-05-08 12:24:48.579456744 +0200
+@@ -461,45 +461,6 @@
+             "time": "2017-07-22T12:49:21+00:00"
+         },
+         {
+-            "name": "dropbox/dropbox-sdk",
+-            "version": "v1.1.7",
+-            "source": {
+-                "type": "git",
+-                "url": "https://github.com/dropbox/dropbox-sdk-php.git",
+-                "reference": "0f1a178ca9c0271bca6426dde8f5a2241578deae"
+-            },
+-            "dist": {
+-                "type": "zip",
+-                "url": "https://api.github.com/repos/dropbox/dropbox-sdk-php/zipball/0f1a178ca9c0271bca6426dde8f5a2241578deae",
+-                "reference": "0f1a178ca9c0271bca6426dde8f5a2241578deae",
+-                "shasum": ""
+-            },
+-            "require": {
+-                "ext-curl": "*",
+-                "php": ">= 5.3"
+-            },
+-            "require-dev": {
+-                "apigen/apigen": "4.1.2",
+-                "phpunit/phpunit": "~4.0",
+-                "squizlabs/php_codesniffer": "2.0.0RC3"
+-            },
+-            "type": "library",
+-            "autoload": {
+-                "psr-0": {
+-                    "Dropbox": "lib/"
+-                }
+-            },
+-            "notification-url": "https://packagist.org/downloads/",
+-            "license": [
+-                "MIT"
+-            ],
+-            "description": "Dropbox SDK for PHP",
+-            "keywords": [
+-                "dropbox"
+-            ],
+-            "time": "2016-08-08T23:48:49+00:00"
+-        },
+-        {
+             "name": "evenement/evenement",
+             "version": "v2.1.0",
+             "source": {
