@@ -32,15 +32,6 @@ ynh_script_progression --message="Removing the MySQL database..." --weight=3
 ynh_mysql_remove_db --db_user=$db_user --db_name=$db_name
 
 #=================================================
-# REMOVE PHP
-#=================================================
-
-if [ "$(lsb_release --codename --short)" != "buster" ]; then
-	ynh_print_info --message="Removing php..."
-	ynh_remove_php
-fi
-
-#=================================================
 # REMOVE DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Removing dependencies..." --weight=4

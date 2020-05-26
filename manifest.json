@@ -14,7 +14,7 @@
         "email": "aymhce@gmail.com"
     },
     "requirements": {
-        "yunohost": ">= 3.8"
+        "yunohost": ">= 3.8.1"
     },
     "multi_instance": true,
     "services" : [

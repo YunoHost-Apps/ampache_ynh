@@ -51,17 +51,6 @@ ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
-# INSTALL PHP7.3
-#=================================================
-
-if [ "$(lsb_release --codename --short)" = "buster" ]; then
-	pkg_dependencies="$pkg_dependencies $extra_pkg_dependencies"
-else
-	ynh_print_info --message="Installing PHP7.3..."
-	ynh_install_php --phpversion="7.3" --package="$extra_pkg_dependencies"
-fi
-
-#=================================================
 # INSTALL DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=25
@@ -109,7 +98,7 @@ ynh_system_user_create --username=$app
 ynh_script_progression --message="Configuring php-fpm..."
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config --phpversion="7.3"
+ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencies"
 
 #=================================================
 # SPECIFIC SETUP
@@ -136,6 +125,7 @@ ynh_store_file_checksum --file="$conf_file"
 #=================================================
 # LOAD DEFAULT DATABASE
 #=================================================
+ynh_script_progression --message="Loading default database..."
 
 # Load default ampache database
 ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_path/sql/ampache.sql"
@@ -146,11 +136,12 @@ ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_
 ynh_script_progression --message="Installing ampache with composer..." --weight=45
 
 # Install composer
-ynh_install_composer --phpversion="7.3" --workdir="$final_path" --install_args="--prefer-source --no-dev"
+ynh_install_composer --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --install_args="--prefer-source --no-dev"
 
 #=================================================
 # INSTALL MULTIMEDIA DIRECTORIES
 #=================================================
+ynh_script_progression --message="Installing multimedia directories..." --weight=5
 
 ynh_multimedia_build_main_dir
 
@@ -173,6 +164,7 @@ sleep 1
 #=================================================
 # LOAD ADMIN DATABASE
 #=================================================
+ynh_script_progression --message="Loading admin database..."
 
 cp ../conf/admin.sql /tmp/
 ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin_ampache" --target_file=/tmp/admin.sql
@@ -186,6 +178,7 @@ ynh_secure_remove --file=/tmp/admin.sql
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
+ynh_script_progression --message="Securing files and directories..."
 
 # Set permissions to ampache directory
 chown -R $app: $final_path

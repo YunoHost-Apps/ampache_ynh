@@ -1,6 +1,8 @@
 #!/bin/bash
 
 #=================================================
+# GENERIC START
+#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -26,6 +28,7 @@ secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
 #=================================================
 # CHECK VERSION
 #=================================================
+ynh_script_progression --message="Checking version..."
 
 upgrade_type=$(ynh_check_app_version_changed)
 
@@ -112,24 +115,6 @@ ynh_script_progression --message="Upgrading nginx web server configuration..." -
 ynh_add_nginx_config
 
 #=================================================
-# UPGRADE PHP7.3
-#=================================================
-
-if [ "$(lsb_release --codename --short)" = "buster" ]; then
-    pkg_dependencies="$pkg_dependencies $extra_pkg_dependencies"
-else
-    if [ "$(ynh_app_setting_get --app=$app --key=php_version)" != "7.3" ]; then
-        ynh_print_info --message="Upgrading PHP7.3..."
-        ynh_remove_fpm_config
-        ynh_remove_app_dependencies
-        ynh_remove_php
-        ynh_install_php --phpversion="7.3" --package="$extra_pkg_dependencies"
-    else
-        ynh_install_php --phpversion="7.3" --package="$extra_pkg_dependencies"
-    fi
-fi
-
-#=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..." --weight=5
@@ -150,7 +135,7 @@ ynh_system_user_create --username=$app
 ynh_script_progression --message="Upgrading php-fpm configuration..." --weight=2
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config --phpversion="7.3"
+ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencies"
 
 #=================================================
 # SPECIFIC UPGRADE
@@ -182,13 +167,14 @@ then
     ynh_script_progression --message="Upgrading ampache with composer..." --weight=30
 
     # Install composer
-    ynh_install_composer --phpversion="7.3" --workdir="$final_path" --install_args="--prefer-source --no-dev"
-    ynh_composer_exec --phpversion="7.3" --workdir=$final_path --commands="config discard-changes true"
+    ynh_install_composer --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --install_args="--prefer-source --no-dev"
+    ynh_composer_exec --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --commands="config discard-changes true"
 fi
 
 #=================================================
 # UPDATE MULTIMEDIA DIRECTORIES
 #=================================================
+ynh_script_progression --message="Updating multimedia directories..."
 
 ynh_multimedia_build_main_dir
 
@@ -217,6 +203,7 @@ fi
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
+ynh_script_progression --message="Securing files and directories..."
 
 # Set permissions on app files
 chown -R $app: $final_path
@@ -226,7 +213,7 @@ chown -R $app: $final_path
 #=================================================
 ynh_script_progression --message="Upgrading SSOwat configuration..."
 
-# Keep app public if necessary
+# Make app public if necessary
 if [ $is_public -eq 0 ]
 then
 	ynh_app_setting_delete --app=$app --key=unprotected_uris
