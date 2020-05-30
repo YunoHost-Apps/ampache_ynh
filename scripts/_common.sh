@@ -17,7 +17,8 @@ extra_php_dependencies="php${YNH_PHP_VERSION}-mysql php${YNH_PHP_VERSION}-curl p
 
 # Execute a command with Composer
 #
-# usage: ynh_composer_exec --phpversion=phpversion [--workdir=$final_path] --commands="commands"
+# usage: ynh_composer_exec [--phpversion=phpversion] [--workdir=$final_path] --commands="commands"
+# | arg: -v, --phpversion - PHP version to use with composer
 # | arg: -w, --workdir - The directory from where the command will be executed. Default $final_path.
 # | arg: -c, --commands - Commands to execute.
 ynh_composer_exec () {
@@ -30,7 +31,7 @@ ynh_composer_exec () {
 	# Manage arguments with getopts
 	ynh_handle_getopts_args "$@"
 	workdir="${workdir:-$final_path}"
-	phpversion="${phpversion:-7.0}"
+	phpversion="${phpversion:-$YNH_PHP_VERSION}"
 
 	COMPOSER_HOME="$workdir/.composer" \
 		php${phpversion} "$workdir/composer.phar" $commands \
@@ -39,12 +40,13 @@ ynh_composer_exec () {
 
 # Install and initialize Composer in the given directory
 #
-# usage: ynh_install_composer --phpversion=phpversion [--workdir=$final_path] [--install_args="--optimize-autoloader"]
+# usage: ynh_install_composer [--phpversion=phpversion] [--workdir=$final_path] [--install_args="--optimize-autoloader"]
+# | arg: -v, --phpversion - PHP version to use with composer
 # | arg: -w, --workdir - The directory from where the command will be executed. Default $final_path.
 # | arg: -a, --install_args - Additional arguments provided to the composer install. Argument --no-dev already include
 ynh_install_composer () {
 	# Declare an array to define the options of this helper.
-	local legacy_args=vw
+	local legacy_args=vwa
 	declare -Ar args_array=( [v]=phpversion= [w]=workdir= [a]=install_args=)
 	local phpversion
 	local workdir
@@ -52,7 +54,8 @@ ynh_install_composer () {
 	# Manage arguments with getopts
 	ynh_handle_getopts_args "$@"
 	workdir="${workdir:-$final_path}"
-	phpversion="${phpversion:-7.0}"
+	phpversion="${phpversion:-$YNH_PHP_VERSION}"
+	install_args="${install_args:-}"
 
 	curl -sS https://getcomposer.org/installer \
 		| COMPOSER_HOME="$workdir/.composer" \
