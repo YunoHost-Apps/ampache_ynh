@@ -1,4 +1,4 @@
-INSERT INTO user(id,username,fullname,access) VALUES("", "__ADMIN__", "__ADMIN__", "100");
+INSERT INTO user(id,username,fullname,access) VALUES(NULL, "__ADMIN__", "__ADMIN__", "100");
 
 UPDATE `user_preference` SET `value` = 'en_US' WHERE `preference` = 31 ;
 

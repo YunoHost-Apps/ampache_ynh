@@ -1,6 +1,8 @@
 #!/bin/bash
 
 #=================================================
+# GENERIC START
+#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -20,11 +22,13 @@ admin_ampache=$(ynh_app_setting_get --app=$app --key=admin)
 is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+db_user=$db_name
 secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
 
 #=================================================
 # CHECK VERSION
 #=================================================
+ynh_script_progression --message="Checking version..."
 
 upgrade_type=$(ynh_check_app_version_changed)
 
@@ -52,6 +56,7 @@ fi
 if [ -z "$db_name" ]; then
 	db_name=$(ynh_sanitize_dbid --db_name=$app)
 	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+    db_user=$db_name
 fi
 
 # If final_path doesn't exist, create it
@@ -114,7 +119,7 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..." --weight=5
 
-ynh_install_app_dependencies libav-tools php-cli
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
@@ -130,7 +135,7 @@ ynh_system_user_create --username=$app
 ynh_script_progression --message="Upgrading php-fpm configuration..." --weight=2
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencies"
 
 #=================================================
 # SPECIFIC UPGRADE
@@ -145,7 +150,7 @@ then
     conf_file="$final_path/config/ampache.cfg.php"
     ynh_backup_if_checksum_is_different --file="$conf_file"
 
-    ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_name" --target_file="$conf_file"
+    ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_user" --target_file="$conf_file"
     db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
     ynh_replace_string --match_string="__DBPWD__" --replace_string="$db_pwd" --target_file="$conf_file"
     ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$conf_file"
@@ -162,15 +167,14 @@ then
     ynh_script_progression --message="Upgrading ampache with composer..." --weight=30
 
     # Install composer
-    ynh_install_composer
-
-    ynh_composer_exec --commands="config discard-changes true"
-    ynh_composer_exec --commands="update --prefer-source --no-interaction --no-dev"
+    ynh_install_composer --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --install_args="--prefer-source --no-dev"
+    ynh_composer_exec --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --commands="config discard-changes true"
 fi
 
 #=================================================
 # UPDATE MULTIMEDIA DIRECTORIES
 #=================================================
+ynh_script_progression --message="Updating multimedia directories..."
 
 ynh_multimedia_build_main_dir
 
@@ -199,6 +203,7 @@ fi
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
+ynh_script_progression --message="Securing files and directories..."
 
 # Set permissions on app files
 chown -R $app: $final_path
@@ -208,7 +213,7 @@ chown -R $app: $final_path
 #=================================================
 ynh_script_progression --message="Upgrading SSOwat configuration..."
 
-# Keep app public if necessary
+# Make app public if necessary
 if [ $is_public -eq 0 ]
 then
 	ynh_app_setting_delete --app=$app --key=unprotected_uris
