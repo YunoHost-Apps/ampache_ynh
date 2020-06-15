@@ -55,7 +55,7 @@ ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=25
 
-ynh_install_app_dependencies libav-tools php-cli
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE A MYSQL DATABASE
@@ -63,8 +63,9 @@ ynh_install_app_dependencies libav-tools php-cli
 ynh_script_progression --message="Creating a MySQL database..."
 
 db_name=$(ynh_sanitize_dbid --db_name=$app)
+db_user=$db_name
 ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-ynh_mysql_setup_db --db_user=$db_name --db_name=$db_name
+ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -97,7 +98,7 @@ ynh_system_user_create --username=$app
 ynh_script_progression --message="Configuring php-fpm..."
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencies"
 
 #=================================================
 # SPECIFIC SETUP
@@ -109,7 +110,7 @@ ynh_script_progression --message="Preconfiguring ampache..." --weight=2
 conf_file="$final_path/config/ampache.cfg.php"
 cp ../conf/ampache.cfg.php "$conf_file"
 
-ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_name" --target_file="$conf_file"
+ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_user" --target_file="$conf_file"
 ynh_replace_string --match_string="__DBPWD__" --replace_string="$db_pwd" --target_file="$conf_file"
 ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$conf_file"
 ynh_replace_string --match_string="__PATHTOCHANGE__" --replace_string="$path_url" --target_file="$conf_file"
@@ -124,6 +125,7 @@ ynh_store_file_checksum --file="$conf_file"
 #=================================================
 # LOAD DEFAULT DATABASE
 #=================================================
+ynh_script_progression --message="Loading default database..."
 
 # Load default ampache database
 ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_path/sql/ampache.sql"
@@ -134,13 +136,12 @@ ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_
 ynh_script_progression --message="Installing ampache with composer..." --weight=45
 
 # Install composer
-ynh_install_composer
-
-ynh_exec_warn_less ynh_composer_exec --commands=\"install --prefer-source --no-dev\"
+ynh_install_composer --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --install_args="--prefer-source --no-dev"
 
 #=================================================
 # INSTALL MULTIMEDIA DIRECTORIES
 #=================================================
+ynh_script_progression --message="Installing multimedia directories..." --weight=5
 
 ynh_multimedia_build_main_dir
 
@@ -163,6 +164,7 @@ sleep 1
 #=================================================
 # LOAD ADMIN DATABASE
 #=================================================
+ynh_script_progression --message="Loading admin database..."
 
 cp ../conf/admin.sql /tmp/
 ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin_ampache" --target_file=/tmp/admin.sql
@@ -176,6 +178,7 @@ ynh_secure_remove --file=/tmp/admin.sql
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
+ynh_script_progression --message="Securing files and directories..."
 
 # Set permissions to ampache directory
 chown -R $app: $final_path

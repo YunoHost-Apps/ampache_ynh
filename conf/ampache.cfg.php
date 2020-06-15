@@ -7,7 +7,13 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 34
+config_version = 40
+
+; Allow you to hard code a default git branch for Ampache
+; If you set this value the inbuilt updater will use this branch for updates.
+; POSSIBLE VALUES: master develop
+; DEFAULT: ""
+;github_force_branch = "develop"
 
 ;#########################################################
 ; Path Vars                                              #
@@ -34,6 +40,12 @@ http_host = "__DOMAINTOCHANGE__"
 web_path 	= "__PATHTOCHANGE__"
 
 ; The local http url of your server.
+; This is used to access the server from within the
+; same host where ampache is running.
+; For example, if the ampache server is not
+; directly accessed via the public domain but via a reverse
+; proxy, local_web_path would need to be changed
+; to a localhost URL.
 ; If not set, retrieved automatically from server information.
 ; DEFAULT: ""
 ;local_web_path = "http://localhost/ampache"
@@ -262,7 +274,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ;catalog_disable = "false"
 
 ; Delete from disk
-; This determines if catalog manager users can delete medias from disk.
+; This determines if catalog manager users can delete media from disk.
 ; DEFAULT: false
 ;delete_from_disk = "false"
 
@@ -280,7 +292,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
 ; Track User IPs
 ; If this is enabled Ampache will log the IP of every completed login
-; it will store user,ip,time at one row per login. The results are
+; it will store user, ip and time at one row per login. The results are
 ; displayed in Admin --> Users
 ; DEFAULT: false
 ;track_user_ip = "false"
@@ -326,6 +338,16 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: #FF0000
 ;waveform_color = "#FF0000"
 
+; Waveform height
+; The waveform height.
+; DEFAULT: 32
+;waveform_height = 32
+
+; Waveform width
+; The waveform width.
+; DEFAULT: 400
+;waveform_width = 400
+
 ; Temporary Directory Path
 ; If Waveform is enabled this must be set to tell
 ; Ampache which directory to save the temporary file to. Do not put a
@@ -355,7 +377,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; Username and password. If this is set to false then ampache
 ; will not ask you for a username and password. false is only
 ; recommended for internal only instances
-; DEFAULT true
+; DEFAULT: true
 use_auth	= "true"
 
 ; Default Auth Level
@@ -372,6 +394,23 @@ default_auth_level = "guest"
 ; POSSIBLE VALUES: false true
 ; DEFAULT: true
 ratings = "true"
+
+; Enable filtering on browse pages for artists and albums.
+; If you enable this setting the get_random and browse pages
+; will remove artists and albums that are <= to that rating
+; DEFAULT: false
+;rating_browse_filter = "false"
+
+; Set the rating that will be filtered
+; e.g. 2 will filter 1 and 2 star albums and artists
+; this setting must be set for the filter to work
+; DEFAULT: null
+;rating_browse_minimum_stars = 1
+
+; Set the amount of items Album/Video of the Moment will display
+; This was previously hardcoded into the site
+; DEFAULT: 6
+;of_the_moment = 6
 
 ; User flags/favorites
 ; This allows user flags for almost any object in ampache as favorite
@@ -407,7 +446,7 @@ sociable = "true"
 ; This turns the caching mechanisms on or off, due to a large number of
 ; problems with people with very large catalogs and low memory settings
 ; this is off by default as it does significantly increase the memory
-; requirments on larger catalogs. If you have the memory this can create
+; requirements on larger catalogs. If you have the memory this can create
 ; a 2-3x speed improvement.
 ; DEFAULT: false
 ;memory_cache = "false"
@@ -479,8 +518,13 @@ sociable = "true"
 ;playlist_art = "false"
 
 ; Statistical Graphs * Requires PHP-GD *
-; Set this to true if you want Ampache to generate statistical
-; graphs on usages / users.
+; Set this to true if you want Ampache to generate statistical graphs on usages / users.
+; This is false by default due to issues around the licensing of c-pchart.
+;  https://github.com/ampache/ampache/issues/1515
+;  http://www.pchart.net/license
+; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
+; You can enable c-chart with the following command
+;  composer require 'szymach/c-pchart'
 ; DEFAULT: false
 ;statistical_graphs = "false"
 
@@ -578,6 +622,35 @@ live_stream = "true"
 ; Possible Values: Int > 5
 refresh_limit = "60"
 
+; Embedded Now Playing Page
+; Set this to true to enable the embedded Now Playing page (now_playing.php).
+; This page allows for embedding a Now Playing badge into a stream
+; or status page. Use with the parameter 'user_id' to filter by a
+; specific user. This page is like rss in that it doesn't require a
+; login to view.
+; DEFAULT: false
+;use_now_playing_embedded = "false"
+
+; Now Playing Refresh Limit
+; This defines the refresh limit in seconds for the
+; Now Playing embedded page. This (now_playing.php) is not
+; part of the normal application and is designed to be
+; embedded in another app, like a stream or status page.
+; If this value is not valid, automatic refresh will be disabled.
+; DEFAULT: -1
+; Possible Values; Int > 1
+;now_playing_refresh_limit = "-1"
+
+; Now Playing Custom CSS
+; This defines the custom css file for the Now Playing embedded
+; page. This (now_playing.php) is not part of the normal
+; application and is designed to be embedded in another app, like
+; a stream or status page.
+; If this value is not set, no CSS will be used. Custom CSS can
+; still be applied in the other application, like OBS.
+; DEFAULT: Not enabled
+;now_playing_css_file = "templates/now-playing.css"
+
 ; Footer Statistics
 ; This defines whether statistics (Queries, Cache Hits, Load Time)
 ; are shown in the page footer.
@@ -597,6 +670,12 @@ show_footer_statistics = "true"
 ; DEFAULT: false
 ;allow_php_themes = "false"
 
+; Subsonic clients all seem to ignore the download method
+; This setting will not scrobble actions from stream actions.
+; (This means you can sync playlists without overloading your server)
+; Make sure you enable scrobbling in your client to keep recording stats!
+; DEFAULT: "true"
+;subsonic_stream_scrobble = "false"
 
 ;#########################################################
 ; Debugging                                              #
@@ -611,11 +690,11 @@ show_footer_statistics = "true"
 ; This should always be set in conjunction with the
 ; debug option, it defines how prolific you want the
 ; debugging in ampache to be. values are 1-5.
-; 1 == Errors only
-; 2 == Error + Failures (login attempts etc.)
-; 3 == ??
-; 4 == ?? (Profit!)
-; 5 == Information (cataloging progress etc.)
+; 1 == Basic Errors
+; 2 == Errors + Failures (login attempts etc.)
+; 3 == Full Error Information
+; 4 == General Information
+; 5 == Full Information (cataloging progress etc.)
 ; DEFAULT: 5
 debug_level = 5
 
@@ -715,12 +794,12 @@ ldap_filter = "(uid=%v)"                   ; OpenLDAP
 ;ldap_require_group = "cn=yourgroup,ou=yourorg,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
 ; LDAP name field
-; DEFAULT = "cn"
+; DEFAULT: = "cn"
 ldap_name_field = "cn"
 ;ldap_name_field = "displayName"
 
 ; LDAP email field
-; DEFAULT = "mail"
+; DEFAULT: = "mail"
 ;ldap_email_field = "mail"
 
 ; LDAP avatar field
@@ -747,7 +826,6 @@ ldap_name_field = "cn"
 ;ldap_member_attribute = "memberuid"
 
 
-
 ;#########################################################
 ; OpenID login info (optional)                           #
 ;#########################################################
@@ -770,7 +848,7 @@ ldap_name_field = "cn"
 auto_create = "true"
 
 ; This setting will silently update an ampache account's
-; informations for anyone who can login using LDAP
+; information for anyone who can login using LDAP
 ; (or any other login extension).
 ; DEFAULT: false
 ;external_auto_update = "false"
@@ -922,18 +1000,6 @@ encode_target_flac = opus
 transcode_player_webplayer_m4a = required
 transcode_player_webplayer_flac = required
 transcode_player_webplayer_mpc = required
-transcode_player_webplayer_avi      = required
-transcode_player_webplayer_mkv      = required
-transcode_player_webplayer_mpg      = required
-transcode_player_webplayer_mpeg     = required
-transcode_player_webplayer_m4v      = required
-transcode_player_webplayer_mp4      = required
-transcode_player_webplayer_mov      = required
-transcode_player_webplayer_wmv      = required
-transcode_player_webplayer_ogv      = required
-transcode_player_webplayer_divx     = required
-transcode_player_webplayer_m2ts     = required
-
 
 ; Override the default output format on a per-player basis
 ; encode_player_PLAYER_target = TYPE
@@ -985,8 +1051,8 @@ encode_args_m4a = "-vn -b:a %BITRATE%K -c:a libfdk_aac -f adts pipe:1"
 encode_args_wav = "-vn -b:a %BITRATE%K -c:a pcm_s16le -f wav pipe:1"
 encode_args_flv = "-b:a %BITRATE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
 encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate 800k -preset superfast -threads 0 pipe:1"
-;encode_args_webm = "-q %QUALITY% -f webm -c:v libvpx -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_ogv = "-codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 -f ogg pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
 encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"
@@ -1000,12 +1066,18 @@ encode_ss_frame = "-ss %TIME%"
 ; Encode segment duration argument
 encode_ss_duration = "-t %DURATION%"
 
+; Use segments for transcoding or send it all in one go.
+; Useful if you are having issues streaming the full track.
+; You can set it for all streams or a specific player
+; POSSIBLE VALUES: true webplayer api
+; DEFAULT: = false
+;send_full_stream = "webplayer"
 
 ;#########################################################
 ; Proxy Settings (optional)                              #
 ;#########################################################
 
-; If Ampache is behind an http proxy, specifiy the hostname or IP address
+; If Ampache is behind an http proxy, specify the hostname or IP address
 ; port, proxyusername, and proxypassword here.
 ;DEFAULT: not in use
 ;proxy_host = "192.168.0.1"
@@ -1021,6 +1093,12 @@ encode_ss_duration = "-t %DURATION%"
 ;#########################################################
 ;  Mail Settings                                         #
 ;#########################################################
+
+; Enable or disable email server features
+; otherwise, you can reset your password
+; and never receive an email with the new one
+; Default: false
+;mail_enable = "false"
 
 ;Method used to send mail
 ;POSSIBLE VALUES: smtp sendmail php
@@ -1089,6 +1167,6 @@ encode_ss_duration = "-t %DURATION%"
 ;#############################
 ;   Abbreviation Filter      #
 ;#############################
-; For file name parsing. Any unecessary abbreviations in file names can be removed during parsing
+; For file name parsing. Any unnecessary abbreviations in file names can be removed during parsing
 ; by adding them to the list below so that they will be removed during the parsing process.
 common_abbr = "divx,xvid,dvdrip,hdtv,lol,axxo,repack,xor,pdtv,real,vtv,caph,2hd,proper,fqm,uncut,topaz,tvt,notv,fpn,fov,orenji,0tv,omicron,dsr,ws,sys,crimson,wat,hiqt,internal,brrip,boheme,vost,vostfr,fastsub,addiction,x264,LOL,720p,1080p,YIFY,evolve,fihtv,first,bokutox,bluray,tvboom,info"

@@ -12,12 +12,14 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		upgrade=1	from_commit=11caf9791c48fdcd632193a1c82ea52d4819b328
 		backup_restore=1
 		multi_instance=1
-		incorrect_path=1
+		# This test is no longer necessary since the version 2.7 (PR: https://github.com/YunoHost/yunohost/pull/304), you can still do it if your app could be installed with this version.
+		# incorrect_path=1
+		port_already_use=0
 		change_url=1
 ;;; Levels
+	# If the level 5 (Package linter) is forced to 1. Please add justifications here.
 	Level 5=auto
 ;;; Options
 Email=aymhce@gmail.com
