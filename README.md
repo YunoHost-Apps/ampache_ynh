@@ -7,9 +7,7 @@
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
 
 ## Overview
-[Ampache](http://ampache.org) for the love of music. A web based audio/video 
-streaming application and file manager allowing you to access your 
-music & videos from anywhere, using almost any internet enabled device.
+[Ampache](http://ampache.org) for the love of music. A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.
 
 **Shipped version:** 4.1.1.1
 
@@ -27,7 +25,7 @@ music & videos from anywhere, using almost any internet enabled device.
 ## Documentation
 
  * Official documentation: https://github.com/ampache/ampache/wiki
- * YunoHost documentation: There no other documentations, feel free to contribute.
+ * YunoHost documentation: https://yunohost.org/#/app_ampache
 
 ## YunoHost specific features
 
@@ -46,16 +44,15 @@ this package:
 
 #### Supported architectures
 
-* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/ampache%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/)
+* x86-64 - [![Build Status](https://ci-apps.yunohost.org/ci/logs/ampache%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/)
 * ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/ampache%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/ampache/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/ampache%20%28Apps%29.svg)](https://ci-stretch.nohost.me/ci/apps/ampache/)
 
 ## Limitations
 
-* Also, the SSO authentication not fully working from user panel, we have to work about this.
-In fact, it can disrupt external Ampache clients like Subsonic.
+* Also, the SSO authentication not fully working from user panel, we have to work about this. In fact, it can disrupt external Ampache clients like Subsonic.
 
 ## Additionnal informations
+
 ### Getting started
 
  * **Add your first catalog to load music files**
@@ -90,8 +87,7 @@ In fact, it can disrupt external Ampache clients like Subsonic.
 
 ---
 
-Developers infos
-----------------
+## Developers infos
 
 Please do your pull request to the [testing branch](https://github.com/YunoHost-Apps/ampache_ynh/tree/testing).
 
