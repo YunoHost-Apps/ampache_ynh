@@ -1,7 +1,7 @@
 # Ampache for YunoHost
 
 [![Integration level](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)  
-[![Install Ampache with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=ampache)
+[![Install Ampache with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ampache)
 
 > *This package allow you to install Ampache quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
