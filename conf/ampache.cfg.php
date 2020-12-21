@@ -955,14 +955,14 @@ registration_mandatory_fields = "fullname"
 transcode_m4a      = allowed
 transcode_flac     = required
 transcode_mpc      = required
-transcode_ogg      = required
+transcode_ogg      = allowed
 transcode_oga      = required
 transcode_wav      = required
 transcode_wma      = required
 transcode_aif      = required
 transcode_aiff     = required
-transcode_ape     = required
-transcode_shn     = required
+transcode_ape      = required
+transcode_shn      = required
 transcode_mp3      = allowed
 ;;; Video
 transcode_avi      = allowed
