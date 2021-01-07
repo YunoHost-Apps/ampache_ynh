@@ -3,10 +3,10 @@
     "id": "ampache",
     "packaging_format": 1,
     "description": {
-        "en": "A web based audio/video streaming application",
-        "fr": "Une application de streaming audio et vidéo"
+        "en": "Web based audio/video streaming application",
+        "fr": "Application de streaming audio et vidéo"
     },
-    "version": "4.1.1.1~ynh1",
+    "version": "4.2.5~ynh1",
     "url": "http://ampache.org",
     "license": "AGPL-3.0",
     "maintainer": {
@@ -48,7 +48,7 @@
                 "type": "user",
                 "ask": {
                     "en": "Choose the Ampache administrator (must be an existing YunoHost user)",
-                    "fr": "Administrateur du serveur Ampache (doit etre un utilisateur Yunohost existant)"
+                    "fr": "Administrateur du serveur Ampache (doit être un utilisateur YunoHost existant)"
                 },
                 "example": "homer"
             },
