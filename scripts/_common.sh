@@ -15,7 +15,7 @@ extra_php_dependencies="php${YNH_PHP_VERSION}-mysql php${YNH_PHP_VERSION}-curl p
 # EXPERIMENTAL HELPERS
 #=================================================
 
-readonly YNH_DEFAULT_COMPOSER_VERSION=2.0.8
+readonly YNH_DEFAULT_COMPOSER_VERSION=1.10.17
 # Declare the actual composer version to use.
 # A packager willing to use another version of composer can override the variable into its _common.sh.
 YNH_COMPOSER_VERSION=${YNH_COMPOSER_VERSION:-$YNH_DEFAULT_COMPOSER_VERSION}
