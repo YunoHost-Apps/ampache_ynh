@@ -185,7 +185,7 @@ then
     ynh_script_progression --message="Upgrading Ampache with cURL..." --weight=6
 
     # Set the app as temporarily public for curl call
-    ynh_permission_update --permission "main" --add "visitors"
+    ynh_permission_update --permission="main" --add="visitors"
 
     # Reload NGINX
     ynh_systemd_action --service_name=nginx --action=reload
@@ -211,7 +211,7 @@ ynh_script_progression --message="Configuring permissions..."
 
 if [ $is_public -eq 0 ]
 then
-    ynh_permission_update --permission="main" --remov="visitors"
+    ynh_permission_update --permission="main" --remove="visitors"
 fi
 
 #=================================================
