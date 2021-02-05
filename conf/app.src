@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/ampache/ampache/archive/4.2.6.tar.gz
-SOURCE_SUM=7cba92f9e59b2c8c81ddfa3d82ca77761d3b0d3c55c6372db01410e5c22ddb46
+SOURCE_URL=https://github.com/ampache/ampache/archive/4.3.0.tar.gz
+SOURCE_SUM=0fc07590e62e5223d305842b175eb83a099ba138e933428b1edec85a0f464370
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=tar.gz
 SOURCE_IN_SUBDIR=true

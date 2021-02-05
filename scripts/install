@@ -151,11 +151,9 @@ ynh_multimedia_build_main_dir
 ynh_script_progression --message="Configuring Ampache..." --weight=5
 
 # Set the app as temporarily public for curl call
-ynh_app_setting_set --app=$app --key=unprotected_uris --value="/"
-# Reload SSOwat config
-yunohost app ssowatconf
+ynh_permission_update --permission="main" --add="visitors"
 
-# Reload Nginx
+# Reload NGINX
 ynh_systemd_action --service_name=nginx --action=reload
 
 ynh_local_curl /update.php?action=update
@@ -186,12 +184,11 @@ chown -R $app: $final_path
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring SSOwat..."
+ynh_script_progression --message="Configuring permissions..."
 
-# Keep app public if necessary
 if [ $is_public -eq 0 ]
 then
-	ynh_app_setting_delete --app=$app --key=unprotected_uris
+    ynh_permission_update --permission="main" --remov="visitors"
 fi
 
 #=================================================
