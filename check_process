@@ -12,6 +12,7 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
+		upgrade=1	from_commit=919c3359d9fe21c29bad1cabf0e7b9a8e368f20e
 		backup_restore=1
 		multi_instance=1
 		port_already_use=0
@@ -20,6 +21,6 @@
 Email=aymhce@gmail.com
 Notification=none
 ;;; Upgrade options
-	; commit=11caf9791c48fdcd632193a1c82ea52d4819b328
-		name=add ynh_abort_if_errors
+	; commit=919c3359d9fe21c29bad1cabf0e7b9a8e368f20e
+		name=Merge pull request #70 from YunoHost-Apps/4.2.6 
 		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&
