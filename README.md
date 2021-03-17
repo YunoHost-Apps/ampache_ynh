@@ -25,7 +25,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 ## Documentation
 
  * Official documentation: https://github.com/ampache/ampache/wiki
- * YunoHost documentation: https://yunohost.org/#/app_ampache
+ * YunoHost documentation: https://yunohost.org/en/app_ampache
 
 ## YunoHost specific features
 

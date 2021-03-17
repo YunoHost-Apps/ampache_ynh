@@ -46,7 +46,6 @@ ynh_script_progression --message="Storing installation settings..." --weight=2
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin_ampache
-ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -110,11 +109,11 @@ ynh_script_progression --message="Preconfiguring Ampache..." --weight=2
 conf_file="$final_path/config/ampache.cfg.php"
 cp ../conf/ampache.cfg.php "$conf_file"
 
-ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_user" --target_file="$conf_file"
-ynh_replace_string --match_string="__DBPWD__" --replace_string="$db_pwd" --target_file="$conf_file"
-ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$conf_file"
+ynh_replace_string --match_string="__DB_USER__" --replace_string="$db_user" --target_file="$conf_file"
+ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$conf_file"
+ynh_replace_string --match_string="__DB_NAME__" --replace_string="$db_name" --target_file="$conf_file"
 ynh_replace_string --match_string="__PATHTOCHANGE__" --replace_string="$path_url" --target_file="$conf_file"
-ynh_replace_string --match_string="__DOMAINTOCHANGE__" --replace_string="$domain" --target_file="$conf_file"
+ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$conf_file"
 secret_key=$(ynh_string_random --length=24)
 ynh_replace_string --match_string="__RANDOMKEYTOCHANGE__" --replace_string="$secret_key" --target_file="$conf_file"
 ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
