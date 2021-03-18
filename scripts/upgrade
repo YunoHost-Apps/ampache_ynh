@@ -131,19 +131,6 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
     ynh_script_progression --message="Upgrading Ampache configuration..."
 
-    # conf_file="$final_path/config/ampache.cfg.php"
-    # ynh_backup_if_checksum_is_different --file="$conf_file"
-
-    # ynh_replace_string --match_string="__DB_USER__" --replace_string="$db_user" --target_file="$conf_file"
-    # ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$conf_file"
-    # ynh_replace_string --match_string="__DB_NAME__" --replace_string="$db_name" --target_file="$conf_file"
-    # ynh_replace_string --match_string="__PATH__" --replace_string="$path_url" --target_file="$conf_file"
-    # ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$conf_file"
-    # ynh_replace_string --match_string="__SECRET_KEY__" --replace_string="$secret_key" --target_file="$conf_file"
-
-    # # Calculate and store the config file checksum into the app settings
-    # ynh_store_file_checksum --file="$conf_file"
-
     ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
 
     #=================================================
@@ -171,8 +158,11 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
     ynh_script_progression --message="Upgrading Ampache with cURL..." --weight=6
 
-    # Set the app as temporarily public for curl call
-    ynh_permission_update --permission="main" --add="visitors"
+    # Set the app as temporarily public for cURL call
+    if ! ynh_permission_has_user --permission="main" --user="visitors"
+    then
+        ynh_permission_update --permission="main" --add="visitors"
+    fi
 
     # Reload NGINX
     ynh_systemd_action --service_name=nginx --action=reload
