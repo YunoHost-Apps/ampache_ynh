@@ -70,6 +70,7 @@ ynh_script_progression --message="Restoring user rights..."
 
 # Restore permissions on app files
 chown -R $app: $final_path
+chmod 600 $final_path/config/ampache.cfg.php
 
 #=================================================
 # RESTORE THE PHP-FPM CONFIGURATION
