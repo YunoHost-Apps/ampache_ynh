@@ -168,7 +168,8 @@ ynh_secure_remove --file=/tmp/admin.sql
 ynh_script_progression --message="Securing files and directories..."
 
 # Set permissions to ampache directory
-chown -R $app: $final_path
+chmod -R o-rwx $final_path
+chown -R $app:$app $final_path
 chmod 600 $final_path/config/ampache.cfg.php
 
 #=================================================

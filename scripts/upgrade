@@ -179,7 +179,8 @@ fi
 ynh_script_progression --message="Securing files and directories..."
 
 # Set permissions on app files
-chown -R $app: $final_path
+chmod -R o-rwx $final_path
+chown -R $app:$app $final_path
 chmod 600 $final_path/config/ampache.cfg.php
 
 #=================================================
