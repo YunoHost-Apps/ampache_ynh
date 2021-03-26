@@ -9,7 +9,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 ## Overview
 [Ampache](http://ampache.org) for the love of music. A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.
 
-**Shipped version:** 4.4.0
+**Shipped version:** 4.4.1
 
 ## Screenshots
 
@@ -25,7 +25,7 @@ If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to
 ## Documentation
 
  * Official documentation: https://github.com/ampache/ampache/wiki
- * YunoHost documentation: https://yunohost.org/#/app_ampache
+ * YunoHost documentation: https://yunohost.org/en/app_ampache
 
 ## YunoHost specific features
 

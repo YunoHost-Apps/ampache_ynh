@@ -46,7 +46,6 @@ ynh_script_progression --message="Storing installation settings..." --weight=2
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin_ampache
-ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -68,6 +67,14 @@ ynh_app_setting_set --app=$app --key=db_name --value=$db_name
 ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
 
 #=================================================
+# CREATE DEDICATED USER
+#=================================================
+ynh_script_progression --message="Configuring system user..."
+
+# Create a system user
+ynh_system_user_create --username=$app
+
+#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=2
@@ -85,14 +92,6 @@ ynh_script_progression --message="Configuring NGINX web server..."
 ynh_add_nginx_config
 
 #=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Configuring system user..."
-
-# Create a system user
-ynh_system_user_create --username=$app
-
-#=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
 ynh_script_progression --message="Configuring PHP-FPM..."
@@ -107,20 +106,10 @@ ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencie
 #=================================================
 ynh_script_progression --message="Preconfiguring Ampache..." --weight=2
 
-conf_file="$final_path/config/ampache.cfg.php"
-cp ../conf/ampache.cfg.php "$conf_file"
-
-ynh_replace_string --match_string="__DBUSER__" --replace_string="$db_user" --target_file="$conf_file"
-ynh_replace_string --match_string="__DBPWD__" --replace_string="$db_pwd" --target_file="$conf_file"
-ynh_replace_string --match_string="__DBNAME__" --replace_string="$db_name" --target_file="$conf_file"
-ynh_replace_string --match_string="__PATHTOCHANGE__" --replace_string="$path_url" --target_file="$conf_file"
-ynh_replace_string --match_string="__DOMAINTOCHANGE__" --replace_string="$domain" --target_file="$conf_file"
 secret_key=$(ynh_string_random --length=24)
-ynh_replace_string --match_string="__RANDOMKEYTOCHANGE__" --replace_string="$secret_key" --target_file="$conf_file"
 ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
 
-# Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum --file="$conf_file"
+ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
 
 #=================================================
 # LOAD DEFAULT DATABASE
@@ -179,7 +168,8 @@ ynh_secure_remove --file=/tmp/admin.sql
 ynh_script_progression --message="Securing files and directories..."
 
 # Set permissions to ampache directory
-chown -R $app: $final_path
+chown -R $app:$app $final_path
+chmod 600 $final_path/config/ampache.cfg.php
 
 #=================================================
 # SETUP SSOWAT
