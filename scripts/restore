@@ -69,7 +69,6 @@ ynh_system_user_create --username=$app
 ynh_script_progression --message="Restoring user rights..."
 
 # Restore permissions on app files
-chmod -R o-rwx $final_path
 chown -R $app:$app $final_path
 chmod 600 $final_path/config/ampache.cfg.php
 
