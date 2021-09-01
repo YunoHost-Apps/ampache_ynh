@@ -125,7 +125,7 @@ ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_
 ynh_script_progression --message="Installing ampache with Composer..." --weight=45
 
 # Install composer
-ynh_install_composer --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --install_args="--prefer-source --no-dev"
+ynh_install_composer #--phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --install_args="--prefer-source --no-dev"
 
 #=================================================
 # INSTALL MULTIMEDIA DIRECTORIES
