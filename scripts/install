@@ -117,7 +117,7 @@ ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/c
 ynh_script_progression --message="Loading default database..."
 
 # Load default ampache database
-ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_path/sql/ampache.sql"
+ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_path/resources/sql/ampache.sql"
 
 #=================================================
 # INSTALL AMPACHE WITH COMPOSER
