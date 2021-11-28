@@ -34,8 +34,7 @@ db_user=$db_name
 #=================================================
 ynh_script_progression --message="Validating restoration parameters..."
 
-test ! -d $final_path \
-	|| ynh_die --message="There is already a directory: $final_path "
+test ! -d $final_path || ynh_die --message="There is already a directory: $final_path "
 
 #=================================================
 # STANDARD RESTORATION STEPS
@@ -76,9 +75,6 @@ chmod 600 $final_path/config/ampache.cfg.php
 ynh_script_progression --message="Restoring PHP-FPM configuration..."
 
 ynh_restore_file --origin_path="/etc/php/${YNH_PHP_VERSION}/fpm/pool.d/$app.conf"
-
-# Recreate a dedicated php-fpm config
-ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencies"
 
 #=================================================
 # SPECIFIC RESTORATION
