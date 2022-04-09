@@ -138,7 +138,7 @@ then
     ynh_script_progression --message="Upgrading ampache with Composer..." --weight=30
 
     # Install composer
-    ynh_install_composer --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --install_args="--prefer-source --no-dev"
+    ynh_install_composer --install_args="--ignore-platform-req=ext-intl"
     ynh_composer_exec --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --commands="config discard-changes true"
 fi
 
