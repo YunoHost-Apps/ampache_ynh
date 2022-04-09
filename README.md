@@ -26,7 +26,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 **Shipped version:** 5.2.1~ynh1
 
-
+**Demo:** https://ampache.org/demo.html
 
 ## Screenshots
 
@@ -67,6 +67,9 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Documentation and resources
 
+* Official app website: http://ampache.org
+* Official admin documentation:  https://github.com/ampache/ampache/wiki
+* Upstream app code repository: https://github.com/ampache/ampache
 * YunoHost documentation for this app: https://yunohost.org/app_ampache
 * Report a bug: https://github.com/YunoHost-Apps/ampache_ynh/issues
 
