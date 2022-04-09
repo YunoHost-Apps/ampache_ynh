@@ -47,7 +47,6 @@ ynh_script_progression --message="Storing installation settings..." --weight=2
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=admin --value=$admin_ampache
-ynh_app_setting_set --app=$app --key=phpversion --value=$phpversion
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -85,6 +84,10 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
 
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chown -R $app:www-data "$final_path"
+
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
@@ -100,6 +103,7 @@ ynh_script_progression --message="Configuring PHP-FPM..."
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config --usage=low --footprint=low
+ynh_app_setting_set --app=$app --key=phpversion --value=$phpversion
 
 #=================================================
 # SPECIFIC SETUP
@@ -113,13 +117,16 @@ ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
 
 ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
 
+chmod 600 $final_path/config/ampache.cfg.php
+chown $app: $final_path/config/ampache.cfg.php
+
 #=================================================
 # LOAD DEFAULT DATABASE
 #=================================================
 ynh_script_progression --message="Loading default database..."
 
 # Load default ampache database
-ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_path/resources/sql/ampache.sql"
+ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < "$final_path/resources/sql/ampache.sql"
 
 #=================================================
 # INSTALL AMPACHE WITH COMPOSER
@@ -158,22 +165,9 @@ ynh_script_progression --message="Loading admin database..."
 cp ../conf/admin.sql /tmp/
 ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin_ampache" --target_file=/tmp/admin.sql
 
-ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < /tmp/admin.sql
+ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < /tmp/admin.sql
 
 ynh_secure_remove --file=/tmp/admin.sql
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression --message="Securing files and directories..."
-
-# Set permissions to ampache directory
-chmod 750 "$final_path"
-chmod -R o-rwx "$final_path"
-chown -R $app:www-data "$final_path"
-chmod 600 $final_path/config/ampache.cfg.php
 
 #=================================================
 # SETUP SSOWAT

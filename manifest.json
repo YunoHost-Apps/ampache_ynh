@@ -6,7 +6,7 @@
         "en": "Web based audio/video streaming application",
         "fr": "Application de streaming audio et vidéo"
     },
-    "version": "5.1.1~ynh1",
+    "version": "5.2.1~ynh1",
     "url": "http://ampache.org",
     "license": "AGPL-3.0",
     "maintainer": {
