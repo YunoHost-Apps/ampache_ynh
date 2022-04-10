@@ -64,7 +64,6 @@ ynh_restore_file --origin_path="$final_path"
 chmod 750 "$final_path"
 chmod -R o-rwx "$final_path"
 chown -R $app:www-data "$final_path"
-chmod 600 $final_path/config/ampache.cfg.php
 
 #=================================================
 # REINSTALL DEPENDENCIES
@@ -79,8 +78,7 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 ynh_script_progression --message="Restoring PHP-FPM configuration..."
 
-# Create a dedicated PHP-FPM config
-ynh_add_fpm_config
+ynh_restore_file --origin_path="/etc/php/$phpversion/fpm/pool.d/$app.conf"
 
 #=================================================
 # RESTORE THE MYSQL DATABASE
