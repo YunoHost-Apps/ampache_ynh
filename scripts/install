@@ -22,9 +22,10 @@ ynh_abort_if_errors
 
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
-admin_ampache=$YNH_APP_ARG_ADMIN
+admin=$YNH_APP_ARG_ADMIN
 is_public=$YNH_APP_ARG_IS_PUBLIC
 phpversion=$YNH_PHP_VERSION
+secret_key=$(ynh_string_random --length=24)
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -46,7 +47,8 @@ ynh_script_progression --message="Storing installation settings..." --weight=2
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
-ynh_app_setting_set --app=$app --key=admin --value=$admin_ampache
+ynh_app_setting_set --app=$app --key=admin --value=$admin
+ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -112,9 +114,6 @@ ynh_app_setting_set --app=$app --key=phpversion --value=$phpversion
 #=================================================
 ynh_script_progression --message="Preconfiguring Ampache..." --weight=2
 
-secret_key=$(ynh_string_random --length=24)
-ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
-
 ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
 
 chmod 600 $final_path/config/ampache.cfg.php
@@ -163,7 +162,7 @@ sleep 1
 ynh_script_progression --message="Loading admin database..."
 
 cp ../conf/admin.sql /tmp/
-ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin_ampache" --target_file=/tmp/admin.sql
+ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file=/tmp/admin.sql
 
 ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < /tmp/admin.sql
 
