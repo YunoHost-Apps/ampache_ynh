@@ -1311,11 +1311,11 @@ send_full_stream = "webplayer"
 
 ; Mail server (hostname or IP address)
 ; DEFAULT: localhost
-;mail_host = "localhost"
+mail_host = "localhost"
 
 ; SMTP port
 ; DEFAULT: 25
-;mail_port = 25
+mail_port = 25
 
 ; Secure SMTP
 ; POSSIBLE VALUES: ssl tls
