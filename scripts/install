@@ -62,7 +62,7 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # CREATE A MYSQL DATABASE
 #=================================================
-ynh_script_progression --message="Creating a MySQL database..."
+ynh_script_progression --message="Creating a MySQL database..." --weight=1
 
 db_name=$(ynh_sanitize_dbid --db_name=$app)
 db_user=$db_name
@@ -72,7 +72,7 @@ ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Configuring system user..."
+ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
 ynh_system_user_create --username=$app --home_dir="$final_path"
@@ -93,7 +93,7 @@ chown -R $app:www-data "$final_path"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring NGINX web server..."
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
@@ -101,7 +101,7 @@ ynh_add_nginx_config
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring PHP-FPM..."
+ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config --usage=low --footprint=low
@@ -122,7 +122,7 @@ chown $app: $final_path/config/ampache.cfg.php
 #=================================================
 # LOAD DEFAULT DATABASE
 #=================================================
-ynh_script_progression --message="Loading default database..."
+ynh_script_progression --message="Loading default database..." --weight=2
 
 # Load default ampache database
 ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < "$final_path/resources/sql/ampache.sql"
@@ -159,7 +159,7 @@ sleep 1
 #=================================================
 # LOAD ADMIN DATABASE
 #=================================================
-ynh_script_progression --message="Loading admin database..."
+ynh_script_progression --message="Loading admin database..." --weight=2
 
 cp ../conf/admin.sql /tmp/
 ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file=/tmp/admin.sql
@@ -171,7 +171,7 @@ ynh_secure_remove --file=/tmp/admin.sql
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring permissions..."
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 if [ $is_public -eq 0 ]
 then
@@ -181,7 +181,7 @@ fi
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server..."
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
