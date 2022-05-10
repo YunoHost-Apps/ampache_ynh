@@ -20,7 +20,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-**Version incluse :** 5.2.1~ynh1
+**Version incluse :** 5.3.3~ynh1
 
 **Démo :** https://ampache.org/demo.html
 
@@ -64,7 +64,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 ## Documentations et ressources
 
 * Site officiel de l'app : http://ampache.org
-* Documentation officielle de l'admin :  https://github.com/ampache/ampache/wiki
+* Documentation officielle de l'admin : https://github.com/ampache/ampache/wiki
 * Dépôt de code officiel de l'app : https://github.com/ampache/ampache
 * Documentation YunoHost pour cette app : https://yunohost.org/app_ampache
 * Signaler un bug : https://github.com/YunoHost-Apps/ampache_ynh/issues
