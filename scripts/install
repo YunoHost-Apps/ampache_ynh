@@ -140,7 +140,7 @@ ynh_install_composer --install_args="--ignore-platform-req=ext-intl"
 #=================================================
 ynh_script_progression --message="Installing multimedia directories..." --weight=5
 
-ynh_multimedia_build_main_dir
+#ynh_multimedia_build_main_dir
 
 #=================================================
 # PRE CONFIGURE AMPACHE
