@@ -112,12 +112,12 @@ ynh_app_setting_set --app=$app --key=phpversion --value=$phpversion
 #=================================================
 # CONFIGURE AMPACHE
 #=================================================
-ynh_script_progression --message="Preconfiguring Ampache..." --weight=2
+ynh_script_progression --message="Preconfiguring $app..." --weight=2
 
 ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
 
-chmod 600 $final_path/config/ampache.cfg.php
-chown $app: $final_path/config/ampache.cfg.php
+chmod 600 "$final_path/config/ampache.cfg.php"
+chown $app: "$final_path/config/ampache.cfg.php"
 
 #=================================================
 # LOAD DEFAULT DATABASE
@@ -130,7 +130,7 @@ ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < 
 #=================================================
 # INSTALL AMPACHE WITH COMPOSER
 #=================================================
-ynh_script_progression --message="Installing ampache with Composer..." --weight=45
+ynh_script_progression --message="Installing $app with Composer..." --weight=45
 
 # Install composer
 ynh_install_composer --install_args="--ignore-platform-req=ext-intl"
@@ -145,7 +145,7 @@ ynh_multimedia_build_main_dir
 #=================================================
 # PRE CONFIGURE AMPACHE
 #=================================================
-ynh_script_progression --message="Configuring Ampache..." --weight=5
+ynh_script_progression --message="Configuring $app..." --weight=5
 
 # Set the app as temporarily public for curl call
 ynh_permission_update --permission="main" --add="visitors"
