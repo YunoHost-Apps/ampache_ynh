@@ -2,6 +2,6 @@ SOURCE_URL=https://github.com/ampache/ampache/releases/download/5.3.3/ampache-5.
 SOURCE_SUM=c2cc99ba7d59e5fadf264cdf40f37af66393d93ec176f5151bf32799599e72fd
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
-SOURCE_IN_SUBDIR=true
+SOURCE_IN_SUBDIR=false
 SOURCE_FILENAME=
 SOURCE_EXTRACT=true
