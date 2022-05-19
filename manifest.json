@@ -6,28 +6,34 @@
         "en": "Web based audio/video streaming application",
         "fr": "Application de streaming audio et vidéo"
     },
-    "version": "4.4.2~ynh1",
+    "version": "5.3.3~ynh1",
     "url": "http://ampache.org",
+    "upstream": {
+        "license": "AGPL-3.0",
+        "website": "http://ampache.org",
+        "demo": "https://ampache.org/demo.html",
+        "admindoc": "https://github.com/ampache/ampache/wiki",
+        "code": "https://github.com/ampache/ampache"
+    },
     "license": "AGPL-3.0",
     "maintainer": {
         "name": "aymhce",
         "email": "aymhce@gmail.com"
     },
     "requirements": {
-        "yunohost": ">= 4.1.7"
+        "yunohost": ">= 4.3.0"
     },
     "multi_instance": true,
     "services" : [
         "nginx",
-        "php7.3-fpm",
+        "php8.0-fpm",
         "mysql"
     ],
     "arguments": {
         "install" : [
             {
                 "name": "domain",
-                "type": "domain",
-                "example": "domain.org"
+                "type": "domain"
             },
             {
                 "name": "path",
@@ -37,8 +43,7 @@
             },
             {
                 "name": "admin",
-                "type": "user",
-                "example": "homer"
+                "type": "user"
             },
             {
                 "name": "is_public",

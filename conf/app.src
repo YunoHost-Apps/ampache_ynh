@@ -1,6 +1,7 @@
-SOURCE_URL=https://github.com/ampache/ampache/archive/4.4.2.tar.gz
-SOURCE_SUM=fadf5c9f9b6d59904979f3e109b7935c48fc2b8c04640a0503723cf31674bc99
+SOURCE_URL=https://github.com/ampache/ampache/releases/download/5.3.3/ampache-5.3.3_all_php8.0.zip
+SOURCE_SUM=c2cc99ba7d59e5fadf264cdf40f37af66393d93ec176f5151bf32799599e72fd
 SOURCE_SUM_PRG=sha256sum
-SOURCE_FORMAT=tar.gz
-SOURCE_IN_SUBDIR=true
+SOURCE_FORMAT=zip
+SOURCE_IN_SUBDIR=false
 SOURCE_FILENAME=
+SOURCE_EXTRACT=true
