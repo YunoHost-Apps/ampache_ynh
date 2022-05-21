@@ -24,7 +24,6 @@ domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 admin=$YNH_APP_ARG_ADMIN
 is_public=$YNH_APP_ARG_IS_PUBLIC
-phpversion=$YNH_PHP_VERSION
 secret_key=$(ynh_string_random --length=24)
 
 app=$YNH_APP_INSTANCE_NAME
@@ -105,7 +104,6 @@ ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config --usage=low --footprint=low
-ynh_app_setting_set --app=$app --key=phpversion --value=$phpversion
 
 #=================================================
 # SPECIFIC SETUP
