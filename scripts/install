@@ -22,8 +22,9 @@ ynh_abort_if_errors
 
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
-admin_ampache=$YNH_APP_ARG_ADMIN
+admin=$YNH_APP_ARG_ADMIN
 is_public=$YNH_APP_ARG_IS_PUBLIC
+secret_key=$(ynh_string_random --length=24)
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -45,7 +46,8 @@ ynh_script_progression --message="Storing installation settings..." --weight=2
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
-ynh_app_setting_set --app=$app --key=admin --value=$admin_ampache
+ynh_app_setting_set --app=$app --key=admin --value=$admin
+ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -59,7 +61,7 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # CREATE A MYSQL DATABASE
 #=================================================
-ynh_script_progression --message="Creating a MySQL database..."
+ynh_script_progression --message="Creating a MySQL database..." --weight=1
 
 db_name=$(ynh_sanitize_dbid --db_name=$app)
 db_user=$db_name
@@ -69,10 +71,10 @@ ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Configuring system user..."
+ynh_script_progression --message="Configuring system user..." --weight=1
 
 # Create a system user
-ynh_system_user_create --username=$app
+ynh_system_user_create --username=$app --home_dir="$final_path"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -83,49 +85,54 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
 
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chown -R $app:www-data "$final_path"
+
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring NGINX web server..."
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
-# Create a dedicated nginx config
+# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring PHP-FPM..."
+ynh_script_progression --message="Configuring PHP-FPM..." --weight=2
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencies"
+ynh_add_fpm_config --usage=low --footprint=low
+phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
 # SPECIFIC SETUP
 #=================================================
 # CONFIGURE AMPACHE
 #=================================================
-ynh_script_progression --message="Preconfiguring Ampache..." --weight=2
-
-secret_key=$(ynh_string_random --length=24)
-ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
+ynh_script_progression --message="Preconfiguring $app..." --weight=2
 
 ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
+
+chmod 600 "$final_path/config/ampache.cfg.php"
+chown $app: "$final_path/config/ampache.cfg.php"
 
 #=================================================
 # LOAD DEFAULT DATABASE
 #=================================================
-ynh_script_progression --message="Loading default database..."
+ynh_script_progression --message="Loading default database..." --weight=2
 
 # Load default ampache database
-ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < "$final_path/sql/ampache.sql"
+ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < "$final_path/resources/sql/ampache.sql"
 
 #=================================================
 # INSTALL AMPACHE WITH COMPOSER
 #=================================================
-ynh_script_progression --message="Installing ampache with Composer..." --weight=45
+ynh_script_progression --message="Installing $app with Composer..." --weight=45
 
 # Install composer
-ynh_install_composer --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --install_args="--prefer-source --no-dev"
+ynh_install_composer --install_args="--ignore-platform-req=ext-intl"
 
 #=================================================
 # INSTALL MULTIMEDIA DIRECTORIES
@@ -137,7 +144,7 @@ ynh_multimedia_build_main_dir
 #=================================================
 # PRE CONFIGURE AMPACHE
 #=================================================
-ynh_script_progression --message="Configuring Ampache..." --weight=5
+ynh_script_progression --message="Configuring $app..." --weight=5
 
 # Set the app as temporarily public for curl call
 ynh_permission_update --permission="main" --add="visitors"
@@ -151,30 +158,19 @@ sleep 1
 #=================================================
 # LOAD ADMIN DATABASE
 #=================================================
-ynh_script_progression --message="Loading admin database..."
+ynh_script_progression --message="Loading admin database..." --weight=2
 
 cp ../conf/admin.sql /tmp/
-ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin_ampache" --target_file=/tmp/admin.sql
+ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file=/tmp/admin.sql
 
-ynh_mysql_connect_as --user=$app --password="$db_pwd" --database=$app < /tmp/admin.sql
+ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < /tmp/admin.sql
 
 ynh_secure_remove --file=/tmp/admin.sql
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression --message="Securing files and directories..."
-
-# Set permissions to ampache directory
-chown -R $app:$app $final_path
-chmod 600 $final_path/config/ampache.cfg.php
-
-#=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring permissions..."
+ynh_script_progression --message="Configuring permissions..." --weight=1
 
 if [ $is_public -eq 0 ]
 then
@@ -184,7 +180,7 @@ fi
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server..."
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
