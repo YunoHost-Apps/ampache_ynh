@@ -5,7 +5,7 @@ It shall NOT be edited by hand.
 
 # Ampache for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![Working status](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)  
 [![Install Ampache with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ampache)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -30,7 +30,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Screenshots
 
-![](./doc/screenshots/visualizer.png)
+![Screenshot of Ampache](./doc/screenshots/visualizer.png)
 
 ## Disclaimers / important information
 
@@ -67,21 +67,22 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Documentation and resources
 
-* Official app website: http://ampache.org
-* Official admin documentation: https://github.com/ampache/ampache/wiki
-* Upstream app code repository: https://github.com/ampache/ampache
-* YunoHost documentation for this app: https://yunohost.org/app_ampache
-* Report a bug: https://github.com/YunoHost-Apps/ampache_ynh/issues
+* Official app website: <http://ampache.org>
+* Official admin documentation: <https://github.com/ampache/ampache/wiki>
+* Upstream app code repository: <https://github.com/ampache/ampache>
+* YunoHost documentation for this app: <https://yunohost.org/app_ampache>
+* Report a bug: <https://github.com/YunoHost-Apps/ampache_ynh/issues>
 
 ## Developer info
 
 Please send your pull request to the [testing branch](https://github.com/YunoHost-Apps/ampache_ynh/tree/testing).
 
 To try the testing branch, please proceed like that.
-```
+
+``` bash
 sudo yunohost app install https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade ampache -u https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --debug
 ```
 
-**More info regarding app packaging:** https://yunohost.org/packaging_apps
+**More info regarding app packaging:** <https://yunohost.org/packaging_apps>
