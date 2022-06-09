@@ -132,7 +132,7 @@ ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < 
 ynh_script_progression --message="Installing $app with Composer..." --weight=45
 
 # Install composer
-ynh_install_composer --install_args="--ignore-platform-req=ext-intl"
+ynh_install_composer
 
 #=================================================
 # INSTALL MULTIMEDIA DIRECTORIES

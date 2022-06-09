@@ -19,7 +19,7 @@ app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
 admin_ampache=$(ynh_app_setting_get --app=$app --key=admin)
-is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+#is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 db_user=$db_name
@@ -95,7 +95,7 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=3
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path"
+	ynh_setup_source --dest_dir="$final_path" --keep="$final_path/config/ampache.cfg.php"
 fi
 
 chmod 750 "$final_path"
@@ -133,11 +133,11 @@ ynh_add_fpm_config --usage=low --footprint=low
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
-    ynh_script_progression --message="Upgrading Ampache configuration..."
+    #ynh_script_progression --message="Upgrading Ampache configuration..."
 
-    ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
-    chmod 600 "$final_path/config/ampache.cfg.php"
-    chown $app:$app "$final_path/config/ampache.cfg.php"
+    #ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
+    #chmod 600 "$final_path/config/ampache.cfg.php"
+    #chown $app:$app "$final_path/config/ampache.cfg.php"
 
     #=================================================
     # UPDATE AMPACHE WITH COMPOSER
@@ -145,7 +145,7 @@ then
     ynh_script_progression --message="Upgrading ampache with Composer..." --weight=30
 
     # Install composer
-    ynh_install_composer --install_args="--ignore-platform-req=ext-intl"
+    ynh_install_composer
     ynh_composer_exec --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --commands="config discard-changes true"
 fi
 
@@ -162,13 +162,13 @@ ynh_multimedia_build_main_dir
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
-    ynh_script_progression --message="Upgrading Ampache with cURL..." --weight=6
+    #ynh_script_progression --message="Upgrading Ampache with cURL..." --weight=6
 
     # Set the app as temporarily public for cURL call
-    if ! ynh_permission_has_user --permission="main" --user="visitors"
-    then
-        ynh_permission_update --permission="main" --add="visitors"
-    fi
+    #if ! ynh_permission_has_user --permission="main" --user="visitors"
+    #then
+    #    ynh_permission_update --permission="main" --add="visitors"
+    #fi
 
     # Reload NGINX
     ynh_systemd_action --service_name=nginx --action=reload
@@ -180,12 +180,12 @@ fi
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring permissions..."
+# ynh_script_progression --message="Configuring permissions..."
 
-if [ $is_public -eq 0 ]
-then
-    ynh_permission_update --permission="main" --remove="visitors"
-fi
+# if [ $is_public -eq 0 ]
+# then
+#     ynh_permission_update --permission="main" --remove="visitors"
+# fi
 
 #=================================================
 # RELOAD NGINX
