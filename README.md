@@ -26,6 +26,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 **Shipped version:** 5.4.0~ynh2
 
+
 **Demo:** https://ampache.org/demo.html
 
 ## Screenshots
