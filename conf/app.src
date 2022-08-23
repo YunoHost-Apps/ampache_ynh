@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/ampache/ampache/releases/download/5.4.0/ampache-5.4.0_all_php8.0.zip
-SOURCE_SUM=d37f9130d2d39d8f936c7ccb2e96711e9e1da53b55d53792f017e5ee5aa12bd1
+SOURCE_URL=https://github.com/ampache/ampache/releases/download/5.5.0/ampache-5.5.0_all_php8.0.zip
+SOURCE_SUM=d9175ca87d5ff662a0bd18e231662c5a0f1ae9cfda03daed9d02554bf8c54638
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
 SOURCE_IN_SUBDIR=false
