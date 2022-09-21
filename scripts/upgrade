@@ -30,6 +30,7 @@ phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 #=================================================
 # CHECK VERSION
 #=================================================
+ynh_script_progression --message="Checking version..." --weight=1
 
 upgrade_type=$(ynh_check_app_version_changed)
 
@@ -41,16 +42,18 @@ ynh_script_progression --message="Backing up the app before upgrading (may take 
 # Backup the current version of the app
 ynh_backup_before_upgrade
 ynh_clean_setup () {
-    # restore it if the upgrade fails
-    ynh_restore_upgradebackup
+	# Restore it if the upgrade fails
+	ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
 #=================================================
+# STANDARD UPGRADE STEPS
+#=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_script_progression --message="Ensuring downward compatibility..."
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
 # If db_name doesn't exist, create it
 if [ -z "$db_name" ]; then
@@ -74,14 +77,15 @@ fi
 # Cleaning legacy permissions
 if ynh_legacy_permissions_exists; then
     ynh_legacy_permissions_delete_all
-
     ynh_app_setting_delete --app=$app --key=is_public
 fi
+
+ynh_secure_remove --file="$final_path/log"
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..."
+ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
 
 # Create a dedicated user (if not existing)
 ynh_system_user_create --username=$app --home_dir="$final_path"
@@ -103,14 +107,6 @@ chmod -R o-rwx "$final_path"
 chown -R $app:www-data "$final_path"
 
 #=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=3
-
-# Create a dedicated nginx config
-ynh_add_nginx_config
-
-#=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Upgrading dependencies..." --weight=5
@@ -122,32 +118,41 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 ynh_script_progression --message="Upgrading PHP-FPM configuration..." --weight=2
 
-# Create a dedicated php-fpm config
+# Create a dedicated PHP-FPM config
 ynh_add_fpm_config --usage=low --footprint=low
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=3
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
 
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
-# RECONFIGURE AMPACHE
+# UPDATE AMPACHE WITH COMPOSER
 #=================================================
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
-    #ynh_script_progression --message="Upgrading Ampache configuration..."
-
-    #ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
-    #chmod 600 "$final_path/config/ampache.cfg.php"
-    #chown $app:$app "$final_path/config/ampache.cfg.php"
-
-    #=================================================
-    # UPDATE AMPACHE WITH COMPOSER
-    #=================================================
     ynh_script_progression --message="Upgrading ampache with Composer..." --weight=30
 
     # Install composer
-    ynh_install_composer
+    ynh_install_composer --workdir=$final_path
     ynh_composer_exec --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --commands="config discard-changes true"
 fi
+
+#=================================================
+# UPDATE A CONFIG FILE
+#=================================================
+ynh_script_progression --message="Updating a configuration file..." --weight=1
+
+ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
+
+chmod 600 "$final_path/config/ampache.cfg.php"
+chown $app: "$final_path/config/ampache.cfg.php"
 
 #=================================================
 # UPDATE MULTIMEDIA DIRECTORIES
@@ -178,19 +183,21 @@ then
 fi
 
 #=================================================
-# SETUP SSOWAT
+# GENERIC FINALIZATION
 #=================================================
-# ynh_script_progression --message="Configuring permissions..."
+# SETUP LOGROTATE
+#=================================================
+ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
 
-# if [ $is_public -eq 0 ]
-# then
-#     ynh_permission_update --permission="main" --remove="visitors"
-# fi
+mkdir -p "/var/log/$app"
+chown $app: "/var/log/$app"
+# Use logrotate to manage app-specific logfile(s)
+ynh_use_logrotate --non-append
 
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server..."
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
