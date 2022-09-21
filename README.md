@@ -24,7 +24,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-**Shipped version:** 5.5.1~ynh1
+**Shipped version:** 5.5.1~ynh2
 
 
 **Demo:** https://ampache.org/demo.html
