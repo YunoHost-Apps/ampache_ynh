@@ -17,8 +17,8 @@
     },
     "license": "AGPL-3.0",
     "maintainer": {
-        "name": "aymhce",
-        "email": "aymhce@gmail.com"
+        "name": "",
+        "email": ""
     },
     "requirements": {
         "yunohost": ">= 11.0.9"
