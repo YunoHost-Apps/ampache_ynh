@@ -5,15 +5,16 @@ It shall NOT be edited by hand.
 
 # Ampache pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
+
 [![Installer Ampache avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ampache)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer Ampache rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer Ampache rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 [Ampache](http://ampache.org) for the love of music. A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.
 
@@ -28,9 +29,9 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 **Démo :** https://ampache.org/demo.html
 
-## Captures d'écran
+## Captures d’écran
 
-![Capture d'écran de Ampache](./doc/screenshots/visualizer.png)
+![Capture d’écran de Ampache](./doc/screenshots/visualizer.png)
 
 ## Avertissements / informations importantes
 
@@ -67,9 +68,9 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 ## Documentations et ressources
 
-* Site officiel de l'app : <http://ampache.org>
-* Documentation officielle de l'admin : <https://github.com/ampache/ampache/wiki>
-* Dépôt de code officiel de l'app : <https://github.com/ampache/ampache>
+* Site officiel de l’app : <http://ampache.org>
+* Documentation officielle de l’admin : <https://github.com/ampache/ampache/wiki>
+* Dépôt de code officiel de l’app : <https://github.com/ampache/ampache>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_ampache>
 * Signaler un bug : <https://github.com/YunoHost-Apps/ampache_ynh/issues>
 
@@ -85,4 +86,4 @@ ou
 sudo yunohost app upgrade ampache -u https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
