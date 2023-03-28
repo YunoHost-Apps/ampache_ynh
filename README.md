@@ -5,7 +5,8 @@ It shall NOT be edited by hand.
 
 # Ampache for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![Working status](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![Working status](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
+
 [![Install Ampache with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ampache)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -24,7 +25,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-**Shipped version:** 5.5.6~ynh1
+**Shipped version:** 5.6.0~ynh1
 
 **Demo:** https://ampache.org/demo.html
 
