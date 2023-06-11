@@ -5,7 +5,7 @@ name = "Ampache"
 description.en = "Web based audio/video streaming application"
 description.fr = "Application de streaming audio et vidéo"
 
-version = "5.6.0~ynh1"
+version = "5.6.1~ynh1"
 
 maintainers = []
 
@@ -20,7 +20,7 @@ code = "https://github.com/ampache/ampache"
 yunohost = ">= 11.1.20"
 architectures = "all"
 multi_instance = true
-ldap = false
+ldap = true
 sso = false
 disk = "50M"
 ram.build = "50M"
@@ -43,8 +43,8 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/ampache/ampache/releases/download/5.6.0/ampache-5.6.0_all_php8.0.zip"
-        sha256 = "f200067b5b7c753ed9660991d484a2e20b87afb0dffb16d5c3a54bb6a23cb963"
+        url = "https://github.com/ampache/ampache/releases/download/5.6.1/ampache-5.6.1_all_php8.2.zip"
+        sha256 = "6b1b278aabfce74bab10384bce67535ee745438798c5fce736607534c93317d9"
         in_subdir = false
 
     [resources.system_user]
@@ -55,7 +55,7 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "'libav-tools|ffmpeg' mariadb-server php8.0-mysql php8.0-curl php8.0-simplexml php8.0-gd php8.0-ldap php8.0-intl"
+    packages = "'libav-tools|ffmpeg' mariadb-server php8.2-mysql php8.2-curl php8.2-simplexml php8.2-gd php8.2-ldap php8.2-intl"
 
     [resources.database]
     type = "mysql"
