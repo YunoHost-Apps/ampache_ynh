@@ -23,7 +23,7 @@ upgrade_type=$(ynh_check_app_version_changed)
 ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
 # If secret_key doesn't exist, create it
-if [ -z "$secret_key" ]; then
+if [ -z "${secret_key:-}" ]; then
 	secret_key="$(grep "^secret_key" "$install_dir/config/ampache.cfg.php" | cut -d'"' -f2)"
 	ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
 fi
