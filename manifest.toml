@@ -46,6 +46,7 @@ ram.runtime = "50M"
         url = "https://github.com/ampache/ampache/releases/download/5.6.1/ampache-5.6.1_all_php8.2.zip"
         sha256 = "6b1b278aabfce74bab10384bce67535ee745438798c5fce736607534c93317d9"
         in_subdir = false
+        autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
 
