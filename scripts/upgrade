@@ -12,20 +12,20 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=2
+#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=2
 
-app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-admin_ampache=$(ynh_app_setting_get --app=$app --key=admin)
-#is_public=$(ynh_app_setting_get --app=$app --key=is_public)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-db_name=$(ynh_app_setting_get --app=$app --key=db_name)
-db_user=$db_name
-db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
-secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
-phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
+#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
+#REMOVEME? path=$(ynh_app_setting_get --app=$app --key=path)
+#REMOVEME? admin_ampache=$(ynh_app_setting_get --app=$app --key=admin)
+#REMOVEME? #is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
+#REMOVEME? db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+#REMOVEME? db_user=$db_name
+#REMOVEME? db_pwd=$(ynh_app_setting_get --app=$app --key=mysqlpwd)
+#REMOVEME? secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
+#REMOVEME? phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
 # CHECK VERSION
@@ -37,16 +37,16 @@ upgrade_type=$(ynh_check_app_version_changed)
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=20
+#REMOVEME? ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=20
 
 # Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
+#REMOVEME? ynh_backup_before_upgrade
+#REMOVEME? ynh_clean_setup () {
 	# Restore it if the upgrade fails
-	ynh_restore_upgradebackup
+#REMOVEME? 	ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -58,37 +58,37 @@ ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 # If db_name doesn't exist, create it
 if [ -z "$db_name" ]; then
 	db_name=$(ynh_sanitize_dbid --db_name=$app)
-	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+#REMOVEME? 	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
     db_user=$db_name
 fi
 
-# If final_path doesn't exist, create it
-if [ -z "$final_path" ]; then
-	final_path=/var/www/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+# If install_dir doesn't exist, create it
+if [ -z "$install_dir" ]; then
+#REMOVEME? 	install_dir=/var/www/$app
+#REMOVEME? 	ynh_app_setting_set --app=$app --key=install_dir --value=$install_dir
 fi
 
 # If secret_key doesn't exist, create it
 if [ -z "$secret_key" ]; then
-	secret_key="$(grep "^secret_key" "$final_path/config/ampache.cfg.php" | cut -d'"' -f2)"
+	secret_key="$(grep "^secret_key" "$install_dir/config/ampache.cfg.php" | cut -d'"' -f2)"
 	ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
 fi
 
 # Cleaning legacy permissions
-if ynh_legacy_permissions_exists; then
-    ynh_legacy_permissions_delete_all
+#REMOVEME? if ynh_legacy_permissions_exists; then
+#REMOVEME?     ynh_legacy_permissions_delete_all
     ynh_app_setting_delete --app=$app --key=is_public
 fi
 
-ynh_secure_remove --file="$final_path/log"
+#REMOVEME? ynh_secure_remove --file="$install_dir/log"
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
+#REMOVEME? ynh_script_progression --message="Making sure dedicated system user exists..." --weight=1
 
 # Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app --home_dir="$final_path"
+#REMOVEME? ynh_system_user_create --username=$app --home_dir="$install_dir"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -99,19 +99,19 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=3
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path" --keep="config/ampache.cfg.php"
+	ynh_setup_source --dest_dir="$install_dir" --keep="config/ampache.cfg.php"
 fi
 
-chmod 750 "$final_path"
-chmod -R o-rwx "$final_path"
-chown -R $app:www-data "$final_path"
+chmod 750 "$install_dir"
+chmod -R o-rwx "$install_dir"
+chown -R $app:www-data "$install_dir"
 
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=5
+#REMOVEME? ynh_script_progression --message="Upgrading dependencies..." --weight=5
 
-ynh_install_app_dependencies $pkg_dependencies
+#REMOVEME? ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # PHP-FPM CONFIGURATION
@@ -140,8 +140,8 @@ then
     ynh_script_progression --message="Upgrading ampache with Composer..." --weight=30
 
     # Install composer
-    ynh_install_composer --workdir=$final_path
-    ynh_composer_exec --phpversion="${YNH_PHP_VERSION}" --workdir="$final_path" --commands="config discard-changes true"
+    ynh_install_composer --workdir=$install_dir
+    ynh_composer_exec --phpversion="${YNH_PHP_VERSION}" --workdir="$install_dir" --commands="config discard-changes true"
 fi
 
 #=================================================
@@ -149,10 +149,10 @@ fi
 #=================================================
 ynh_script_progression --message="Updating a configuration file..." --weight=1
 
-ynh_add_config --template="../conf/ampache.cfg.php" --destination="$final_path/config/ampache.cfg.php"
+ynh_add_config --template="../conf/ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
 
-chmod 600 "$final_path/config/ampache.cfg.php"
-chown $app: "$final_path/config/ampache.cfg.php"
+chmod 600 "$install_dir/config/ampache.cfg.php"
+chown $app: "$install_dir/config/ampache.cfg.php"
 
 #=================================================
 # UPDATE MULTIMEDIA DIRECTORIES
@@ -172,11 +172,11 @@ then
     # Set the app as temporarily public for cURL call
     #if ! ynh_permission_has_user --permission="main" --user="visitors"
     #then
-    #    ynh_permission_update --permission="main" --add="visitors"
+#REMOVEME?     #    ynh_permission_update --permission="main" --add="visitors"
     #fi
 
     # Reload NGINX
-    ynh_systemd_action --service_name=nginx --action=reload
+#REMOVEME?     ynh_systemd_action --service_name=nginx --action=reload
 
     ynh_local_curl /update.php?action=update
     sleep 1
@@ -197,9 +197,9 @@ ynh_use_logrotate --non-append
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
+#REMOVEME? ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
-ynh_systemd_action --service_name=nginx --action=reload
+#REMOVEME? ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
