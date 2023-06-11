@@ -84,7 +84,6 @@ ynh_install_composer --workdir=$install_dir
 ynh_script_progression --message="Setuping application with CURL..." --weight=5
 
 # Installation with curl
-ynh_script_progression --message="Finalizing installation..." --weight=1
 ynh_local_curl /update.php?action=update
 
 #=================================================
