@@ -1,9 +1,3 @@
-## Limitations
-
-* Also, the SSO authentication not fully working from user panel, we have to work about this. In fact, it can disrupt external Ampache clients like Subsonic.
-
-## Additionnal informations
-
 ### Getting started
 
  * **Add your first catalog to load music files**
