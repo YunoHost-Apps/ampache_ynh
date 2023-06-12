@@ -62,7 +62,7 @@ ynh_add_nginx_config
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
-    ynh_script_progression --message="Upgrading ampache with Composer..." --weight=30
+    ynh_script_progression --message="Upgrading $app with Composer..." --weight=30
 
     # Install composer
     ynh_install_composer --workdir=$install_dir

@@ -5,7 +5,7 @@
 #=================================================
 
 # Composer version
-YNH_COMPOSER_VERSION="2.3.5"
+YNH_COMPOSER_VERSION="2.5.7"
 
 #=================================================
 # PERSONAL HELPERS
