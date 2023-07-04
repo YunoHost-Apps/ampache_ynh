@@ -16,7 +16,7 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
 
 ## Vue d’ensemble
 
-[Ampache](http://ampache.org) for the love of music. A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.
+Ampache is a web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device.
 
 ### Features
 
@@ -25,46 +25,13 @@ Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) po
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-**Version incluse :** 5.6.0~ynh1
+**Version incluse :** 5.6.1~ynh1
 
 **Démo :** https://ampache.org/demo.html
 
 ## Captures d’écran
 
 ![Capture d’écran de Ampache](./doc/screenshots/visualizer.png)
-
-## Avertissements / informations importantes
-
-## Limitations
-
-* Also, the SSO authentication not fully working from user panel, we have to work about this. In fact, it can disrupt external Ampache clients like Subsonic.
-
-## Additionnal informations
-
-### Getting started
-
- * **Add your first catalog to load music files**
-   * Go to *Admin panel* ![](https://raw.githubusercontent.com/ampache/ampache/develop/themes/reborn/images/icons/icon_admin.png)
-   * Click on *Add a Catalog*
-   * Fill up fields and click *Add Calalog*
-   * Next, enjoy :)
-
- * **Update a catalog for load new music files**
-   * Go to *Admin panel* ![](https://raw.githubusercontent.com/ampache/ampache/develop/themes/reborn/images/icons/icon_admin.png)
-   * Click on *Show Catalogs*
-   * Select *Update* in *Actions* list and click *Go*
-
- * **Change interface Language**
-   * Go to *Preferences panel* ![](https://raw.githubusercontent.com/ampache/ampache/develop/themes/reborn/images/icons/icon_edit.png)
-   * Click on *Interface*
-   * Change *Language* field
-
-### Ampache on mobile devices
-
- * [For Android](https://play.google.com/store/apps/details?id=com.antoniotari.reactiveampacheapp)
- * [For iOS](http://iampache.com/)
-
- * Full list of existings clients : https://github.com/ampache/ampache/wiki/Clients
 
 ## Documentations et ressources
 
