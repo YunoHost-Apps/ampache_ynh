@@ -17,7 +17,7 @@ admindoc = "https://github.com/ampache/ampache/wiki"
 code = "https://github.com/ampache/ampache"
 
 [integration]
-yunohost = ">= 11.1.20"
+yunohost = ">= 11.2"
 architectures = "all"
 multi_instance = true
 ldap = true
@@ -43,8 +43,8 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/ampache/ampache/archive/refs/tags/6.0.1.tar.gz"
-        sha256 = "0348daa7548ae48694ee590a67fc0dbd6d4cfc9c11641a20b6d4721f1ff30da2"
+        url = "https://github.com/ampache/ampache/releases/download/6.0.1/ampache-6.0.1_all_php8.2.zip"
+        sha256 = "37cf6fa2f3540e7d1ed51db5f0517f0689119c148f7abfcc6eb62864e87f1119"
         in_subdir = false
         autoupdate.strategy = "latest_github_tag"
 
