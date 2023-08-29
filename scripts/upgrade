@@ -72,9 +72,9 @@ fi
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Updating a configuration file..." --weight=1
+#ynh_script_progression --message="Updating a configuration file..." --weight=1
 
-(cd $install_dir && ynh_exec_as "$app" php$phpversion bin/cli admin:updateDatabase -e)
+#(cd $install_dir && ynh_exec_as "$app" php$phpversion bin/cli admin:updateDatabase -e)
 
 #ynh_add_config --template="../conf/ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
 
@@ -96,6 +96,7 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
     ynh_local_curl /update.php?action=update
     sleep 1
+    (cd $install_dir && ynh_exec_as "$app" php$phpversion bin/cli admin:updateDatabase -e)
 fi
 
 #=================================================
