@@ -43,8 +43,8 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/ampache/ampache/archive/refs/tags/6.0.3.tar.gz"
-        sha256 = "0d70ce6ee6a3ecb60b7f34d21d90c09a10e126637728ca849ce1ab0f93e42834"
+        url = "https://github.com/ampache/ampache/releases/download/6.0.3/ampache-6.0.3_all_php8.2.zip"
+        sha256 = "568114c48e2f0462d73fb742a82d7139ef5d0d01e6afe2f071409542c23dcd1d"
         in_subdir = false
         autoupdate.strategy = "latest_github_tag"
 
