@@ -38,7 +38,7 @@ Ampache is a web based audio/video streaming application and file manager allowi
 * Site officiel de l’app : <http://ampache.org>
 * Documentation officielle de l’admin : <https://github.com/ampache/ampache/wiki>
 * Dépôt de code officiel de l’app : <https://github.com/ampache/ampache>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_ampache>
+* YunoHost Store: <https://apps.yunohost.org/app/ampache>
 * Signaler un bug : <https://github.com/YunoHost-Apps/ampache_ynh/issues>
 
 ## Informations pour les développeurs
