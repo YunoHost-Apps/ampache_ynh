@@ -25,7 +25,7 @@ Ampache est une application Web de streaming audio/vidéo et un gestionnaire de 
   * Intégration avec les utilisateurs YunoHost - mêmes nom d'utilisateur et mot de passe
   * Autoriser un utilisateur à être l'administrateur (défini lors de l'installation)
 
-**Version incluse :** 6.1.0~ynh1
+**Version incluse :** 6.2.0~ynh1
 
 **Démo :** https://ampache.org/demo.html
 
