@@ -16,16 +16,12 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Removing system configurations related to $app..." --weight=1
 
-# Remove the app-specific logrotate config
 ynh_remove_logrotate
 
-# Remove the dedicated NGINX config
 ynh_remove_nginx_config
 
-# Remove the dedicated PHP-FPM config
 ynh_remove_fpm_config
 
-# Remove the log files
 ynh_secure_remove --file="/var/log/$app"
 
 #=================================================

@@ -26,7 +26,6 @@ ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=2
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 
 chmod -R o-rwx "$install_dir"
@@ -37,10 +36,8 @@ chown -R $app:www-data "$install_dir"
 #=================================================
 ynh_script_progression --message="Adding system configurations related to $app ..." --weight=1
 
-# Create a dedicated PHP-FPM config
-ynh_add_fpm_config --usage=low --footprint=low
+ynh_add_fpm_config
 
-# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
@@ -50,7 +47,6 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Loading default database..." --weight=2
 
-# Load default ampache database
 ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < "$install_dir/resources/sql/ampache.sql"
 
 #=================================================
@@ -65,7 +61,7 @@ ynh_multimedia_build_main_dir
 #=================================================
 ynh_script_progression --message="Adding a configuration file..." --weight=2
 
-ynh_add_config --template="../conf/ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
+ynh_add_config --template="ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
 
 chmod 600 "$install_dir/config/ampache.cfg.php"
 chown $app: "$install_dir/config/ampache.cfg.php"
