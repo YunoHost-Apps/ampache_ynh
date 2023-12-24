@@ -1353,21 +1353,21 @@ mail_port = 25
 ; Secure SMTP
 ; POSSIBLE VALUES: ssl tls
 ; DEFAULT: none
-;mail_secure_smtp = tls
+mail_secure_smtp = tls
 
 ; Enable SMTP authentication
 ; DEFAULT: "false"
-;mail_auth = "true"
+mail_auth = "true"
 
 ; SMTP username
 ; your mail auth username.
 ; DEFAULT: none
-;mail_auth_user = ""
+mail_auth_user = "__APP__"
 
 ; SMTP password
 ; your mail auth password.
 ; DEFAULT: none
-;mail_auth_pass = ""
+mail_auth_pass = "__MAIL_PWD__"
 
 ;#########################################################
 ;   Abbreviation Filter                                  #

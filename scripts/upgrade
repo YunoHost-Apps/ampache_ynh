@@ -75,7 +75,7 @@ fi
 
 #ynh_add_config --template="ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
 
-#chmod 600 "$install_dir/config/ampache.cfg.php"
+#chmod 650 "$install_dir/config/ampache.cfg.php"
 #chown $app: "$install_dir/config/ampache.cfg.php"
 
 #=================================================
