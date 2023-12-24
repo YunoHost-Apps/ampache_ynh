@@ -832,7 +832,7 @@ show_footer_statistics = "true"
 ; (latest albums, shouts, albums of artist, ...)
 ; use_rss = false (values true | false)
 ; DEFAULT: "false"
-;use_rss = "true"
+use_rss = "true"
 
 ; This setting allows themes to overwrite PHP template files. This can be really
 ; dangerous. Do this only if you trust every theme in your themes/ directory.
@@ -1357,17 +1357,17 @@ mail_port = 25
 
 ; Enable SMTP authentication
 ; DEFAULT: "false"
-;mail_auth = "true"
+mail_auth = "true"
 
 ; SMTP username
 ; your mail auth username.
 ; DEFAULT: none
-;mail_auth_user = ""
+mail_auth_user = "__APP__"
 
 ; SMTP password
 ; your mail auth password.
 ; DEFAULT: none
-;mail_auth_pass = ""
+mail_auth_pass = "__MAIL_PWD__"
 
 ;#########################################################
 ;   Abbreviation Filter                                  #
