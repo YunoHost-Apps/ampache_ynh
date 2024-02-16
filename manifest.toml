@@ -51,6 +51,7 @@ ram.runtime = "50M"
         sha256 = "11b137be42317a37bb2c89f1bde618449c91ac879cfa594853f3ba5e5a042cb7"
         in_subdir = false
         autoupdate.strategy = "latest_github_tag"
+        autoupdate.asset = "^ampache-.*_all_php8.2.zip$"
 
     [resources.system_user]
     allow_email = true
