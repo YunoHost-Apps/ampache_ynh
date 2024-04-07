@@ -1,5 +1,5 @@
 <!--
-NOTA: Este README foi creado automáticamente por https://github.com/YunoHost/apps/tree/master/tools/readme_generator
+NOTA: Este README foi creado automáticamente por <https://github.com/YunoHost/apps/tree/master/tools/readme_generator>
 NON debe editarse manualmente.
 -->
 
@@ -11,8 +11,8 @@ NON debe editarse manualmente.
 
 *[Le este README en outros idiomas.](./ALL_README.md)*
 
-> *Este paquete permíteche instalar Ampache de xeito rápido e doado nun servidor YunoHost.
-Se non usas YunoHost, le a [documentación](https://yunohost.org/#/install) para saber como instalalo.*
+> *Este paquete permíteche instalar Ampache de xeito rápido e doado nun servidor YunoHost.*  
+> *Se non usas YunoHost, le a [documentación](https://yunohost.org/install) para saber como instalalo.*
 
 ## Vista xeral
 
@@ -24,9 +24,10 @@ Ampache is a web based audio/video streaming application and file manager allowi
  * Quick loading for mobile devices with potential low bandwith
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
-**Versión proporcionada** 6.3.1~ynh1
 
-**Demo** <https://ampache.org/demo.html>
+**Versión proporcionada:** 6.3.1~ynh1
+
+**Demo:** <https://ampache.org/demo.html>
 
 ## Capturas de pantalla
 
@@ -42,14 +43,13 @@ Ampache is a web based audio/video streaming application and file manager allowi
 
 ## Info de desenvolvemento
 
-Envía a túa colaboración á [rama testing](https://github.com/YunoHost-Apps/ampache_ynh/tree/testing),
+Envía a túa colaboración á [rama `testing`](https://github.com/YunoHost-Apps/ampache_ynh/tree/testing).
 
-
-Para probar a rama testing, procede deste xeito.
+Para probar a rama `testing`, procede deste xeito:
 
 ```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --debug
-or
+ou
 sudo yunohost app upgrade ampache -u https://github.com/YunoHost-Apps/ampache_ynh/tree/testing --debug
 ```
 
