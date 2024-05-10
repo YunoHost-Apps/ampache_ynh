@@ -3,7 +3,7 @@
 请勿手动编辑。
 -->
 
-# YunoHost 的 Ampache
+# YunoHost 上的 Ampache
 
 [![集成程度](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![工作状态](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
 
