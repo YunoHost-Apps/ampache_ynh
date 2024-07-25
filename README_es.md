@@ -5,7 +5,7 @@ No se debe editar a mano.
 
 # Ampache para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
+[![Nivel de integración](https://dash.yunohost.org/integration/ampache.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
 
 [![Instalar Ampache con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ampache)
 

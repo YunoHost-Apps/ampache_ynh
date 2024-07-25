@@ -5,7 +5,7 @@ EZ editatu eskuz.
 
 # Ampache YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/ampache.svg)](https://dash.yunohost.org/appci/app/ampache) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
+[![Integrazio maila](https://dash.yunohost.org/integration/ampache.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
 
 [![Instalatu Ampache YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ampache)
 
