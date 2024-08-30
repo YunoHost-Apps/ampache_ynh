@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -19,65 +13,65 @@ secret_key=$(ynh_string_random --length=24)
 # STORE SETTINGS FROM MANIFEST
 #=================================================
 
-ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
+ynh_app_setting_set --key=secret_key --value=$secret_key
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=2
+ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir"
 
-chmod -R o-rwx "$install_dir"
-chown -R $app:www-data "$install_dir"
-
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app ..." --weight=1
+ynh_script_progression "Adding system configurations related to $app ..."
 
-ynh_add_fpm_config
+ynh_config_add_phpfpm
 
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 #=================================================
 # SPECIFIC SETUP
 #=================================================
 # LOAD DEFAULT DATABASE
 #=================================================
-ynh_script_progression --message="Loading default database..." --weight=2
+ynh_script_progression "Loading default database..."
 
-ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < "$install_dir/resources/sql/ampache.sql"
+ynh_mysql_db_shell < "$install_dir/resources/sql/ampache.sql"
 
 #=================================================
 # INSTALL MULTIMEDIA DIRECTORIES
 #=================================================
-ynh_script_progression --message="Installing multimedia directories..." --weight=5
+ynh_script_progression "Installing multimedia directories..."
 
 ynh_multimedia_build_main_dir
 
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding a configuration file..." --weight=2
+ynh_script_progression "Adding $app's configuration..."
 
-ynh_add_config --template="ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
+ynh_config_add --template="ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
 
-chmod 650 "$install_dir/config/ampache.cfg.php"
-chown $app: "$install_dir/config/ampache.cfg.php"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 650 "$install_dir/config/ampache.cfg.php"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app: "$install_dir/config/ampache.cfg.php"
 
 #=================================================
 # INSTALL WITH COMPOSER
 #=================================================
-ynh_script_progression --message="Installing with Composer..." --weight=45
+ynh_script_progression "Installing with Composer..."
 
 # Install composer
-ynh_install_composer --workdir=$install_dir
+ynh_composer_install
+ynh_composer_exec install --no-dev  # FIXMEhelpers2.1 (replace with composer_workdir=... prior to calling this helper, default is $intall_dir) --workdir=$install_dir
 
 #=================================================
 # SETUP APPLICATION WITH CURL
 #=================================================
-ynh_script_progression --message="Setuping application with CURL..." --weight=5
+ynh_script_progression "Setuping application with CURL..."
 
 # Installation with curl
 ynh_local_curl /update.php?action=update
@@ -85,28 +79,26 @@ ynh_local_curl /update.php?action=update
 #=================================================
 # LOAD ADMIN DATABASE
 #=================================================
-ynh_script_progression --message="Loading admin database..." --weight=2
+ynh_script_progression "Loading admin database..."
 
-ynh_add_config --template="admin.sql" --destination="/tmp/admin.sql"
+ynh_config_add --template="admin.sql" --destination="/tmp/admin.sql"
 
-ynh_mysql_connect_as --user=$db_user --password="$db_pwd" --database=$db_name < /tmp/admin.sql
+ynh_mysql_db_shell < /tmp/admin.sql
 
-ynh_secure_remove --file=/tmp/admin.sql
+ynh_safe_rm /tmp/admin.sql
 
-#=================================================
-# GENERIC FINALIZATION
 #=================================================
 # SETUP LOGROTATE
 #=================================================
-ynh_script_progression --message="Configuring log rotation..." --weight=1
+ynh_script_progression "Configuring log rotation..."
 
 mkdir -p "/var/log/$app"
-chown $app: "/var/log/$app"
+#REMOVEME? Assuming ynh_config_add_logrotate is called, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app: "/var/log/$app"
 # Use logrotate to manage application logfile(s)
-ynh_use_logrotate
+ynh_config_add_logrotate
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"

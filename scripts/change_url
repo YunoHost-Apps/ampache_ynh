@@ -1,37 +1,29 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC STARTING
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# STANDARD MODIFICATIONS
-#=================================================
 # MODIFY URL IN NGINX CONF
 #=================================================
-ynh_script_progression --message="Updating NGINX web server configuration..." --weight=2
+ynh_script_progression "Updating NGINX web server configuration..."
 
-ynh_change_url_nginx_config
+ynh_config_change_url_nginx
 
 #=================================================
 # SPECIFIC MODIFICATIONS
 #=================================================
 # CHANGE AMPACHE CONFIGURATION
 #=================================================
-ynh_script_progression --message="Updating Ampache configuration..."
+ynh_script_progression "Updating Ampache configuration..."
 
 conf_file="$install_dir/config/ampache.cfg.php"
 
-ynh_replace_string --match_string="\(web_path.*=.*\)\"$old_path\"" --replace_string="\1\"$new_path\"" --target_file="$conf_file"
-ynh_replace_string --match_string="\(http_host.*=.*\)\"$old_domain\"" --replace_string="\1\"$new_domain\"" --target_file="$conf_file"
+ynh_replace --match="\(web_path.*=.*\)\"$old_path\"" --replace="\1\"$new_path\"" --file="$conf_file"
+ynh_replace --match="\(http_host.*=.*\)\"$old_domain\"" --replace="\1\"$new_domain\"" --file="$conf_file"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Change of URL completed for $app" --last
+ynh_script_progression "Change of URL completed for $app"

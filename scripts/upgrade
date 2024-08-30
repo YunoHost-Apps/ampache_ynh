@@ -1,87 +1,74 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# CHECK VERSION
-#=================================================
-
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
+ynh_script_progression "Ensuring downward compatibility..."
 
 # If secret_key doesn't exist, create it
+# FIXMEhelpers2.1: maybe replace with: ynh_app_setting_set_default --key=secret_key --value="$(grep "^secret_key" "$install_dir/config/ampache.cfg.php" | cut -d'"' -f2)"
 if [ -z "${secret_key:-}" ]; then
 	secret_key="$(grep "^secret_key" "$install_dir/config/ampache.cfg.php" | cut -d'"' -f2)"
-	ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
+	ynh_app_setting_set --key=secret_key --value=$secret_key
 fi
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
+# FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
+if ynh_app_upstream_version_changed
 then
-	ynh_script_progression --message="Upgrading source files..." --weight=3
+	ynh_script_progression "Upgrading source files..."
 
 	ynh_setup_source --dest_dir="$install_dir" #--keep="config/ampache.cfg.php"
 fi
 
-chmod -R o-rwx "$install_dir"
-chown -R $app:www-data "$install_dir"
-
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
+ynh_script_progression "Upgrading system configurations related to $app..."
 
-ynh_add_fpm_config
+ynh_config_add_phpfpm
 
-ynh_add_nginx_config
+ynh_config_add_nginx
 
-#=================================================
-# SPECIFIC UPGRADE
 #=================================================
 # UPDATE AMPACHE WITH COMPOSER
 #=================================================
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
+# FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
+if ynh_app_upstream_version_changed
 then
-    ynh_script_progression --message="Upgrading $app with Composer..." --weight=30
+    ynh_script_progression "Upgrading $app with Composer..."
 
     # Install composer
-    ynh_install_composer --workdir=$install_dir
-    ynh_composer_exec --workdir="$install_dir" --commands="config discard-changes true"
+    ynh_composer_install
+ynh_composer_exec install --no-dev  # FIXMEhelpers2.1 (replace with composer_workdir=... prior to calling this helper, default is $intall_dir) --workdir=$install_dir
+    ynh_composer_exec config discard-changes true
 fi
 
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Updating a configuration file..." --weight=1
+ynh_script_progression "Updating configuration..."
 
-(cd $install_dir && ynh_exec_as "$app" php$phpversion bin/cli admin:updateDatabase -e)
+(cd $install_dir && ynh_exec_as_app php$php_version bin/cli admin:updateDatabase -e)
 
-ynh_add_config --template="ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
+ynh_config_add --template="ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
 
-chmod 650 "$install_dir/config/ampache.cfg.php"
-chown $app: "$install_dir/config/ampache.cfg.php"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 650 "$install_dir/config/ampache.cfg.php"
+#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app: "$install_dir/config/ampache.cfg.php"
 
 #=================================================
 # UPDATE MULTIMEDIA DIRECTORIES
 #=================================================
-ynh_script_progression --message="Updating multimedia directories..."
+ynh_script_progression "Updating multimedia directories..."
 
 ynh_multimedia_build_main_dir
 
@@ -89,27 +76,26 @@ ynh_multimedia_build_main_dir
 # UPGRADE AMPACHE WITH CURL
 #=================================================
 
-#if [ "$upgrade_type" == "UPGRADE_APP" ]
+## FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
+if ynh_app_upstream_version_changed
 #then
 #    ynh_local_curl /update.php?action=update
 #    sleep 1
-#    (cd $install_dir && ynh_exec_as "$app" php$phpversion bin/cli admin:updateDatabase -e)
+#    (cd $install_dir && ynh_exec_as_app php$php_version bin/cli admin:updateDatabase -e)
 #fi
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
 # SETUP LOGROTATE
 #=================================================
-ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
+ynh_script_progression "Upgrading logrotate configuration..."
 
 mkdir -p "/var/log/$app"
-chown $app: "/var/log/$app"
+#REMOVEME? Assuming ynh_config_add_logrotate is called, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app: "/var/log/$app"
 # Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate --non-append
+ynh_config_add_logrotate
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"
