@@ -30,17 +30,14 @@ ynh_config_add_nginx
 #=================================================
 # UPDATE AMPACHE WITH COMPOSER
 #=================================================
+ynh_script_progression "Upgrading $app with Composer..."
 
-# FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
-if ynh_app_upstream_version_changed
-then
-    ynh_script_progression "Upgrading $app with Composer..."
+# Install composer
+ynh_composer_install
 
-    # Install composer
-    ynh_composer_install
 ynh_composer_exec install --no-dev  # FIXMEhelpers2.1 (replace with composer_workdir=... prior to calling this helper, default is $intall_dir) --workdir=$install_dir
-    ynh_composer_exec config discard-changes true
-fi
+
+ynh_composer_exec config discard-changes true
 
 #=================================================
 # UPDATE A CONFIG FILE
