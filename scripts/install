@@ -22,8 +22,6 @@ ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir"
 
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
@@ -33,8 +31,6 @@ ynh_config_add_phpfpm
 
 ynh_config_add_nginx
 
-#=================================================
-# SPECIFIC SETUP
 #=================================================
 # LOAD DEFAULT DATABASE
 #=================================================
@@ -56,8 +52,7 @@ ynh_script_progression "Adding $app's configuration..."
 
 ynh_config_add --template="ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
 
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 650 "$install_dir/config/ampache.cfg.php"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app: "$install_dir/config/ampache.cfg.php"
+chmod 650 "$install_dir/config/ampache.cfg.php"
 
 #=================================================
 # INSTALL WITH COMPOSER
@@ -66,6 +61,7 @@ ynh_script_progression "Installing with Composer..."
 
 # Install composer
 ynh_composer_install
+
 ynh_composer_exec install --no-dev  # FIXMEhelpers2.1 (replace with composer_workdir=... prior to calling this helper, default is $intall_dir) --workdir=$install_dir
 
 #=================================================
@@ -73,7 +69,6 @@ ynh_composer_exec install --no-dev  # FIXMEhelpers2.1 (replace with composer_wor
 #=================================================
 ynh_script_progression "Setuping application with CURL..."
 
-# Installation with curl
 ynh_local_curl /update.php?action=update
 
 #=================================================
@@ -93,7 +88,7 @@ ynh_safe_rm /tmp/admin.sql
 ynh_script_progression "Configuring log rotation..."
 
 mkdir -p "/var/log/$app"
-#REMOVEME? Assuming ynh_config_add_logrotate is called, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app: "/var/log/$app"
+chown $app: "/var/log/$app"
 # Use logrotate to manage application logfile(s)
 ynh_config_add_logrotate
 
