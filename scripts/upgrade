@@ -9,26 +9,15 @@ source /usr/share/yunohost/helpers
 ynh_script_progression "Ensuring downward compatibility..."
 
 # If secret_key doesn't exist, create it
-# FIXMEhelpers2.1: maybe replace with: ynh_app_setting_set_default --key=secret_key --value="$(grep "^secret_key" "$install_dir/config/ampache.cfg.php" | cut -d'"' -f2)"
-if [ -z "${secret_key:-}" ]; then
-	secret_key="$(grep "^secret_key" "$install_dir/config/ampache.cfg.php" | cut -d'"' -f2)"
-	ynh_app_setting_set --key=secret_key --value=$secret_key
-fi
+ynh_app_setting_set_default --key=secret_key --value="$(grep "^secret_key" "$install_dir/config/ampache.cfg.php" | cut -d'"' -f2)"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression "Upgrading source files..."
 
-# FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
-if ynh_app_upstream_version_changed
-then
-	ynh_script_progression "Upgrading source files..."
+ynh_setup_source --dest_dir="$install_dir" #--keep="config/ampache.cfg.php"
 
-	ynh_setup_source --dest_dir="$install_dir" #--keep="config/ampache.cfg.php"
-fi
-
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
@@ -62,9 +51,6 @@ ynh_script_progression "Updating configuration..."
 
 ynh_config_add --template="ampache.cfg.php" --destination="$install_dir/config/ampache.cfg.php"
 
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 650 "$install_dir/config/ampache.cfg.php"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app: "$install_dir/config/ampache.cfg.php"
-
 #=================================================
 # UPDATE MULTIMEDIA DIRECTORIES
 #=================================================
@@ -78,11 +64,11 @@ ynh_multimedia_build_main_dir
 
 ## FIXME: this is still supported but the recommendation is now to *always* re-setup the app sources wether or not the upstream sources changed
 if ynh_app_upstream_version_changed
-#then
-#    ynh_local_curl /update.php?action=update
-#    sleep 1
-#    (cd $install_dir && ynh_exec_as_app php$php_version bin/cli admin:updateDatabase -e)
-#fi
+then
+    ynh_local_curl /update.php?action=update
+    sleep 1
+    (cd $install_dir && ynh_exec_as_app php$php_version bin/cli admin:updateDatabase -e)
+fi
 
 #=================================================
 # SETUP LOGROTATE
@@ -90,7 +76,7 @@ if ynh_app_upstream_version_changed
 ynh_script_progression "Upgrading logrotate configuration..."
 
 mkdir -p "/var/log/$app"
-#REMOVEME? Assuming ynh_config_add_logrotate is called, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown $app: "/var/log/$app"
+chown $app: "/var/log/$app"
 # Use logrotate to manage app-specific logfile(s)
 ynh_config_add_logrotate
 
