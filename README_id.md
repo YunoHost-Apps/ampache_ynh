@@ -25,7 +25,7 @@ Ampache is a web based audio/video streaming application and file manager allowi
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-**Versi terkirim:** 6.6.0~ynh1
+**Versi terkirim:** 6.6.3~ynh1
 
 **Demo:** <https://ampache.org/demo.html>
 
@@ -37,7 +37,7 @@ Ampache is a web based audio/video streaming application and file manager allowi
 
 - Website aplikasi resmi: <http://ampache.org>
 - Dokumentasi admin resmi: <https://github.com/ampache/ampache/wiki>
-- Repositori kode aplikasi hulu: <https://github.com/ampache/ampache>
+- Depot kode aplikasi hulu: <https://github.com/ampache/ampache>
 - Gudang YunoHost: <https://apps.yunohost.org/app/ampache>
 - Laporkan bug: <https://github.com/YunoHost-Apps/ampache_ynh/issues>
 
