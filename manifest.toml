@@ -49,7 +49,7 @@ ram.runtime = "50M"
 [resources]
         [resources.sources.main]
         url = "https://github.com/ampache/ampache/releases/download/6.6.3/ampache-6.6.3_all_php8.3.zip"
-        sha256 = "1eba2880e68f8dad753bcb6365691b3b0049b4732ad9e8ea7ae61ea7a5853b4d"
+        sha256 = "df7db36f537c6527c05a08fefbdbd2d558e101171c94123139bb98fee920a4fd"
         in_subdir = false
         autoupdate.strategy = "latest_github_release"
         autoupdate.asset = "^ampache-.*_all_php8.3.zip$"
