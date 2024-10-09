@@ -106,7 +106,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 
 
 INSERT INTO `catalog` (`id`, `name`, `catalog_type`, `last_update`, `last_clean`, `last_add`, `enabled`, `rename_pattern`, `sort_pattern`, `gather_types`) VALUES
-(1, 'Yunohost Music', 'local', 0, NULL, 0, 1, '%T - %t', '%a/%A', 'music');
+(1, 'YunoHost Music', 'local', 0, NULL, 0, 1, '%T - %t', '%a/%A', 'music');
 
 INSERT INTO `catalog_local` (`id`, `path`, `catalog_id`) VALUES
 (1, '/home/yunohost.multimedia/share/Music', 1);
