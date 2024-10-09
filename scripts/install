@@ -59,10 +59,9 @@ chmod 650 "$install_dir/config/ampache.cfg.php"
 #=================================================
 ynh_script_progression "Installing with Composer..."
 
-# Install composer
 ynh_composer_install
 
-ynh_composer_exec install --no-dev  # FIXMEhelpers2.1 (replace with composer_workdir=... prior to calling this helper, default is $intall_dir) --workdir=$install_dir
+ynh_composer_exec install --no-dev
 
 #=================================================
 # SETUP APPLICATION WITH CURL
@@ -89,7 +88,7 @@ ynh_script_progression "Configuring log rotation..."
 
 mkdir -p "/var/log/$app"
 chown $app: "/var/log/$app"
-# Use logrotate to manage application logfile(s)
+
 ynh_config_add_logrotate
 
 #=================================================
