@@ -25,7 +25,7 @@ Ampache is a web based audio/video streaming application and file manager allowi
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-**Поставляемая версия:** 6.6.3~ynh1
+**Поставляемая версия:** 7.0.0~ynh1
 
 **Демо-версия:** <https://ampache.org/demo.html>
 
