@@ -64,7 +64,7 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "'libav-tools|ffmpeg', mariadb-server, php8.3-mysql, php8.3-curl, php8.3-simplexml, php8.3-gd, php8.3-ldap, php8.3-intl"
+    packages = "'libav-tools|ffmpeg', mariadb-server, php8.3-mysql, php8.3-curl, php8.3-simplexml, php8.3-gd, php8.3-ldap, php8.3-intl, php8.3-zip"
 
     [resources.database]
     type = "mysql"
