@@ -5,7 +5,9 @@
 
 # YunoHost 上的 Ampache
 
-[![集成程度](https://dash.yunohost.org/integration/ampache.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/ampache)](https://ci-apps.yunohost.org/ci/apps/ampache/)
+![工作状态](https://apps.yunohost.org/badge/state/ampache)
+![维护状态](https://apps.yunohost.org/badge/maintained/ampache)
 
 [![使用 YunoHost 安装 Ampache](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ampache)
 
@@ -25,7 +27,7 @@ Ampache is a web based audio/video streaming application and file manager allowi
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-**分发版本：** 6.6.3~ynh1
+**分发版本：** 7.1.1~ynh1
 
 **演示：** <https://ampache.org/demo.html>
 
