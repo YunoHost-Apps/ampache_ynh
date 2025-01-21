@@ -61,7 +61,7 @@ ynh_script_progression "Installing with Composer..."
 
 ynh_composer_install
 
-ynh_composer_exec install --no-dev
+ynh_composer_exec install --no-dev --ignore-platform-req=ext-zip
 
 #=================================================
 # SETUP APPLICATION WITH CURL
