@@ -5,7 +5,9 @@ NON debe editarse manualmente.
 
 # Ampache para YunoHost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/ampache.svg)](https://ci-apps.yunohost.org/ci/apps/ampache/) ![Estado de funcionamento](https://ci-apps.yunohost.org/ci/badges/ampache.status.svg) ![Estado de mantemento](https://ci-apps.yunohost.org/ci/badges/ampache.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/ampache)](https://ci-apps.yunohost.org/ci/apps/ampache/)
+![Estado de funcionamento](https://apps.yunohost.org/badge/state/ampache)
+![Estado de mantemento](https://apps.yunohost.org/badge/maintained/ampache)
 
 [![Instalar Ampache con YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=ampache)
 
@@ -25,7 +27,7 @@ Ampache is a web based audio/video streaming application and file manager allowi
  * Integrate with YunoHost users - same username and password
  * Allow one user to be the administrator (set at the installation)
 
-**Versión proporcionada:** 6.6.3~ynh1
+**Versión proporcionada:** 7.2.0~ynh1
 
 **Demo:** <https://ampache.org/demo.html>
 
