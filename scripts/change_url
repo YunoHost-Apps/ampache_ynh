@@ -15,10 +15,8 @@ ynh_config_change_url_nginx
 #=================================================
 ynh_script_progression "Updating Ampache configuration..."
 
-conf_file="$install_dir/config/ampache.cfg.php"
-
-ynh_replace --match="\(web_path.*=.*\)\"$old_path\"" --replace="\1\"$new_path\"" --file="$conf_file"
-ynh_replace --match="\(http_host.*=.*\)\"$old_domain\"" --replace="\1\"$new_domain\"" --file="$conf_file"
+ynh_replace --match="\(web_path.*=.*\)\"$old_path\"" --replace="\1\"$new_path\"" --file="$install_dir/config/ampache.cfg.php"
+ynh_replace --match="\(http_host.*=.*\)\"$old_domain\"" --replace="\1\"$new_domain\"" --file="$install_dir/config/ampache.cfg.php"
 
 #=================================================
 # END OF SCRIPT
