@@ -34,7 +34,7 @@ ynh_script_progression "Upgrading $app with Composer..."
 # Install composer
 ynh_composer_install
 
-ynh_composer_exec install --no-dev
+ynh_composer_exec install --no-dev --ignore-platform-req=ext-zip
 
 ynh_composer_exec config discard-changes true
 
