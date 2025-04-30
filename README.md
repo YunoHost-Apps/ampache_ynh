@@ -4,7 +4,7 @@ It shall NOT be edited by hand.
 -->
 
 <h1>
-  <img src="https://raw.githubusercontent.com/YunoHost/apps/master/logos/ampache.png" width="32px" alt="Logo of Ampache">
+  <img src="https://raw.githubusercontent.com/YunoHost/apps/main/logos/ampache.png" width="32px" alt="Logo of Ampache">
   Ampache, packaged for YunoHost
 </h1>
 
@@ -12,7 +12,7 @@ Web based audio/video streaming application
 
 [![🌐 Official app website](https://img.shields.io/badge/Official_app_website-darkgreen?style=for-the-badge)](http://ampache.org)
 [![App Demo](https://img.shields.io/badge/App_Demo-blue?style=for-the-badge)](https://ampache.org/demo.html)
-![Version: 7.4.0~ynh1](https://img.shields.io/badge/Version-7.4.0~ynh1-rgba(0,150,0,1)?style=for-the-badge)
+[![Version: 7.4.2~ynh1](https://img.shields.io/badge/Version-7.4.2~ynh1-rgba(0,150,0,1)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/ampache/)
 
 <div align="center">
 <a href="https://apps.yunohost.org/app/ampache"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_more_info_on_the_appstore.svg"/></a>
@@ -20,6 +20,8 @@ Web based audio/video streaming application
 </div>
 
 ## 📦 Developer info
+
+[![Automatic tests level](https://apps.yunohost.org/badge/cilevel/ampache)](https://ci-apps.yunohost.org/ci/apps/ampache/)
 
 🛠️ Upstream Ampache repository: <https://github.com/ampache/ampache>
 
