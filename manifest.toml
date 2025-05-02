@@ -5,7 +5,7 @@ name = "Ampache"
 description.en = "Web based audio/video streaming application"
 description.fr = "Application de streaming audio et vidéo"
 
-version = "7.4.0~ynh1"
+version = "7.4.2~ynh1"
 
 maintainers = []
 
@@ -47,8 +47,8 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/ampache/ampache/releases/download/7.4.0/ampache-7.4.0_all_php8.3.zip"
-        sha256 = "30f89dbfa691c062339f33c93dbc345102dfecba3c78cec959280917a06c2b23"
+        url = "https://github.com/ampache/ampache/releases/download/7.4.2/ampache-7.4.2_all_php8.3.zip"
+        sha256 = "303127b4a2fc0e2aed3b662528b2da5ab68bd34cdca7ad1c5909cc59df6dc69f"
         in_subdir = false
         autoupdate.strategy = "latest_github_release"
         autoupdate.asset = "^ampache-.*_all_php8.3.zip$"
