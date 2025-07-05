@@ -47,11 +47,11 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/ampache/ampache/releases/download/7.6.1/ampache-7.6.1_all_php8.3.zip"
-        sha256 = "8ae8016c686a2701c06753635d48a5b91efd32535366a58b6d18fe74f4bee8f1"
+        url = "https://github.com/ampache/ampache/releases/download/7.6.1/ampache-7.6.1_all_php8.4.zip"
+        sha256 = "341ecc66206f9b66da940c5e980fb74dc973a98b8b3fe5f2021bc025d989eb8f"
         in_subdir = false
         autoupdate.strategy = "latest_github_release"
-        autoupdate.asset = "^ampache-.*_all_php8.3.zip$"
+        autoupdate.asset = "^ampache-.*_all_php8.4.zip$"
 
     [resources.system_user]
     allow_email = true
@@ -63,7 +63,7 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "'libav-tools|ffmpeg', mariadb-server, php8.3-mysql, php8.3-curl, php8.3-simplexml, php8.3-gd, php8.3-ldap, php8.3-intl"
+    packages = "'libav-tools|ffmpeg', mariadb-server, php8.4-mysql, php8.4-curl, php8.4-simplexml, php8.4-gd, php8.4-ldap, php8.4-intl"
 
     [resources.database]
     type = "mysql"
