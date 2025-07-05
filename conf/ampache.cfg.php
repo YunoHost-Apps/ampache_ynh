@@ -30,6 +30,16 @@ config_version = 82
 ; DEFAULT: composer
 ;composer_binary_path = "composer"
 
+; By default Ampache doesn't install dev packages using the --no-dev parameter
+; disable this setting to install dev packages (e.g. composer install --prefer-source --no-interaction)
+; DEFAULT: "true"
+composer_no_dev = "true"
+
+; This value allows to override the npm binary path to distinguish between multiple npm versions
+; Either a binary name in $PATH as well as a fully qualified path is possible
+; DEFAULT: npm
+;npm_binary_path = "npm"
+
 ; We sometimes need to talk and will show a warning to admin users
 ; Enable this setting if you don't want to see warnings (When we enable them)
 ; DEFAULT: "false"
@@ -122,6 +132,11 @@ database_password = "__DB_PWD__"
 ; DEFAULT: "utf8mb4_unicode_ci"
 ;database_collation = "utf8mb4_unicode_ci"
 
+; Set a default table engine for your database
+; Don't change this unless you understand how to BACKUP and RESTORE a database!
+; DEFAULT: "InnoDB"
+;database_engine = "InnoDB"
+
 ;#########################################################
 ; Session and Security                                   #
 ;#########################################################
@@ -149,17 +164,19 @@ stream_length = 7200
 remember_length = 604800
 
 ; Name of the Session/Cookie that will sent to the browser
-; default should be fine
-; DEFAULT: ampache
-session_name = ampache
+; If you are using session_cookiesecure add the prefix __Secure-
+; to restrict cookie access to HTTPS only (e.g. "__Secure-ampache")
+; (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#cookie-namecookie-value)
+; DEFAULT: "ampache"
+session_name = "ampache"
 
-; Lifetime of the Cookie, 0 == Forever (until browser close) , otherwise in terms of seconds
+; Lifetime of the Cookie, 0 == Forever (until browser close), otherwise in terms of seconds
 ; If you want cookies to last past a browser close set this to a value in seconds.
 ; DEFAULT: 0
 session_cookielife = 0
 
-; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
-; running a secure site (HTTPS).
+; Create cookies with the "secure" flag.
+; Set to 1 (true) if you are running a secure site (HTTPS).
 ; DEFAULT: 0
 session_cookiesecure = 0
 
@@ -203,6 +220,15 @@ access_control = "true"
 ; disabled.
 ; DEFAULT: "true"
 require_session = "true"
+
+; Webplayer Access Level
+; Set a minimum access level required to access the webplayer.
+; When a user does not meet the access requirements then you
+; are blocked from using the webplayer.
+; NOTE: This setting is ignored if you disable use_auth
+; POSSIBLE VALUES: guest, user, content_manager, manager, admin
+; DEFAULT: "user"
+webplayer_level = "user"
 
 ; Require LocalNet Session
 ; If this is set to true then Ampache will require that a valid session
@@ -248,15 +274,6 @@ getid3_tag_order = "vorbiscomment,id3v2,id3v1,quicktime,matroska,ape,asf,avi,mpe
 ; DEFAULT: "false"
 ;getid3_detect_id3v2_encoding = "true"
 
-; This determines if we write the changes to files (as id3 tags) when modifying metadata, or only keep them in Ampache (the default).
-; DEFAULT: "false"
-;write_id3 = "true"
-
-; This determines if we write the changes to files (as id3 tags) when modifying album art, or only keep them in Ampache (the default)
-; as id3 metadata when updated.
-; DEFAULT: "false"
-;write_id3_art = "true"
-
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked)
 ; POSSIBLE VALUES (builtins): filename and getID3
@@ -267,7 +284,6 @@ metadata_order = "getID3,MusicBrainz,TheAudioDb,filename"
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked) for video files
 ; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
 ; DEFAULT: "filename,getID3"
 metadata_order_video = "filename,getID3"
 
@@ -283,6 +299,13 @@ deferred_ext_metadata = "true"
 ; This setting takes a regex pattern. TODO: explain that this is not just for genres until we can replace this safely
 ; DEFAULT: "[/]{2}|[/\\|,;]" (Split on "//", "_", "/", "\", "|", "," and ";")
 additional_genre_delimiters = "[/]{2}|[_/\\|,;]"
+
+; Split Artist and Album Artist tags by regex; keeping the first result.
+; Some clients add a \\ to their tags to support multiple artists. Ampache assumes that these tags are a single name.
+; The string must not have spaces around the delimiter to allow for bands who use \\ in their name.
+; NOTE: This is usually a single string tag so it's not enabled by default. The final regex is '/[^ ]\\\\[^ ]/'
+; DEFAULT: "\\\\"
+;split_artist_regex = "\\\\"
 
 ; Enable importing custom metadata from files.
 ; This will need a bit of time during the import. So you may want to disable this
@@ -328,11 +351,19 @@ catalog_playlist_pattern = "m3u|m3u8|pls|asx|xspf"
 ; DEFAULT: The|An|A|Die|Das|Ein|Eine|Les|Le|La
 catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
+; List Header Alphabetical String Pattern
+; This defines the string used in the list header when you check "Alphabet"
+; in browse pages. Each character will be split into single items
+; and will be applied as a regex to title of the objects being displayed.
+; NOTE: '#' (Digits or Punctuation) and '*' (All results) are added separately
+; DEFAULT: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+;alpha_string_pattern = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 ; Ignore Pattern
 ; Ignore files that match this pattern
 ; You can specify any file extension you want in here separating them with a |
 ; DEFAULT: None
-; catalog_ignore_pattern = "\(HTOA\)"
+;catalog_ignore_pattern = "\(HTOA\)"
 
 ; Catalog disable
 ; This defines if catalog can be disabled without removing database entries
@@ -359,14 +390,23 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: "false"
 ;catalog_verify_by_time = "true"
 
+; Catalog verify by album groups
+; Ampache will verify songs individually by default. If you enable this setting
+; We will update each album instead of just the individual songs.
+; DEFAULT: "false"
+;catalog_verify_by_album = "true"
+
 ;#########################################################
 ; Program Settings                                       #
 ;#########################################################
 
 ; Downsample Remote
-; If this is set to true and access control is on any users who are not
-; coming from a defined 'network' ACL will be automatically downsampled
-; regardless of their preferences. Requires access_control to be enabled
+; When enabled, any users who are not coming from a defined 'network' ACL
+; will be automatically downsampled. ('transcoding' will be set to 'required')
+; regardless of their preferences. This requires access_control to be enabled.
+; NOTE:
+;  * Local network users will disable all transcoding when enabled
+;  * If transcode is set to 'never' this setting will be ignored
 ; DEFAULT: "false"
 ;downsample_remote = "true"
 
@@ -416,13 +456,6 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: Ampache - Zip Batch Download
 ;file_zip_comment = "Ampache - Zip Batch Download"
 
-; Load the debug webplayer
-; This will load the *.js player instead of the *.min.js player
-; The unminified player has a lot of console.log() statements in the code.
-; You can make changes and then check how the player is functioning.
-; DEFAULT: "false"
-;webplayer_debug = "true"
-
 ; Waveform
 ; This settings tells Ampache to attempt to generate a waveform
 ; for each song. It requires transcode and encode_args_wav settings.
@@ -445,10 +478,16 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: 400
 ;waveform_width = 400
 
+; Waveform draw flat
+; Don't print flat values on the canvas if not necessary
+; NOTE: This was hardcoded to true and doesn't 'seem' to do anything
+; DEFAULT: "true"
+;waveform_drawflat = "false"
+
 ; Temporary Directory Path
 ; If Waveform is enabled this must be set to tell
-; Ampache which directory to save the temporary file to. Do not put a
-; trailing slash or this will not work.
+; Ampache which directory to save the temporary file to.
+; Do not put a trailing slash or this will not work.
 ; DEFAULT: "false"
 ;tmp_dir_path = "/tmp"
 
@@ -480,9 +519,8 @@ use_auth = "true"
 ; Default Auth Level
 ; If use_auth is set to false then this option is used
 ; to determine the permission level of the 'default' users
-; default is administrator. This setting only takes affect
-; if use_auth is false
-; POSSIBLE VALUES: user, admin, manager, guest
+; NOTE: This setting only takes affect if use_auth is false
+; POSSIBLE VALUES: guest, user, content_manager, manager, admin
 ; DEFAULT: guest
 default_auth_level = "guest"
 
@@ -637,6 +675,13 @@ album_art_min_height = 30
 ; DEFAULT: "false"
 ;resize_images = "true"
 
+; Upscale Images * Requires PHP-GD *
+; Disable this option to prevent upscaling of images.
+; By default Ampache will scale images to display size * 2
+; This is useful for high DPI displays but does increase load times
+; DEFAULT: "true"
+;upscale_images = "false"
+
 ; Playlist Cover Art
 ; Set this to true if you want Ampache to generate
 ; cover art for playlists automatically based on
@@ -664,7 +709,7 @@ playlist_art = "true"
 ; method unless you want it to overwrite what's already in the
 ; database
 ; POSSIBLE VALUES (builtins): db tags folder spotify musicbrainz google
-; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
+; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Flickr
 ; DEFAULT: db,tags,folder,spotify,musicbrainz
 art_order = "db,tags,folder,spotify,musicbrainz"
 
@@ -686,15 +731,15 @@ art_order = "db,tags,folder,spotify,musicbrainz"
 ;show_song_art = "true"
 
 ; Spotify Album art search filter
-;  Narrow the search.
-;  POSSIBLE VALUES:  artist,(year:1991 or year:1991-2000)
-; POSSIBLE  VALUES: empty string("") or commented out for no filter
+; Narrow the search using additional filters.
+; POSSIBLE VALUES: artist,(year:1991 or year:1991-2000)
+; POSSIBLE VALUES: empty string("") or commented out for no filter
 ; DEFAULT: none;
 ;spotify_art_filter = "artist"
 
 ; Art search limit
-;  Limit the total images returned
-;  DEFAULT: 15
+; Limit the total images returned
+; DEFAULT: 15
 ;art_search_limit = 15
 
 ; Recommendations
@@ -735,6 +780,20 @@ lastfm_api_secret = ""
 ; accessing their catalog API. (https://developer.spotify.com/dashboard/)
 ; DEFAULT: none
 ;spotify_client_id = ""
+
+; MusicBrainz API username
+; If you make a lot of requests you should use your MusicBrainz API account
+; This can help with rate limiting as MusicBrainz servers limit all requests
+; Your account can be created at https://musicbrainz.org/register
+; DEFAULT: none
+;musicbrainz_username = ""
+
+; MusicBrainz API password
+; If you make a lot of requests you should use your MusicBrainz API account
+; This can help with rate limiting as MusicBrainz servers limit all requests
+; Your account can be created at https://musicbrainz.org/register
+; DEFAULT: none
+;musicbrainz_password = ""
 
 ; Spotify client secret
 ; Both id and secret are required to access the spotify catalog.
@@ -875,14 +934,34 @@ log_path = "/var/log/__APP__"
 ; DEFAULT: %name.%Y%m%d.log
 log_filename = "%name.%Y%m%d.log"
 
+; API Debug Handler
+; If this is enabled Ampache will not catch exceptions during API calls.
+; Used for development and not recommended for regular use.
+; DEFAULT: "false"
+;api_debug_handler = "true"
+
+; Load the debug webplayer
+; This will load the *.js player instead of the *.min.js player
+; The unminified player has a lot of console.log() statements in the code.
+; You can make changes and then check how the player is functioning.
+; DEFAULT: "false"
+;webplayer_debug = "true"
+
+; Load Vite dev environment
+; This will load the Vite dev server scripts from scripts.inc.php
+; Not needed unless you're interested in Ampache JS dev
+; https://vite.dev/guide/
+; DEFAULT: "false"
+;vite_dev = "true"
+
 ;#########################################################
 ; Encoding Settings                                      #
 ;#########################################################
 
 ; Charset of generated HTML pages
 ; Default of UTF-8 should work for most people
-; DEFAULT: UTF-8
-site_charset = UTF-8
+; DEFAULT: "UTF-8"
+site_charset = "UTF-8"
 
 ; Locale Charset
 ; Local charset (mainly for file operations) if different
@@ -986,15 +1065,6 @@ ldap_name_field = "cn"
 ;ldap_member_attribute = "memberuid"
 
 ;#########################################################
-; OpenID login info (optional)                           #
-;#########################################################
-
-; Requires specific OpenID Provider Authentication Policy
-; DEFAULT: none
-; VALUES: PAPE_AUTH_MULTI_FACTOR_PHYSICAL,PAPE_AUTH_MULTI_FACTOR,PAPE_AUTH_PHISHING_RESISTANT
-;openid_required_pape = ""
-
-;#########################################################
 ; Public Registration settings, defaults to disabled     #
 ;#########################################################
 
@@ -1015,6 +1085,7 @@ ldap_name_field = "cn"
 ; recommended you leave this off, as it will allow anyone to
 ; sign up for an account on your server.
 ; REMEMBER: don't forget to set the mail from address further down in the config.
+; If you don't have an email server, make sure to enable user_no_email_confirm below
 ; DEFAULT: "false"
 ;allow_public_registration = "true"
 
@@ -1070,6 +1141,14 @@ registration_display_fields = "fullname,website"
 ; POSSIBLE VALUES: fullname,website,state,city
 ; DEFAULT: "fullname"
 registration_mandatory_fields = "fullname"
+
+; User create field validation
+; Regex filters for username, fullname and website validation
+; If you run a site with public registration you may  want to
+; filter these fields for spam or other unwanted content.
+; DEFAULT: none
+;user_name_filter = "https?:\/\/"
+;user_website_filter = "\[url=http"
 
 ;#########################################################
 ; These options control the dynamic downsampling based   #
@@ -1142,17 +1221,17 @@ transcode_mp3 = "allowed"
 
 ; Default audio output format
 ; DEFAULT: none
-;encode_target = mp3
+;encode_target = "mp3"
 
 ; Default video output format
 ; DEFAULT: none
-;encode_video_target = webm
+;encode_video_target = "webm"
 
 ; Override the default output format on a per-type basis, for example,
 ; to stream lossless encoded files in lossy formats.
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
-;encode_target_flac = opus
+;encode_target_flac = "opus"
 
 ; Override the default TYPE transcoding behavior on a per-player basis, for example,
 ; to stream lossless using the api and lossy using the web interface.
@@ -1167,8 +1246,8 @@ transcode_mp3 = "allowed"
 ; encode_player_PLAYER_target = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
-;encode_player_webplayer_target = mp3
-;encode_player_api_target = mp3
+;encode_player_webplayer_target = "mp3"
+;encode_player_api_target = "mp3"
 
 ; Allow clients to override transcode settings (output type, bitrate, codec ...)
 ; DEFAULT: "true"
@@ -1206,14 +1285,14 @@ transcode_input = "-i %FILE%"
 ; For each output format, you should provide the necessary arguments for
 ; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-encode_args_mp3 = "-vn -b:a %BITRATE%K -c:a libmp3lame -f mp3 pipe:1"
-encode_args_ogg = "-vn -b:a %BITRATE%K -c:a libvorbis -f ogg pipe:1"
-encode_args_opus = "-vn -b:a %BITRATE%K -c:a libopus -compression_level 10 -f ogg pipe:1"
-encode_args_m4a = "-vn -b:a %BITRATE%K -c:a libfdk_aac -f adts pipe:1"
-encode_args_wav = "-vn -b:a %BITRATE%K -c:a pcm_s16le -f wav pipe:1"
-encode_args_flv = "-b:a %BITRATE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
-encode_args_webm = "-b:a %BITRATE%K -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
-encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_mp3 = "-vn -b:a %BITRATE% -c:a libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a %BITRATE% -c:a libvorbis -f ogg pipe:1"
+encode_args_opus = "-vn -b:a %BITRATE% -c:a libopus -compression_level 10 -f ogg pipe:1"
+encode_args_m4a = "-vn -b:a %BITRATE% -c:a libfdk_aac -f adts pipe:1"
+encode_args_wav = "-vn -b:a %BITRATE% -c:a pcm_s16le -f wav pipe:1"
+encode_args_flv = "-b:a %BITRATE% -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+encode_args_webm = "-b:a %BITRATE% -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
+encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE% -preset superfast -threads 0 pipe:1"
 encode_args_ogv = "-codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 -f ogg pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
@@ -1296,7 +1375,7 @@ send_full_stream = "webplayer"
 ;force_ssl = "true"
 
 ;#########################################################
-;  Mail Settings                                         #
+; Mail Settings                                          #
 ;#########################################################
 
 ; Enable or disable email server features
@@ -1332,14 +1411,14 @@ send_full_stream = "webplayer"
 ;mail_check = "strict"
 
 ;#########################################################
-;  sendmail Settings                                     #
+; sendmail Settings                                      #
 ;#########################################################
 
 ; DEFAULT: /usr/sbin/sendmail
 ;sendmail_path = "/usr/sbin/sendmail"
 
 ;#########################################################
-;  SMTP Settings                                         #
+; SMTP Settings                                          #
 ;#########################################################
 
 ; Mail server (hostname or IP address)
@@ -1353,7 +1432,7 @@ mail_port = 25
 ; Secure SMTP
 ; POSSIBLE VALUES: ssl tls
 ; DEFAULT: none
-;mail_secure_smtp = tls
+;mail_secure_smtp = "tls"
 
 ; Enable SMTP authentication
 ; DEFAULT: "false"
