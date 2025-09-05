@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -58,8 +57,6 @@ chmod 650 "$install_dir/config/ampache.cfg.php"
 # INSTALL WITH COMPOSER
 #=================================================
 ynh_script_progression "Installing with Composer..."
-
-#REMOVEME? ynh_composer_install
 
 ynh_composer_exec install --no-dev --ignore-platform-req=ext-zip
 

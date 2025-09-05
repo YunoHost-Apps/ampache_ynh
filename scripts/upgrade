@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -30,9 +29,6 @@ ynh_config_add_nginx
 # UPDATE AMPACHE WITH COMPOSER
 #=================================================
 ynh_script_progression "Upgrading $app with Composer..."
-
-# Install composer
-#REMOVEME? ynh_composer_install
 
 ynh_composer_exec install --no-dev --ignore-platform-req=ext-zip
 
