@@ -54,7 +54,7 @@ chmod 650 "$install_dir/config/ampache.cfg.php"
 #=================================================
 ynh_script_progression "Installing with Composer..."
 
-ynh_composer_exec install --no-dev #--ignore-platform-req=ext-zip
+ynh_composer_exec install --no-dev
 
 #=================================================
 # SETUP APPLICATION WITH CURL
