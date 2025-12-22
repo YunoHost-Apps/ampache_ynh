@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 82
+config_version = 85
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -80,7 +80,7 @@ web_path = "__PATH__"
 ; DEFAULT: none
 ;local_web_path = "http://localhost/ampache"
 
-; The Ampache base URL is determinied from web requests.
+; The Ampache base URL is determined from web requests.
 ; When using CLI actions you don't send a web request meaning
 ; it can't be determined. This setting allows you to set a
 ; fallback when the base url can't be determined. Do not put a
@@ -95,7 +95,7 @@ web_path = "__PATH__"
 ; Hostname of your database
 ; For socket authentication, set the path to socket file (e.g. /var/run/mysqld/mysqld.sock)
 ; DEFAULT: localhost
-database_hostname = localhost
+database_hostname = "localhost"
 
 ; Port to use when connecting to your database
 ; DEFAULT: none
@@ -117,7 +117,6 @@ database_password = "__DB_PWD__"
 
 ; Set a default charset for your database
 ; Don't change this unless you understand how to BACKUP and RESTORE a database!
-;
 ; DEFAULT: "utf8mb4"
 ;database_charset = "utf8mb4"
 
@@ -184,7 +183,7 @@ session_cookiesecure = 0
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
-; VALUES: mysql,ldap,http,pam,external,openid
+; VALUES: mysql,ldap,http,pam,external
 auth_methods = "ldap"
 
 ; External authentication
@@ -558,6 +557,13 @@ ratings = "true"
 ; DEFAULT: -1
 ;rating_file_tag_user = 1
 
+; Rating Tag Compatability mode
+; Lots of different players have lots of different scales for ratings
+; Ampache has always kept a simple divide by 5 scale but lots of places don't
+; Enable this option if your file tags are using this other scale
+; DEFAULT: "false"
+;rating_file_tag_compatibility = "true"
+
 ; Direct play
 ; This allows user to play directly a song or album
 ; POSSIBLE VALUES: false true
@@ -666,6 +672,14 @@ album_art_min_height = 30
 ; Specify the maximum height for arts (in pixel).
 ; DEFAULT: none
 ;album_art_max_height = 1024
+
+; Public Images
+; Disable this option to require a valid user session for viewing images.
+; When enabled, images can be displayed without checking for an active session,
+; bypassing `use_auth` and `require_session` settings.
+; If disabled, image links will require a valid session to be accessed.
+; DEFAULT: "true"
+public_images = "true"
 
 ; Resize Images * Requires PHP-GD *
 ; Set this to true if you want Ampache to resize the Album
@@ -933,6 +947,12 @@ log_path = "/var/log/__APP__"
 ; %name.%Y%m%d.log will create a different log file every day.
 ; DEFAULT: %name.%Y%m%d.log
 log_filename = "%name.%Y%m%d.log"
+
+; Log Time Format
+; This defines the time format used in the log files.
+; See https://www.php.net/manual/en/function.date.php for possible formats.
+; DEFAULT: c (ISO 8601 date)
+log_time_format = "c"
 
 ; API Debug Handler
 ; If this is enabled Ampache will not catch exceptions during API calls.
@@ -1285,14 +1305,14 @@ transcode_input = "-i %FILE%"
 ; For each output format, you should provide the necessary arguments for
 ; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-encode_args_mp3 = "-vn -b:a %BITRATE% -c:a libmp3lame -f mp3 pipe:1"
-encode_args_ogg = "-vn -b:a %BITRATE% -c:a libvorbis -f ogg pipe:1"
-encode_args_opus = "-vn -b:a %BITRATE% -c:a libopus -compression_level 10 -f ogg pipe:1"
-encode_args_m4a = "-vn -b:a %BITRATE% -c:a libfdk_aac -f adts pipe:1"
-encode_args_wav = "-vn -b:a %BITRATE% -c:a pcm_s16le -f wav pipe:1"
-encode_args_flv = "-b:a %BITRATE% -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
-encode_args_webm = "-b:a %BITRATE% -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
-encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE% -preset superfast -threads 0 pipe:1"
+encode_args_mp3 = "-vn -b:a %BITRATE%k -c:a libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a %BITRATE%k -c:a libvorbis -f ogg pipe:1"
+encode_args_opus = "-vn -b:a %BITRATE%k -c:a libopus -compression_level 10 -f ogg pipe:1"
+encode_args_m4a = "-vn -b:a %BITRATE%k -c:a libfdk_aac -f adts pipe:1"
+encode_args_wav = "-vn -b:a %BITRATE%k -c:a pcm_s16le -f wav pipe:1"
+encode_args_flv = "-b:a %BITRATE%k -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+encode_args_webm = "-b:a %BITRATE%k -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
+encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
 encode_args_ogv = "-codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 -f ogg pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame

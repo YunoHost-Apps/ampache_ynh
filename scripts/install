@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -8,10 +7,6 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 secret_key=$(ynh_string_random --length=24)
-
-#=================================================
-# STORE SETTINGS FROM MANIFEST
-#=================================================
 
 ynh_app_setting_set --key=secret_key --value=$secret_key
 
@@ -59,9 +54,7 @@ chmod 650 "$install_dir/config/ampache.cfg.php"
 #=================================================
 ynh_script_progression "Installing with Composer..."
 
-ynh_composer_install
-
-ynh_composer_exec install --no-dev --ignore-platform-req=ext-zip
+ynh_composer_exec install --no-dev
 
 #=================================================
 # SETUP APPLICATION WITH CURL
