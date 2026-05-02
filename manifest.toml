@@ -5,7 +5,7 @@ name = "Ampache"
 description.en = "Web based audio/video streaming application"
 description.fr = "Application de streaming audio et vidéo"
 
-version = "7.9.2~ynh1"
+version = "7.9.3~ynh1"
 
 maintainers = []
 
@@ -18,7 +18,7 @@ code = "https://github.com/ampache/ampache"
 fund = "https://ampache.org/donate.html"
 
 [integration]
-yunohost = ">= 12.1.38"
+yunohost = ">= 12.1.39"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = true
@@ -47,11 +47,11 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/ampache/ampache/releases/download/7.9.2/ampache-7.9.2_all_php8.4.zip"
-        sha256 = "52be7e66dc6d7272507346f3ccaa89c2ee783c579e4697fd32f3c18fe22a8d98"
+        url = "https://github.com/ampache/ampache/releases/download/7.9.3/ampache-7.9.3_all_php8.5.zip"
+        sha256 = "06a219a261d5be1bd6b1da6fa8fe9aa6c5f715a1b0b9f8cf297d31cc09dbb7e5"
         in_subdir = false
         autoupdate.strategy = "latest_github_release"
-        autoupdate.asset = "^ampache-.*_all_php8.4.zip$"
+        autoupdate.asset = "^ampache-.*_all_php8.5.zip$"
 
     [resources.system_user]
     allow_email = true
@@ -63,10 +63,10 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "'libav-tools|ffmpeg', mariadb-server, php8.4-zip, php8.4-mysql, php8.4-curl, php8.4-simplexml, php8.4-gd, php8.4-ldap, php8.4-intl"
+    packages = "'libav-tools|ffmpeg', mariadb-server, php8.5-zip, php8.5-mysql, php8.5-curl, php8.5-simplexml, php8.5-gd, php8.5-ldap, php8.5-intl"
 
     [resources.database]
     type = "mysql"
 
     [resources.composer]
-    version = "2.9.5"
+    version = "2.9.7"

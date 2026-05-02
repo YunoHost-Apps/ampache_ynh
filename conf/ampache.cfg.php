@@ -1093,7 +1093,7 @@ ldap_name_field = "cn"
 ; extension). The default is to create new users as guests
 ; see auto_user config option if you would like to change this
 ; DEFAULT: "false"
-;auto_create = "true"
+auto_create = "true"
 
 ; This setting will silently update an Ampache account's
 ; information for anyone who can login using LDAP
@@ -1132,7 +1132,7 @@ ldap_name_field = "cn"
 ; added as a guest and must be promoted by the admin.
 ; POSSIBLE VALUES: guest, user, admin
 ; DEFAULT: guest
-;auto_user = "guest"
+auto_user = "user"
 
 ; This will display the user agreement when registering
 ; For agreement text, edit config/registration_agreement.php
