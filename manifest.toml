@@ -5,7 +5,7 @@ name = "Ampache"
 description.en = "Web based audio/video streaming application"
 description.fr = "Application de streaming audio et vidéo"
 
-version = "7.9.3~ynh1"
+version = "7.9.3~ynh2"
 
 maintainers = []
 
