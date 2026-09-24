@@ -18,7 +18,7 @@ code = "https://github.com/ampache/ampache"
 fund = "https://ampache.org/donate.html"
 
 [integration]
-yunohost = ">= 12.1.39"
+yunohost = ">= 12.1.40"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = true
@@ -69,4 +69,4 @@ ram.runtime = "50M"
     type = "mysql"
 
     [resources.composer]
-    version = "2.10.1"
+    version = "2.10.3"
